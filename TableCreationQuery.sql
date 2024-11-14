@@ -1,3 +1,10 @@
+--CREATE DATABASE GamifiedPlatform
+
+--use GamifiedPlatform
+
+--USE master;  -- Switch to the master database
+--DROP DATABASE GamifiedPlatform;
+
  --1
 CREATE TABLE Learner (
     LearnerID INT PRIMARY KEY,
@@ -49,11 +56,11 @@ CREATE TABLE HealthCondition (
 CREATE TABLE Course (
     CourseID INT PRIMARY KEY,
     Title VARCHAR(50),
-    learning_objective TEXT,
+    learning_objective VARCHAR(50),
     credit_points INT,
     difficulty_level VARCHAR(50),
-    pre_requisites TEXT,
-    description TEXT
+    pre_requisites VARCHAR(50),
+    description VARCHAR(50)
 );
 
 -- 7
@@ -62,7 +69,7 @@ CREATE TABLE Modules (
     CourseID INT,
     Title VARCHAR(50),
     difficulty VARCHAR(50),
-    contentURL TEXT,
+    contentURL VARCHAR(50),
     PRIMARY KEY(ModuleID,CourseID),
     FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
 );
@@ -73,8 +80,7 @@ CREATE TABLE Target_traits (
     CourseID INT,
     Trait VARCHAR(50),
     PRIMARY KEY (ModuleID, CourseID, Trait),
-    FOREIGN KEY (ModuleID) REFERENCES Modules(ModuleID),
-    FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
+    FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)
 );
 
 --9
@@ -83,8 +89,7 @@ CREATE TABLE ModuleContent (
     CourseID INT,
     content_type VARCHAR(50),
     PRIMARY KEY (ModuleID, CourseID, content_type),
-    FOREIGN KEY (ModuleID) REFERENCES Modules(ModuleID),
-    FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
+    FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)
 );
 
 --10
@@ -93,12 +98,11 @@ CREATE TABLE ContentLibrary (
     ModuleID INT,
     CourseID INT,
     Title VARCHAR(50),
-    description TEXT,
-    metadata TEXT,
+    description VARCHAR(50),
+    metadata VARCHAR(50),
     type VARCHAR(50),
-    content_URL TEXT,
-    FOREIGN KEY (ModuleID) REFERENCES Modules(ModuleID),
-    FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
+    content_URL VARCHAR(50),
+    FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)
 );
 
 --11
@@ -111,10 +115,9 @@ CREATE TABLE Assessments (
     passing_marks INT,
     criteria VARCHAR(50),
     weightage INT,
-    description TEXT,
+    description VARCHAR(50),
     title VARCHAR(50),
-    FOREIGN KEY (ModuleID) REFERENCES Modules(ModuleID),
-    FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
+    FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)
 );
 
 -- 12
@@ -135,10 +138,9 @@ CREATE TABLE Learning_activities (
     ModuleID INT,
     CourseID INT,
     activity_type VARCHAR(50),
-    instruction_details TEXT,
+    instruction_details VARCHAR(50),
     Max_points INT,
-    FOREIGN KEY (ModuleID) REFERENCES Modules(ModuleID),
-    FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
+    FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)
 );
 
 -- 14
@@ -156,8 +158,8 @@ CREATE TABLE Learning_path (
     LearnerID INT,
     ProfileID INT,
     completion_status VARCHAR(50),
-    custom_content TEXT,
-    adaptive_rules TEXT,
+    custom_content VARCHAR(50),
+    adaptive_rules VARCHAR(50),
     FOREIGN KEY (LearnerID, ProfileID) REFERENCES PersonalizationProfiles(LearnerID, ProfileID)
 );
 
@@ -174,7 +176,7 @@ CREATE TABLE Instructor (
 CREATE TABLE Pathreview (
     InstructorID INT,
     PathID INT,
-    feedback TEXT,
+    feedback VARCHAR(50),
     PRIMARY KEY (InstructorID, PathID),
     FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID),
     FOREIGN KEY (PathID) REFERENCES Learning_path(pathID)
@@ -184,7 +186,7 @@ CREATE TABLE Pathreview (
 CREATE TABLE Emotionalfeedback_review (
     FeedbackID INT,
     InstructorID INT,
-    feedback TEXT,
+    feedback VARCHAR(50),
     PRIMARY KEY (FeedbackID, InstructorID),
     FOREIGN KEY (FeedbackID) REFERENCES Emotional_feedback(FeedbackID),
     FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID)
@@ -235,7 +237,7 @@ CREATE TABLE Learning_goal (
     ID INT PRIMARY KEY,
     status VARCHAR(50),
     deadline DATETIME,
-    description TEXT
+    description VARCHAR(50)
 );
 
 -- 24
@@ -256,7 +258,7 @@ CREATE TABLE Survey (
 -- 26
 CREATE TABLE SurveyQuestions (
     SurveyID INT,
-    Question TEXT,
+    Question VARCHAR(50),
     PRIMARY KEY (SurveyID, Question),
     FOREIGN KEY (SurveyID) REFERENCES Survey(ID)
 );
@@ -264,9 +266,9 @@ CREATE TABLE SurveyQuestions (
 -- 27
 CREATE TABLE FilledSurvey (
     SurveyID INT,
-    Question TEXT,
+    Question VARCHAR(50),
     LearnerID INT,
-    Answer TEXT,
+    Answer VARCHAR(50),
     PRIMARY KEY (SurveyID, Question, LearnerID),
     FOREIGN KEY (SurveyID, Question) REFERENCES SurveyQuestions(SurveyID, Question),
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)
@@ -276,7 +278,7 @@ CREATE TABLE FilledSurvey (
 CREATE TABLE Notification (
     ID INT PRIMARY KEY,
     timestamp TIMESTAMP,
-    message TEXT,
+    message VARCHAR(50),
     urgency_level VARCHAR(50)
 );
 
@@ -293,8 +295,8 @@ CREATE TABLE ReceivedNotification (
 CREATE TABLE Badge (
     BadgeID INT PRIMARY KEY,
     title VARCHAR(50),
-    description TEXT,
-    criteria TEXT,
+    description VARCHAR(50),
+    criteria VARCHAR(50),
     points INT
 );
 
@@ -313,7 +315,7 @@ CREATE TABLE Achievement (
     AchievementID INT PRIMARY KEY,
     LearnerID INT,
     BadgeID INT,
-    description TEXT,
+    description VARCHAR(50),
     date_earned DATETIME,
     type VARCHAR(50),
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID),
@@ -324,7 +326,7 @@ CREATE TABLE Achievement (
 CREATE TABLE Reward (
     RewardID INT PRIMARY KEY,
     value DECIMAL(10, 2),
-    description TEXT,
+    description VARCHAR(50),
     type VARCHAR(50)
 );
 
@@ -332,8 +334,8 @@ CREATE TABLE Reward (
 CREATE TABLE Quest (
     QuestID INT PRIMARY KEY,
     difficulty_level VARCHAR(50),
-    criteria TEXT,
-    description TEXT,
+    criteria VARCHAR(50),
+    description VARCHAR(50),
     title VARCHAR(50)
 );
 
@@ -361,17 +363,16 @@ CREATE TABLE Discussion_forum (
     CourseID INT,
     title VARCHAR(50),
     last_active DATETIME,
-    timestamp TIMESTAMP                                                             ,
-    description TEXT,
-    FOREIGN KEY (ModuleID) REFERENCES Modules(ModuleID),
-    FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
+    timestamp TIMESTAMP,
+    description VARCHAR(50),
+    FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)
 );
 
 -- 38
 CREATE TABLE LearnerDiscussion (
     ForumID INT,
     LearnerID INT,
-    Post TEXT,
+    Post VARCHAR(50),
     time DATETIME,
     PRIMARY KEY (ForumID, LearnerID),
     FOREIGN KEY (ForumID) REFERENCES Discussion_forum(forumID),
