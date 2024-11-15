@@ -1,6 +1,6 @@
---CREATE DATABASE GamifiedPlatform
+CREATE DATABASE GamifiedPlatform
 
---use GamifiedPlatform
+USE GamifiedPlatform
 
 --USE master;  -- Switch to the master database
 --DROP DATABASE GamifiedPlatform;
@@ -126,7 +126,7 @@ CREATE TABLE Interaction_log (
     activity_ID INT,
     LearnerID INT,
     Duration TIME,
-    Timestamp TIMESTAMP ,
+    Timestamp DATETIME ,
     action_type VARCHAR(50),
     FOREIGN KEY (activity_ID) REFERENCES Learning_activities(ActivityID),
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)
@@ -138,7 +138,7 @@ CREATE TABLE Learning_activities (
     ModuleID INT,
     CourseID INT,
     activity_type VARCHAR(50),
-    instruction_details VARCHAR(50),
+    instruction_details VARCHAR(100),
     Max_points INT,
     FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)
 );
@@ -147,7 +147,7 @@ CREATE TABLE Learning_activities (
 CREATE TABLE Emotional_feedback (
     FeedbackID INT PRIMARY KEY,
     LearnerID INT,
-    timestamp TIMESTAMP,
+    timestamp DATETIME,
     emotional_state VARCHAR(50),
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)
 );
@@ -186,7 +186,7 @@ CREATE TABLE Pathreview (
 CREATE TABLE Emotionalfeedback_review (
     FeedbackID INT,
     InstructorID INT,
-    feedback VARCHAR(50),
+    feedback VARCHAR(100),
     PRIMARY KEY (FeedbackID, InstructorID),
     FOREIGN KEY (FeedbackID) REFERENCES Emotional_feedback(FeedbackID),
     FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID)
@@ -258,7 +258,7 @@ CREATE TABLE Survey (
 -- 26
 CREATE TABLE SurveyQuestions (
     SurveyID INT,
-    Question VARCHAR(50),
+    Question VARCHAR(100),
     PRIMARY KEY (SurveyID, Question),
     FOREIGN KEY (SurveyID) REFERENCES Survey(ID)
 );
@@ -266,19 +266,19 @@ CREATE TABLE SurveyQuestions (
 -- 27
 CREATE TABLE FilledSurvey (
     SurveyID INT,
-    Question VARCHAR(50),
+    Question VARCHAR(100),
     LearnerID INT,
     Answer VARCHAR(50),
     PRIMARY KEY (SurveyID, Question, LearnerID),
-    FOREIGN KEY (SurveyID, Question) REFERENCES SurveyQuestions(SurveyID, Question),
+    FOREIGN KEY (SurveyID, Question) REFERENCES SurveyQuestions(SurveyID, Question) ON UPDATE CASCADE,
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)
 );
 
 --28
 CREATE TABLE Notification (
     ID INT PRIMARY KEY,
-    timestamp TIMESTAMP,
-    message VARCHAR(50),
+    timestamp DATETIME,
+    message VARCHAR(100),
     urgency_level VARCHAR(50)
 );
 
@@ -294,9 +294,9 @@ CREATE TABLE ReceivedNotification (
 --30
 CREATE TABLE Badge (
     BadgeID INT PRIMARY KEY,
-    title VARCHAR(50),
-    description VARCHAR(50),
-    criteria VARCHAR(50),
+    title VARCHAR(100),
+    description VARCHAR(100),
+    criteria VARCHAR(100),
     points INT
 );
 
@@ -306,7 +306,7 @@ CREATE TABLE SkillProgression (
     proficiency_level VARCHAR(50),
     LearnerID INT,
     skill_name VARCHAR(50),
-    timestamp TIMESTAMP,
+    timestamp DATETIME,
     FOREIGN KEY (LearnerID, skill_name) REFERENCES Skills(LearnerID, skill)
 );
 
@@ -315,7 +315,7 @@ CREATE TABLE Achievement (
     AchievementID INT PRIMARY KEY,
     LearnerID INT,
     BadgeID INT,
-    description VARCHAR(50),
+    description VARCHAR(100),
     date_earned DATETIME,
     type VARCHAR(50),
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID),
@@ -326,7 +326,7 @@ CREATE TABLE Achievement (
 CREATE TABLE Reward (
     RewardID INT PRIMARY KEY,
     value DECIMAL(10, 2),
-    description VARCHAR(50),
+    description VARCHAR(100),
     type VARCHAR(50)
 );
 
@@ -334,8 +334,8 @@ CREATE TABLE Reward (
 CREATE TABLE Quest (
     QuestID INT PRIMARY KEY,
     difficulty_level VARCHAR(50),
-    criteria VARCHAR(50),
-    description VARCHAR(50),
+    criteria VARCHAR(100),
+    description VARCHAR(100),
     title VARCHAR(50)
 );
 
@@ -363,8 +363,8 @@ CREATE TABLE Discussion_forum (
     CourseID INT,
     title VARCHAR(50),
     last_active DATETIME,
-    timestamp TIMESTAMP,
-    description VARCHAR(50),
+    timestamp DATETIME,
+    description VARCHAR(100),
     FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)
 );
 
@@ -372,7 +372,7 @@ CREATE TABLE Discussion_forum (
 CREATE TABLE LearnerDiscussion (
     ForumID INT,
     LearnerID INT,
-    Post VARCHAR(50),
+    Post VARCHAR(100),
     time DATETIME,
     PRIMARY KEY (ForumID, LearnerID),
     FOREIGN KEY (ForumID) REFERENCES Discussion_forum(forumID),
