@@ -239,6 +239,7 @@ VALUES
 (5, 5),
 (6, 6),
 (7, 7);
+INSERT INTO Teaches (InstructorID, CourseID) VALUES (7, 3)
 
 --Insertion into Leaderboard 
 INSERT INTO Leaderboard (BoardID, season)

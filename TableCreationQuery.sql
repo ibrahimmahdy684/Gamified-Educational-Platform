@@ -1,3 +1,7 @@
+--PROBLEMS:
+    --identity attributes
+    --on update and on delete cascade, delete, or set null
+
 CREATE DATABASE GamifiedPlatform
 
 USE GamifiedPlatform
@@ -270,7 +274,7 @@ CREATE TABLE FilledSurvey (
     LearnerID INT,
     Answer VARCHAR(50),
     PRIMARY KEY (SurveyID, Question, LearnerID),
-    FOREIGN KEY (SurveyID, Question) REFERENCES SurveyQuestions(SurveyID, Question) ON UPDATE CASCADE,
+    FOREIGN KEY (SurveyID, Question) REFERENCES SurveyQuestions(SurveyID, Question),
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)
 );
 

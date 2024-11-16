@@ -1,5 +1,7 @@
 ﻿USE GamifiedPlatform
 
+--ADMIN PROCEDURES
+
 -- Maher
 --1
 GO
@@ -45,14 +47,84 @@ CREATE PROCEDURE LogDetails (@LearnerID AS INT)
 AS
 BEGIN
 	SELECT *
-	FROM Interaction_log
-	WHERE 
+	FROM Interaction_log i
+	WHERE i.LearnerID = @LearnerID
 END
-EXEC LogDetails
+EXEC LogDetails 1
+
+--5
+GO
+CREATE PROCEDURE InstructorReview (@InstructorID AS INT)
+AS
+BEGIN
+	SELECT *
+	FROM Emotionalfeedback_review e
+	WHERE e.InstructorID = @InstructorID
+END
+EXEC InstructorReview 2
+
+--6 (how to remove dependancies?)
+GO
+CREATE PROCEDURE CourseRemove (@courseID AS INT)
+AS
+BEGIN
+	DELETE FROM Course
+	WHERE CourseID = @courseID
+END
+EXEC CourseRemove 10
+/* testing
+select * from Course
+INSERT INTO Course (CourseID, Title, learning_objective, credit_points, difficulty_level, pre_requisites, description)
+VALUES (10, 'Introduction to Programming', 'Learn the basics of coding', 4, 'Beginner', 'None', 'A beginner-level course.')*/
+
+--7 (do i need to display the course itself?)
+GO
+CREATE PROCEDURE Highestgrade 
+AS
+BEGIN
+	SELECT MAX(total_marks)
+	FROM Assessments
+	GROUP BY CourseID
+END
+EXEC Highestgrade
+
+--8 (how no output?)
+GO
+CREATE PROCEDURE InstructorCount
+AS
+BEGIN
+	SELECT *
+	FROM Course
+END
+
+--9
+GO
+CREATE PROCEDURE ViewNot (@LearnerID AS INT)
+AS
+BEGIN
+	SELECT Notification.ID, Notification.message, Notification.urgency_level, Notification.timestamp
+	FROM Notification
+	INNER JOIN 
+		ReceivedNotification ON ReceivedNotification.NotificationID = Notification.ID AND 
+		ReceivedNotification.LearnerID = @LearnerID
+END
+EXEC ViewNot 2
+
+--10
+GO 
+CREATE PROCEDURE 
+AS
+BEGIN
+	
+END
+
+--11
 -- Joe
 
 --Ibrahim
 
 -- Darwish
+
+--INSTRUCTOR PROCEDURES
 
 -- Mariam
