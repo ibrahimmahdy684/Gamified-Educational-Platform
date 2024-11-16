@@ -391,5 +391,13 @@ CREATE TABLE QuestReward (
     FOREIGN KEY (QuestID) REFERENCES Quest(QuestID)on delete cascade on update cascade,
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)on delete cascade on update cascade
 );
-
+--40(found in ERD but not found in schema)
+create table takesassesment(
+learner_id int,
+assesment_id int,
+ScoredPoints int,
+primary key(learner_id,assesment_id),
+foreign key(learner_id)references Learner on delete cascade on update cascade,
+foreign key(assesment_id)references Assessments on delete cascade on update cascade
+);
 
