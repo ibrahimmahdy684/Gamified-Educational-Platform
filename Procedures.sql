@@ -122,9 +122,42 @@ END
 -- Joe
 
 --Ibrahim
+--Learner9
+Go
+create proc SkillsProfeciency
+(@learnerId int)
+AS
+begin
+select skill_name,proficiency_level
+from SkillProgression
+where LearnerID=@learnerId
+end
+exec SkillsProficiency 1
 
+--Learner10(relation takesassesment found in ERD but not found in schema)
+Go
+create proc Viewscore(@LearnerID int,@AssessmentID int,@score int output)
+AS
+begin 
+select @score=ScoredPoints
+from takesassesment
+where learner_id=@LearnerID and @AssessmentID=assesment_id
+end
+declare @score int
+exec Viewscore 1,2, @score output
+print @score
+--Learner11
+Go 
+create proc AssessmentsList(@courseID int,@ModuleID int)
+AS
+begin
+select
 -- Darwish
 
+<<<<<<< HEAD
 --INSTRUCTOR PROCEDURES
 
 -- Mariam
+=======
+-- Mariam
+>>>>>>> 63b2081a9123ab7184782b37598adf7022e05018
