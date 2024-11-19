@@ -411,4 +411,12 @@ primary key(learner_id,assesment_id),
 foreign key(learner_id)references Learner on delete cascade on update cascade,
 foreign key(assesment_id)references Assessments on delete cascade on update cascade
 );
-
+--41
+create table LearnerCollaborative(
+Learner_id int,
+quest_id int,
+completion_status nvarchar(MAX),
+primary key(Learner_id,quest_id),
+foreign key(Learner_id) references Learner(LearnerID) on delete cascade on update cascade,
+foreign key(quest_id) references Collaborative(QuestID)on delete cascade on update cascade
+);
