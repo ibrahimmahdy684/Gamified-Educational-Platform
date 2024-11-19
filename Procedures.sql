@@ -147,11 +147,85 @@ declare @score int
 exec Viewscore 1,2, @score output
 print @score
 --Learner11
+
 Go 
 create proc AssessmentsList(@courseID int,@ModuleID int)
 AS
 begin
-select
+select a.title,t.ScoredPoints
+from takesassesment t inner join Assessments a on  t.assesment_id=a.ID 
+inner join Learner l on l.LearnerID=t.learner_id
+where a.ModuleID=@ModuleID AND a.CourseID=@courseID
+end
+exec AssessmentsList 2,4
+
+--Learner12
+Go 
+create proc Courseregister(@LearnerID int, @CourseID int )
+AS 
+begin if(
+--Learner13
+Go
+
+create proc Post(@LearnerID int,@DiscussionID int,@Post varchar(max))
+AS
+begin
+insert into LearnerDiscussion(ForumID,LearnerID,Post) values (@LearnerID,@DiscussionID,@Post);
+end
+exec Post 7,4,'test'
+/*test
+select *
+from LearnerDiscussion*/
+--Learner14
+Go
+create proc AddGoal(@LearnerID int, @GoalID int)
+As 
+Begin 
+insert into LearnersGoals(GoalID,LearnerID)values(@LearnerID,@GoalID)
+End
+exec AddGoal 4,5
+/*test
+select *
+from LearnersGoals
+*/
+--Learner 15
+Go 
+create proc CurrentPath(@LearnerID int)
+As
+Begin
+select *
+from Learning_path
+where LearnerID=@LearnerID
+end
+exec CurrentPath 1
+
+--Learner16
+--Learner19
+Go
+create proc SkillProgressHistory(@LearnerID int, @Skill varchar(50))
+AS
+Begin
+select *
+from SkillProgression
+where LearnerID=@LearnerID AND skill_name=@Skill
+End
+exec SkillProgressHistory 2,'Graphic Design'
+
+--Learner20
+Go 
+create proc  AssessmentAnalysis(@LearnerID int, @AssessmentID int)
+--Learner21
+Go
+create proc  LeaderboardFilter(@LearnerID int)
+AS
+Begin 
+select l.BoardID,l.season,c.Title as course,r.total_points,r.rank
+from Leaderboard l inner join Ranking r on l.BoardID=r.BoardID inner join Course c on r.CourseID=c.CourseID
+where LearnerID=@LearnerID 
+order by rank desc
+end
+ 
+exec LeaderboardFilter 2
 -- Darwish
 
 <<<<<<< HEAD
