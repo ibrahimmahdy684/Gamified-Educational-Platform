@@ -457,3 +457,9 @@ values(1,2,96),
 (1,5,88),
 (2,4,99),
 (4,1,22)
+insert into LearnerCollaborative
+values(1,5,'in progress'),
+(2,7,'completed'),
+(3,2,'didnot start'),
+(4,1,'incomplete'),
+(2,4,'completed')
