@@ -4,7 +4,6 @@
     --on update and on delete cascade, delete, or set null
 =======
 >>>>>>> 63b2081a9123ab7184782b37598adf7022e05018
-
 CREATE DATABASE GamifiedPlatform
 
 USE GamifiedPlatform
@@ -14,7 +13,7 @@ USE GamifiedPlatform
 
  --1
 CREATE TABLE Learner (
-    LearnerID INT PRIMARY KEY,
+    LearnerID INT PRIMARY KEY identity,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     gender CHAR(1),
@@ -61,7 +60,7 @@ CREATE TABLE HealthCondition (
 
 --6
 CREATE TABLE Course (
-    CourseID INT PRIMARY KEY,
+    CourseID INT PRIMARY KEY identity,
     Title VARCHAR(50),
     learning_objective VARCHAR(50),
     credit_points INT,
@@ -72,7 +71,7 @@ CREATE TABLE Course (
 
 -- 7
 CREATE TABLE Modules (
-    ModuleID INT ,
+    ModuleID INT identity ,
     CourseID INT,
     Title VARCHAR(50),
     difficulty VARCHAR(50),
@@ -101,7 +100,7 @@ CREATE TABLE ModuleContent (
 
 --10
 CREATE TABLE ContentLibrary (
-    ID INT PRIMARY KEY,
+    ID INT PRIMARY KEY identity,
     ModuleID INT,
     CourseID INT,
     Title VARCHAR(50),
@@ -114,7 +113,7 @@ CREATE TABLE ContentLibrary (
 
 --11
 CREATE TABLE Assessments (
-    ID INT PRIMARY KEY,
+    ID INT PRIMARY KEY identity,
     ModuleID INT,
     CourseID INT,
     type VARCHAR(50),
@@ -129,7 +128,7 @@ CREATE TABLE Assessments (
 
 -- 12
 CREATE TABLE Interaction_log (
-    LogID INT PRIMARY KEY,
+    LogID INT PRIMARY KEY identity,
     activity_ID INT,
     LearnerID INT,
     Duration TIME,
@@ -141,7 +140,7 @@ CREATE TABLE Interaction_log (
 
 -- 13
 CREATE TABLE Learning_activities (
-    ActivityID INT PRIMARY KEY,
+    ActivityID INT PRIMARY KEY identity,
     ModuleID INT,
     CourseID INT,
     activity_type VARCHAR(50),
@@ -152,7 +151,7 @@ CREATE TABLE Learning_activities (
 
 -- 14
 CREATE TABLE Emotional_feedback (
-    FeedbackID INT PRIMARY KEY,
+    FeedbackID INT PRIMARY KEY identity,
     LearnerID INT,
     timestamp DATETIME,
     emotional_state VARCHAR(50),
@@ -161,7 +160,7 @@ CREATE TABLE Emotional_feedback (
 
 --15
 CREATE TABLE Learning_path (
-    pathID INT PRIMARY KEY,
+    pathID INT PRIMARY KEY identity,
     LearnerID INT,
     ProfileID INT,
     completion_status VARCHAR(50),
@@ -172,7 +171,7 @@ CREATE TABLE Learning_path (
 
 -- 16
 CREATE TABLE Instructor (
-    InstructorID INT PRIMARY KEY,
+    InstructorID INT PRIMARY KEY identity,
     name VARCHAR(50),
     latest_qualification VARCHAR(50),
     expertise_area VARCHAR(50),
@@ -201,7 +200,7 @@ CREATE TABLE Emotionalfeedback_review (
 
 --19
 CREATE TABLE Course_enrollment (
-    EnrollmentID INT PRIMARY KEY,
+    EnrollmentID INT PRIMARY KEY identity,
     CourseID INT,
     LearnerID INT,
     completion_date DATETIME,
@@ -222,7 +221,7 @@ CREATE TABLE Teaches (
 
 -- 21
 CREATE TABLE Leaderboard (
-    BoardID INT PRIMARY KEY,
+    BoardID INT PRIMARY KEY identity,
     season VARCHAR(50)
 );
 
@@ -241,7 +240,7 @@ CREATE TABLE Ranking (
 
 -- 23
 CREATE TABLE Learning_goal (
-    ID INT PRIMARY KEY,
+    ID INT PRIMARY KEY identity,
     status VARCHAR(50),
     deadline DATETIME,
     description VARCHAR(50)
@@ -258,7 +257,7 @@ CREATE TABLE LearnersGoals (
 
 --25
 CREATE TABLE Survey (
-    ID INT PRIMARY KEY,
+    ID INT PRIMARY KEY identity,
     Title VARCHAR(50)
 );
 
@@ -277,18 +276,16 @@ CREATE TABLE FilledSurvey (
     LearnerID INT,
     Answer VARCHAR(50),
     PRIMARY KEY (SurveyID, Question, LearnerID),
-<<<<<<< HEAD
-    FOREIGN KEY (SurveyID, Question) REFERENCES SurveyQuestions(SurveyID, Question),
-    FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)
-=======
-    FOREIGN KEY (SurveyID, Question) REFERENCES SurveyQuestions(SurveyID, Question)on delete cascade on update cascade,
+  FOREIGN KEY (SurveyID, Question) REFERENCES SurveyQuestions(SurveyID, Question)on delete cascade on update cascade,
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)on delete cascade on update cascade
->>>>>>> 63b2081a9123ab7184782b37598adf7022e05018
+
+
+  
 );
 
 --28
 CREATE TABLE Notification (
-    ID INT PRIMARY KEY,
+    ID INT PRIMARY KEY identity,
     timestamp DATETIME,
     message VARCHAR(100),
     urgency_level VARCHAR(50)
@@ -305,7 +302,7 @@ CREATE TABLE ReceivedNotification (
 
 --30
 CREATE TABLE Badge (
-    BadgeID INT PRIMARY KEY,
+    BadgeID INT PRIMARY KEY identity,
     title VARCHAR(100),
     description VARCHAR(100),
     criteria VARCHAR(100),
@@ -314,7 +311,7 @@ CREATE TABLE Badge (
 
 -- 31
 CREATE TABLE SkillProgression (
-    ID INT PRIMARY KEY,
+    ID INT PRIMARY KEY identity,
     proficiency_level VARCHAR(50),
     LearnerID INT,
     skill_name VARCHAR(50),
@@ -324,7 +321,7 @@ CREATE TABLE SkillProgression (
 
 -- 32
 CREATE TABLE Achievement (
-    AchievementID INT PRIMARY KEY,
+    AchievementID INT PRIMARY KEY identity,
     LearnerID INT,
     BadgeID INT,
     description VARCHAR(100),
@@ -336,7 +333,7 @@ CREATE TABLE Achievement (
 
 --33
 CREATE TABLE Reward (
-    RewardID INT PRIMARY KEY,
+    RewardID INT PRIMARY KEY identity,
     value DECIMAL(10, 2),
     description VARCHAR(100),
     type VARCHAR(50)
@@ -344,7 +341,7 @@ CREATE TABLE Reward (
 
 -- 34
 CREATE TABLE Quest (
-    QuestID INT PRIMARY KEY,
+    QuestID INT PRIMARY KEY identity,
     difficulty_level VARCHAR(50),
     criteria VARCHAR(100),
     description VARCHAR(100),
@@ -370,7 +367,7 @@ CREATE TABLE Collaborative (
 
 --37
 CREATE TABLE Discussion_forum (
-    forumID INT PRIMARY KEY,
+    forumID INT PRIMARY KEY identity,
     ModuleID INT,
     CourseID INT,
     title VARCHAR(50),
