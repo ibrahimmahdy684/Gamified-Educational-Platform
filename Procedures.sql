@@ -27,19 +27,15 @@ EXEC LearnerInfo 3
 
 --3
 GO
-CREATE PROCEDURE EmotionalState 
-	(
-		@LearnerID AS INT, 
-		@emotional_state AS VARCHAR(50)
-	)
+CREATE PROCEDURE EmotionalState (@LearnerID INT)
 AS
 BEGIN
-	SELECT emotional_state
+	SELECT TOP 1 emotional_state
 	FROM Emotional_feedback e
 	WHERE e.LearnerID = @LearnerID
+	ORDER BY timestamp DESC
 END
-DROP PROCEDURE EmotionalState
-EXEC EmotionalState 1
+EXEC EmotionalState 2
 
 --4
 GO 
@@ -110,15 +106,40 @@ BEGIN
 END
 EXEC ViewNot 2
 
---10
+--10 (trigger?)(do i need to check if midule or course exists?)
 GO 
-CREATE PROCEDURE 
+CREATE PROCEDURE CreateDiscussion 
+(
+	@ModuleID AS int, @courseID AS int, @title AS varchar(50), @description AS varchar(50)
+)
 AS
 BEGIN
-	
-END
+	INSERT INTO Discussion_forum (ModuleID, CourseID, title, last_active, timestamp, description)
+		VALUES
+		(@ModuleID, @courseID, @title, GETDATE(), GETDATE(), @description)
 
---11
+	print 'Discussion forum created successfully for ModuleID: ' + 
+		CAST(@ModuleID AS VARCHAR) + ' and CourseID: ' + CAST(@CourseID AS VARCHAR);
+END
+SELECT * FROM Discussion_forum
+EXEC CreateDiscussion 1, 1, 'TEST', 'test description'
+
+--11 (do i need to check if it exists?)
+GO
+CREATE PROCEDURE RemoveBadge (@BadgeID AS INT)
+AS
+BEGIN
+	DELETE FROM Badge
+	WHERE BadgeID = @BadgeID
+
+	print 'Deleted the following badge: ' + CAST(@BadgeID AS VARCHAR);
+END
+EXEC RemoveBadge 8
+/* testing
+SELECT * FROM Badge
+INSERT INTO Badge ( title, description, criteria, points) VALUES
+( 'test', 'test', 'test', 10)*/
+
 -- Joe
 
 --Ibrahim

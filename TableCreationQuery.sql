@@ -270,11 +270,8 @@ CREATE TABLE FilledSurvey (
     LearnerID INT,
     Answer VARCHAR(50),
     PRIMARY KEY (SurveyID, Question, LearnerID),
-  FOREIGN KEY (SurveyID, Question) REFERENCES SurveyQuestions(SurveyID, Question)on delete cascade on update cascade,
+    FOREIGN KEY (SurveyID, Question) REFERENCES SurveyQuestions(SurveyID, Question)on delete cascade on update cascade,
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)on delete cascade on update cascade
-
-
-  
 );
 
 --28
