@@ -70,7 +70,7 @@ CREATE TABLE Prerequisites (
     FOREIGN KEY (course_id) REFERENCES Course(CourseID),
     FOREIGN KEY (prereq) REFERENCES Course(CourseID)
 );
-drop table Prerequisites
+
 
 -- 7
 CREATE TABLE Modules (
