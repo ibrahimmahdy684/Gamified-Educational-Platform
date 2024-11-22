@@ -228,10 +228,6 @@ end
 exec LeaderboardFilter 2
 -- Darwish
 
-<<<<<<< HEAD
 --INSTRUCTOR PROCEDURES
 
 -- Mariam
-=======
--- Mariam
->>>>>>> 63b2081a9123ab7184782b37598adf7022e05018

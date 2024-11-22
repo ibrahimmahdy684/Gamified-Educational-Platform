@@ -1,9 +1,3 @@
-<<<<<<< HEAD
---PROBLEMS:
-    --identity attributes
-    --on update and on delete cascade, delete, or set null
-=======
->>>>>>> 63b2081a9123ab7184782b37598adf7022e05018
 CREATE DATABASE GamifiedPlatform
 
 USE GamifiedPlatform
@@ -401,19 +395,19 @@ CREATE TABLE QuestReward (
 );
 --40(found in ERD but not found in schema)
 create table takesassesment(
-learner_id int,
-assesment_id int,
-ScoredPoints int,
-primary key(learner_id,assesment_id),
-foreign key(learner_id)references Learner on delete cascade on update cascade,
-foreign key(assesment_id)references Assessments on delete cascade on update cascade
+    learner_id int,
+    assesment_id int,
+    ScoredPoints int,
+    primary key(learner_id,assesment_id),
+    foreign key(learner_id)references Learner on delete cascade on update cascade,
+    foreign key(assesment_id)references Assessments on delete cascade on update cascade
 );
 --41
 create table LearnerCollaborative(
-Learner_id int,
-quest_id int,
-completion_status nvarchar(MAX),
-primary key(Learner_id,quest_id),
-foreign key(Learner_id) references Learner(LearnerID) on delete cascade on update cascade,
-foreign key(quest_id) references Collaborative(QuestID)on delete cascade on update cascade
+    Learner_id int,
+    quest_id int,
+    completion_status nvarchar(MAX),
+    primary key(Learner_id,quest_id),
+    foreign key(Learner_id) references Learner(LearnerID) on delete cascade on update cascade,
+    foreign key(quest_id) references Collaborative(QuestID)on delete cascade on update cascade
 );
