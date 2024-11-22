@@ -407,8 +407,7 @@ BEGIN
     BEGIN
         PRINT 'Rejection: No space available in the quest.';
     END
-END;
---Ibrahim
+END;--Ibrahim
 --Learner9
 Go
 create proc SkillsProfeciency
@@ -419,9 +418,9 @@ select skill_name,proficiency_level
 from SkillProgression
 where LearnerID=@learnerId
 end
-exec SkillsProficiency 1
+exec SkillsProfeciency 1
 
---Learner10(relation takesassesment found in ERD but not found in schema)
+--Learner10
 Go
 create proc Viewscore(@LearnerID int,@AssessmentID int,@score int output)
 AS
@@ -447,10 +446,40 @@ end
 exec AssessmentsList 2,4
 
 --Learner12
-Go 
-create proc Courseregister(@LearnerID int, @CourseID int )
-AS 
-begin if(
+Go
+create proc Courseregister( @LearnerID int, @CourseID int)
+AS
+begin
+declare @preq int
+declare @preqmet int
+
+select @preq=count(*)
+from Prerequisites p
+where p.course_id=@CourseID
+
+select @preqmet=COUNT(*)
+from Course_enrollment ce inner join Prerequisites p on ce.CourseID=p.prereq
+where p.course_id=@CourseID and ce.LearnerID=@LearnerID and ce.status='Completed'
+
+if @preq=0
+Begin 
+insert into Course_enrollment(CourseID,LearnerID,enrollment_date,status)
+values(@CourseID,@LearnerID,GETDATE(),'Enrolled')
+print 'Registration approved'
+end
+
+else if @preqmet=@preq
+begin 
+insert into Course_enrollment(CourseID,LearnerID,enrollment_date,status)
+values(@CourseID,@LearnerID,GETDATE(),'Enrolled')
+print 'Registration approved'
+end
+else 
+begin
+print 'Registeration Failed,You did not complete all prerequisites of this course'
+end
+end
+exec Courseregister 3,5
 --Learner13
 Go
 
@@ -473,8 +502,8 @@ End
 exec AddGoal 4,5
 /*test
 select *
-from LearnersGoals
-*/
+from LearnersGoals*/
+
 --Learner 15
 Go 
 create proc CurrentPath(@LearnerID int)
@@ -487,20 +516,99 @@ end
 exec CurrentPath 1
 
 --Learner16
---Learner19
 Go
-create proc SkillProgressHistory(@LearnerID int, @Skill varchar(50))
+create proc QuestMembers(@LearnerID int )
 AS
 Begin
-select *
-from SkillProgression
-where LearnerID=@LearnerID AND skill_name=@Skill
-End
+select l.first_name,l.last_name,c.QuestID
+from LearnersCollaboration lc inner join Collaborative c on lc.QuestID=c.QuestID
+inner join LearnersCollaboration other on lc.QuestID=other.QuestID 
+inner join Learner l on other.LearnerID=l.LearnerID
+where lc.LearnerID=@LearnerID AND c.deadline>GETDATE() 
+end
+
+exec QuestMembers 1
+
+--Learner17
+Go
+create proc QuestProgress (@LearnerID INT)
+AS
+BEGIN
+    
+    SELECT 
+        Q.QuestID,
+        Q.title AS QuestTitle,
+        C.deadline AS deadline,
+        LC.completion_status AS QuestCompletionStatus
+    FROM Collaborative C inner join LearnersCollaboration LC ON C.QuestID = LC.QuestID
+    inner join Quest Q ON C.QuestID = Q.QuestID
+    WHERE LC.LearnerID = @LearnerID AND C.deadline > GETDATE() 
+    
+
+    
+    SELECT 
+        B.BadgeID,
+        B.title AS BadgeTitle,
+        A.date_earned AS DateEarned,
+        B.criteria AS BadgeCriteria
+    FROM Achievement A inner join Badge B ON A.BadgeID = B.BadgeID
+    WHERE A.LearnerID = @LearnerID
+    
+END
+exec QuestProgress 1
+--Learner18
+Go
+create proc GoalReminder( @LearnerID int)
+AS
+begin
+declare @remdays int
+declare @goaldesc varchar(max)
+select @remdays=DateDiff(day,getDate(),deadline),@goaldesc=g.description
+from Learner l inner join LearnersGoals lg on l.LearnerID=lg.LearnerID inner join Learning_goal g on lg.GoalID=g.ID
+where l.LearnerID=@LearnerID 
+
+if(@remdays<7)
+begin
+insert into Notification(timestamp,message,urgency_level)
+values(GETDATE(),'You are failing behind on '+@goaldesc,'high')
+end
+end
+exec GoalReminder 1
+/*TEST
+select*
+from Notification*/
+
+
+--Learner19
+Go
+CREATE PROCEDURE SkillProgressHistory (
+    @LearnerID INT,
+    @Skill VARCHAR(50)
+)
+AS
+BEGIN
+    
+    SELECT 
+        SP.timestamp AS ProgressDate,
+        SP.proficiency_level AS SkillLevel
+    FROM SkillProgression SP
+    inner join Skills S ON SP.LearnerID = S.LearnerID AND SP.skill_name = S.skill
+    WHERE SP.LearnerID = @LearnerID
+      AND SP.skill_name = @Skill
+    ORDER BY SP.timestamp ASC;
+END;
 exec SkillProgressHistory 2,'Graphic Design'
 
 --Learner20
 Go 
-create proc  AssessmentAnalysis(@LearnerID int, @AssessmentID int)
+create proc  AssessmentAnalysis(@LearnerID int)
+AS 
+begin
+select a.title as Assessment,t.ScoredPoints as grade
+from takesassesment t inner join Assessments a on t.assesment_id=a.ID
+where t.learner_id=@LearnerID
+end
+exec AssessmentAnalysis 1
 --Learner21
 Go
 create proc  LeaderboardFilter(@LearnerID int)
