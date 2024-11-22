@@ -64,6 +64,16 @@ VALUES
 ('Leadership Fundamentals', 'Develop leadership skills', 4, 'Advanced', 'Team Experience', 'Leadership in practice.'),
 ('Collaborative Problem Solving', 'Team-based challenges', 5, 'Intermediate', 'None', 'Real-world scenarios.');
 
+-- Insert data into the Prerequisites table
+INSERT INTO Prerequisites (course_id, prereq)
+VALUES
+(2, 1),  -- Course 2 requires Course 1 as a prerequisite
+(3, 2),  -- Course 3 requires Course 2 as a prerequisite
+(4, 1),  -- Course 4 requires Course 1 as a prerequisite
+(5, 3),  -- Course 5 requires Course 3 as a prerequisite
+(6, 5);  -- Course 6 requires Course 5 as a prerequisite
+
+
 -- Insertion into Modules
 INSERT INTO Modules (CourseID, Title, difficulty, contentURL)
 VALUES 
@@ -134,19 +144,6 @@ VALUES
 ( 9, 4, 'Speech', 50, 30, 'Oral presentation', 25, 'Assessment of public speaking skills', 'Public Speaking Techniques Speech'),
 ( 10, 5, 'Assignment', 40, 20, 'Writing a short story with character development', 30, 'Evaluating creativity and character writing skills', 'Character Development Assignment');
 
--- Insertion into Interaction_log
-INSERT INTO Interaction_log ( activity_ID, LearnerID, Duration, Timestamp, action_type)
-VALUES
-( 1, 1, '00:20:00', '2024-11-15 09:00:00', 'Started'),
-( 1, 2, '00:25:00', '2024-11-15 09:30:00', 'Completed'),
-( 2, 1, '01:00:00', '2024-11-15 10:00:00', 'Started'),
-( 2, 3, '00:45:00', '2024-11-15 11:00:00', 'Completed'),
-( 3, 4, '00:35:00', '2024-11-15 12:00:00', 'Started'),
-( 3, 5, '00:50:00', '2024-11-15 12:45:00', 'Completed'),
-( 4, 2, '00:40:00', '2024-11-15 14:00:00', 'Started'),
-( 4, 5, '00:30:00', '2024-11-15 14:30:00', 'Completed'),
-( 5, 1, '00:55:00', '2024-11-15 15:00:00', 'Started'),
-( 6, 3, '01:15:00', '2024-11-15 15:30:00', 'Completed');
 
 -- Insertion into Learning_activities
 INSERT INTO Learning_activities ( ModuleID, CourseID, activity_type, instruction_details, Max_points)
@@ -161,6 +158,21 @@ VALUES
 ( 8, 3, 'Assignment', 'Create a design mockup using typography and color theory principles.', 45),
 ( 9, 4, 'Assignment', 'Write a script for a public speaking session on leadership.', 30),
 ( 10, 5, 'Workshop', 'Write a short story and develop characters using creative writing techniques.', 35);
+
+-- Insertion into Interaction_log
+INSERT INTO Interaction_log ( activity_ID, LearnerID, Duration, Timestamp, action_type)
+VALUES
+( 1, 1, '00:20:00', '2024-11-15 09:00:00', 'Started'),
+( 1, 2, '00:25:00', '2024-11-15 09:30:00', 'Completed'),
+( 2, 1, '01:00:00', '2024-11-15 10:00:00', 'Started'),
+( 2, 3, '00:45:00', '2024-11-15 11:00:00', 'Completed'),
+( 3, 4, '00:35:00', '2024-11-15 12:00:00', 'Started'),
+( 3, 5, '00:50:00', '2024-11-15 12:45:00', 'Completed'),
+( 4, 2, '00:40:00', '2024-11-15 14:00:00', 'Started'),
+( 4, 5, '00:30:00', '2024-11-15 14:30:00', 'Completed'),
+( 5, 1, '00:55:00', '2024-11-15 15:00:00', 'Started'),
+( 6, 3, '01:15:00', '2024-11-15 15:30:00', 'Completed');
+
 
 --Insertion into Emotional_feedback 
 INSERT INTO Emotional_feedback ( LearnerID, timestamp, emotional_state)
@@ -420,6 +432,25 @@ VALUES
 (6, '2025-06-01 23:59:59', 12),
 (7, '2025-07-01 23:59:59', 7);
  
+ -- Insertion into LearnersCollaboration
+INSERT INTO LearnersCollaboration (LearnerID, QuestID, completion_status)
+VALUES
+(1, 1, 'Completed'),
+(2, 2, 'In Progress'),
+(3, 3, 'Not Started'),
+(4, 4, 'Completed'),
+(5, 5, 'In Progress');
+
+
+INSERT INTO LearnerMastery (LearnerID, QuestID, skill, completion_status)
+VALUES
+(1, 1, 'Programming', 'Completed'),
+(2, 2, 'Graphic Design', 'In Progress'),
+(3, 3, 'Data Analysis', 'Not Started'),
+(4, 4, 'Leadership', 'Completed'),
+(5, 5, 'Time Management', 'In Progress');
+
+
 -- Insertion into Discussion_forum
 INSERT INTO Discussion_forum ( ModuleID, CourseID, title, last_active, timestamp, description)
 VALUES
@@ -459,11 +490,4 @@ values(1,2,96),
 (1,5,88),
 (2,4,99),
 (4,1,22)
-
-insert into LearnerCollaborative
-values(1,5,'in progress'),
-(2,7,'completed'),
-(3,2,'didnot start'),
-(4,1,'incomplete'),
-(2,4,'completed')
 
