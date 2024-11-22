@@ -1,3 +1,4 @@
+drop database GamifiedPlatform
 CREATE DATABASE GamifiedPlatform
 
 USE GamifiedPlatform
@@ -62,6 +63,14 @@ CREATE TABLE Course (
     pre_requisites VARCHAR(50),
     description VARCHAR(50)
 );
+CREATE TABLE Prerequisites (
+    course_id INT,
+    prereq INT,
+    PRIMARY KEY (course_id, prereq),
+    FOREIGN KEY (course_id) REFERENCES Course(CourseID),
+    FOREIGN KEY (prereq) REFERENCES Course(CourseID)
+);
+drop table Prerequisites
 
 -- 7
 CREATE TABLE Modules (
@@ -120,7 +129,18 @@ CREATE TABLE Assessments (
     FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)on delete cascade on update cascade
 );
 
+
 -- 12
+CREATE TABLE Learning_activities (
+    ActivityID INT PRIMARY KEY identity,
+    ModuleID INT,
+    CourseID INT,
+    activity_type VARCHAR(50),
+    instruction_details VARCHAR(100),
+    Max_points INT,
+    FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)on delete cascade on update cascade
+);
+-- 13
 CREATE TABLE Interaction_log (
     LogID INT PRIMARY KEY identity,
     activity_ID INT,
@@ -132,16 +152,6 @@ CREATE TABLE Interaction_log (
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)on delete cascade on update cascade
 );
 
--- 13
-CREATE TABLE Learning_activities (
-    ActivityID INT PRIMARY KEY identity,
-    ModuleID INT,
-    CourseID INT,
-    activity_type VARCHAR(50),
-    instruction_details VARCHAR(100),
-    Max_points INT,
-    FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)on delete cascade on update cascade
-);
 
 -- 14
 CREATE TABLE Emotional_feedback (
@@ -270,8 +280,11 @@ CREATE TABLE FilledSurvey (
     LearnerID INT,
     Answer VARCHAR(50),
     PRIMARY KEY (SurveyID, Question, LearnerID),
-    FOREIGN KEY (SurveyID, Question) REFERENCES SurveyQuestions(SurveyID, Question)on delete cascade on update cascade,
+  FOREIGN KEY (SurveyID, Question) REFERENCES SurveyQuestions(SurveyID, Question)on delete cascade on update cascade,
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)on delete cascade on update cascade
+
+
+  
 );
 
 --28
@@ -355,7 +368,23 @@ CREATE TABLE Collaborative (
     PRIMARY KEY (QuestID),
     FOREIGN KEY (QuestID) REFERENCES Quest(QuestID)on delete cascade on update cascade
 );
-
+create table LearnersCollaboration(
+LearnerID int,
+QuestID int,
+completion_status nvarchar(MAX),
+Primary key(LearnerID,QuestID),
+foreign key(LearnerID) references Learner(LearnerID) ,
+foreign key(QuestID) references Collaborative(QuestID)
+);
+create table LearnerMastery(
+LearnerID int,
+QuestID int,
+skill varchar(50),
+completion_status nvarchar(MAX),
+Primary key(LearnerID,QuestID,skill),
+foreign key(LearnerID) references Learner(LearnerID) ,
+foreign key(QuestID,skill) references Skill_Mastery(QuestID,skill)
+);
 --37
 CREATE TABLE Discussion_forum (
     forumID INT PRIMARY KEY identity,
@@ -392,19 +421,10 @@ CREATE TABLE QuestReward (
 );
 --40(found in ERD but not found in schema)
 create table takesassesment(
-    learner_id int,
-    assesment_id int,
-    ScoredPoints int,
-    primary key(learner_id,assesment_id),
-    foreign key(learner_id)references Learner on delete cascade on update cascade,
-    foreign key(assesment_id)references Assessments on delete cascade on update cascade
-);
---41
-create table LearnerCollaborative(
-    Learner_id int,
-    quest_id int,
-    completion_status nvarchar(MAX),
-    primary key(Learner_id,quest_id),
-    foreign key(Learner_id) references Learner(LearnerID) on delete cascade on update cascade,
-    foreign key(quest_id) references Collaborative(QuestID)on delete cascade on update cascade
+learner_id int,
+assesment_id int,
+ScoredPoints int,
+primary key(learner_id,assesment_id),
+foreign key(learner_id)references Learner on delete cascade on update cascade,
+foreign key(assesment_id)references Assessments on delete cascade on update cascade
 );
