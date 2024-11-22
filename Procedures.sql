@@ -142,6 +142,272 @@ INSERT INTO Badge ( title, description, criteria, points) VALUES
 
 -- Joe
 
+
+--12
+go 
+create procedure CriteriaDelete
+@criteria varchar(50)
+as
+begin 
+delete from Quest 
+where criteria=@criteria
+end;
+exec CriteriaDelete 'Complete a beginner course'
+
+--13
+go
+create procedure NotificationUpdate
+@LearnerID int,
+@NotificationID int,
+@ReadStatus bit
+as
+begin
+if @ReadStatus=1
+begin
+update Notification
+set urgency_level='read'
+where ID = @NotificationID
+and exists (
+  select 1
+  from ReceivedNotification
+  where LearnerID = @LearnerID AND NotificationID = @NotificationID
+  );
+print 'notfication is read';
+end
+else
+begin
+delete from ReceivedNotification
+where LearnerID = @LearnerID and NotificationID = @NotificationID;
+print 'notfication deleted';
+end
+end;
+
+exec NotificationUpdate 2 ,2 ,1
+
+--14
+drop procedure EmotionalTrendAnalysis
+go 
+create procedure EmotionalTrendAnalysis
+ @CourseID int, @ModuleID int, @TimePeriod datetime
+ as
+ begin 
+ select ef.emotional_state,l.LearnerID
+ from  Emotional_feedback ef inner join Learner l on l.LearnerID=ef.LearnerID
+                             inner join Course_enrollment ce on ce.LearnerID=l.LearnerID
+                             inner join Modules m on ce.CourseID=m.CourseID
+                             inner join Course c  on m.CourseID=m.CourseID
+
+where c.CourseID=@CourseID and m.ModuleID = @ModuleID and ce.enrollment_date<=@TimePeriod and ce.completion_date>=@TimePeriod
+end;
+exec EmotionalTrendAnalysis 3,2,'2024-11-10 11:30:00'
+
+--1
+CREATE PROCEDURE ProfileUpdate
+    @LearnerID INT,
+    @ProfileID INT,
+    @PreferedContentType VARCHAR(50),
+    @emotional_state VARCHAR(50),
+    @PersonalityType VARCHAR(50)
+AS
+BEGIN
+
+        -- Update the profile with the new details
+        UPDATE PersonalizationProfiles
+        SET 
+            Prefered_content_type = @PreferedContentType,
+            emotional_state = @emotional_state,
+            personality_type = @PersonalityType
+        WHERE LearnerID = @LearnerID AND ProfileID = @ProfileID;
+
+        
+  
+END;
+exec ProfileUpdate  1,101,'speaking','sad','shy'
+
+--2
+
+go
+create procedure TotalPoints
+@LearnerID int, @RewardType varchar(50)
+as
+begin
+select sum(r.value)
+from Reward r inner join QuestReward qr on r.RewardID=qr.RewardID
+
+where qr.LearnerID=@LearnerID and r.type=@Rewardtype
+end 
+
+exec TotalPoints 4,'Points'
+
+--3
+go
+create procedure EnrolledCourses
+    @LearnerID int
+AS
+BEGIN
+select c.Title ,c.CourseID
+from Course_enrollment ce inner join Learner l on l.LearnerID=ce.LearnerID
+                          inner join Course c on c.CourseID=ce.CourseID
+where l.LearnerID=@LearnerID
+end
+
+exec EnrolledCourses 2
+
+
+GO
+CREATE PROCEDURE Prerequisites
+    @LearnerID INT,
+    @CourseID INT,
+    @StatusMessage VARCHAR(100) OUTPUT
+AS
+BEGIN
+    
+    DECLARE @Prerequisites VARCHAR(100);
+    SELECT @Prerequisites = pre_requisites
+    FROM Course
+    WHERE CourseID = @CourseID;
+
+    IF @Prerequisites IS NULL OR @Prerequisites = ''
+    BEGIN
+        SET @StatusMessage = 'No prerequisites required for this course.';
+        RETURN;
+    END
+
+    -- Check if all prerequisites are completed by the learner
+    IF NOT EXISTS (
+        SELECT 1
+        FROM Course_enrollment ce
+        WHERE ce.LearnerID = @LearnerID
+          AND ce.CourseID IN (SELECT value FROM STRING_SPLIT(@Prerequisites, ','))
+          AND ce.status = 'Completed'
+    )
+    BEGIN
+        SET @StatusMessage = 'Prerequisites are not yet completed.';
+    END
+    ELSE
+    BEGIN
+        SET @StatusMessage = 'All prerequisites are completed.';
+    END
+END;
+GO
+
+--5
+go
+create procedure Moduletraits
+@TargetTrait varchar(50), 
+@CourseID int
+as
+begin
+select m.Title ,m.ModuleID 
+from Modules m inner join Target_traits tt ON m.ModuleID = tt.ModuleID AND m.CourseID = tt.CourseID    
+where tt.Trait = @TargetTrait  AND m.CourseID = @CourseID;
+end;
+exec Moduletraits 'Creativity',3
+
+--6
+go
+create procedure LeaderboardRank
+@LeaderboardID int
+as
+begin 
+select l.first_name,l.last_name ,r.rank,r.total_points
+from Learner l inner join Ranking r on l.LearnerID=r.LearnerID
+where r.BoardID=@LeaderboardID
+order by r.rank
+end
+
+exec LeaderboardRank 4
+
+--7
+CREATE PROCEDURE ViewMyDeviceCharge
+    @ActivityID INT,
+    @LearnerID INT,
+    @timestamp TIME,
+    @emotionalstate VARCHAR(50)
+AS
+BEGIN
+    -- Check if the activity exists
+    IF EXISTS (
+        SELECT 1
+        FROM Learning_activities
+        WHERE ActivityID = @ActivityID
+    )
+    BEGIN
+        -- Check if the learner exists
+        IF EXISTS (
+            SELECT 1
+            FROM Learner
+            WHERE LearnerID = @LearnerID
+        )
+        BEGIN
+            -- Insert emotional feedback
+            INSERT INTO Emotional_feedback (FeedbackID, LearnerID, timestamp, emotional_state)
+            VALUES (
+                (SELECT ISNULL(MAX(FeedbackID), 0) + 1 FROM Emotional_feedback), -- Generate new FeedbackID
+                @LearnerID,
+                GETDATE(),
+                @emotionalstate
+            );
+
+            PRINT 'Emotional feedback submitted successfully.';
+        END
+        ELSE
+        BEGIN
+            PRINT 'Error: Learner does not exist.';
+        END
+    END
+    ELSE
+    BEGIN
+        PRINT 'Error: Activity does not exist.';
+    END
+END;
+
+
+--8
+CREATE PROCEDURE JoinQuest
+    @LearnerID INT,
+    @QuestID INT
+AS
+BEGIN
+    DECLARE @MaxParticipants INT;
+    DECLARE @CurrentParticipants INT;
+
+    -- Get the maximum number of participants for the quest
+    SELECT @MaxParticipants = max_num_participants
+    FROM Collaborative
+    WHERE QuestID = @QuestID;
+
+    -- Check if the quest exists
+    IF @MaxParticipants IS NULL
+    BEGIN
+        PRINT 'Error: Quest does not exist.';
+        RETURN;
+    END
+
+    -- Count current participants for the quest
+    SELECT @CurrentParticipants = COUNT(*)
+    FROM QuestReward
+    WHERE QuestID = @QuestID;
+
+    -- Check if space is available
+    IF @CurrentParticipants < @MaxParticipants
+    BEGIN
+        -- Add the learner to the quest
+        INSERT INTO QuestReward (RewardID, QuestID, LearnerID, Time_earned)
+        VALUES (
+            (SELECT ISNULL(MAX(RewardID), 0) + 1 FROM QuestReward), -- Generate new RewardID
+            @QuestID,
+            @LearnerID,
+            GETDATE()
+        );
+
+        PRINT 'Approval: You have successfully joined the quest.';
+    END
+    ELSE
+    BEGIN
+        PRINT 'Rejection: No space available in the quest.';
+    END
+END;
 --Ibrahim
 --Learner9
 Go
