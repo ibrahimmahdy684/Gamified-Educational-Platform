@@ -626,3 +626,167 @@ exec LeaderboardFilter 2
 --INSTRUCTOR PROCEDURES
 
 -- Mariam
+--9 (what value to update to?)
+GO
+CREATE PROCEDURE GradeUpdate(@LearnerID AS int, @AssessmentID AS int)
+AS
+BEGIN
+    UPDATE takesassesment
+    SET ScoredPoints = 
+    WHERE learner_id=@LearnerID AND assesment_id=@AssessmentID
+END
+
+--10 (notification id is identity)
+GO
+CREATE PROCEDURE AssessmentNot
+( 
+    @NotificationID AS int, 
+    @timestamp AS DATETIME, 
+    @message AS varchar(max), 
+    @urgencylevel AS varchar(50), 
+    @LearnerID AS int
+)
+AS
+BEGIN
+     SET IDENTITY_INSERT Notification ON;
+     INSERT INTO Notification(ID, timestamp, message, urgency_level)
+     VALUES (@NotificationID, @timestamp, @message, @urgencylevel)
+     SET IDENTITY_INSERT Notification OFF;
+
+     INSERT INTO ReceivedNotification (NotificationID, LearnerID)
+     VALUES (@NotificationID, @LearnerID)
+
+     print 'Sent notification: ' + CAST(@NotificationID as varchar) + 
+     ' to learner: ' + CAST(@LearnerID as varchar)
+END
+EXEC AssessmentNot 15, '2024-11-15 10:00:00', 'test', 'test', 1 
+/* testing
+Select * from Notification
+*/
+
+--11 (goal id is identity)
+GO
+CREATE PROCEDURE NewGoal 
+(
+    @GoalID AS int, 
+    @status AS varchar(max), 
+    @deadline AS DATETIME, 
+    @description AS varchar(max)
+)
+AS
+BEGIN
+    SET IDENTITY_INSERT Learning_goal ON;
+
+    INSERT INTO Learning_goal (ID, status, deadline, description) VALUES
+    (@GoalID, @status, @deadline, @description)
+
+    SET IDENTITY_INSERT Learning_goal OFF;
+END
+EXEC NewGoal 15, 'test', '1/1/2005', 'test'
+/* testing
+select * 
+from Learning_goal*/
+
+--12
+GO
+CREATE PROCEDURE LearnersCourses(@CourseID AS int, @InstructorID AS int)
+AS
+BEGIN
+    SELECT CourseID
+    FROM Course_enrollment 
+    INNER JOIN 
+    WHERE CourseID=@CourseID AND InstructorID=@InstructorID
+END
+
+--13
+GO 
+CREATE PROCEDURE LastActive(@ForumID AS int, @lastactive AS datetime output)
+AS
+BEGIN
+SELECT last_active
+FROM Discussion_forum 
+WHERE ForumID=@ForumID AND lastactive=@lastactive
+END
+
+--14
+GO
+CREATE PROCEDURE CommonEmotiobnalState(@state AS varchar(50) output)
+AS
+BEGIN
+SELECT
+FROM
+WHERE
+END
+
+--15
+GO 
+CREATE PROCEDURE ModuleDifficulty(@courseID AS int)
+AS
+BEGIN
+SELECT difficulty
+FROM Modules 
+INNER JOIN
+WHERE courseID=@courseID
+END
+
+--16
+GO
+CREATE PROCEDURE Profeciencylevel(@LearnerID AS int, @skill AS varchar(50) Output)
+AS
+BEGIN
+SELECT proficiency_level
+FROM SkillProgression
+WHERE LearnerID=@LearnerID AND skill=@skill
+END
+
+--17
+GO 
+CREATE PROCEDURE  ProfeciencyUpdate( @Skill AS varchar(50), @LearnerId AS int, @Level AS varchar(50))
+AS
+BEGIN
+SELECT proficiency_level
+FROM SkillProgression
+INNER JOIN
+WHERE Skill=@Skill AND LearnerId=@LearnerId AND Level=@Level
+END
+
+--18
+GO
+CREATE PROCEDURE LeastBadge (@LearnerID AS int Output)
+AS
+BEGIN
+SELECT
+FROM Badge 
+WHERE LearnerID=@LearnerID
+END
+
+--19
+GO 
+CREATE PROCEDURE PreferedType(@type AS varchar(50) output)
+AS
+BEGIN 
+SELECT preference
+FROM LearningPreference
+WHERE type=@tpe
+END
+
+--20
+GO
+CREATE PROCEDURE AssessmentAnalytics(@CourseID AS int, @ModuleID AS int)
+AS
+BEGIN
+SELECT 
+FROM 
+WHERE CourseID=@CourseID AND ModuleID=@ModuleID
+END
+
+--21
+GO
+CREATE PROCEDURE EmotionalTrendAnalysis(@CourseID AS int, @ModuleID AS int, @TimePeriod AS varchar(50))
+AS
+BEGIN
+SELECT 
+FROM Emotional_feedback
+INNER JOIN
+WHERE CourseID=@CourseID AND ModuleID=@ModuleID AND TimePeriod=@TimePeriod
+END
