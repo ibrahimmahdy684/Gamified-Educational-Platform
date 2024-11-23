@@ -687,15 +687,26 @@ EXEC NewGoal 15, 'test', '1/1/2005', 'test'
 select * 
 from Learning_goal*/
 
---12
+--12 (what is the purpose of courseid?)
 GO
-CREATE PROCEDURE LearnersCourses(@CourseID AS int, @InstructorID AS int)
+CREATE PROCEDURE LearnersCourses
+(
+    @CourseID AS INT, 
+    @InstructorID AS INT
+)
 AS
 BEGIN
-    SELECT CourseID
-    FROM Course_enrollment 
+    SELECT 
+        ce.LearnerID,
+        ce.CourseID
+    FROM 
+        Course_enrollment ce
     INNER JOIN 
-    WHERE CourseID=@CourseID AND InstructorID=@InstructorID
+        Teaches t
+        ON ce.CourseID = t.CourseID
+    WHERE 
+        t.InstructorID = @InstructorID
+        AND (@CourseID = @CourseID);
 END
 
 --13
@@ -703,90 +714,131 @@ GO
 CREATE PROCEDURE LastActive(@ForumID AS int, @lastactive AS datetime output)
 AS
 BEGIN
-SELECT last_active
-FROM Discussion_forum 
-WHERE ForumID=@ForumID AND lastactive=@lastactive
+    SELECT last_active
+    FROM Discussion_forum 
+    WHERE Discussion_forum.forumID=@ForumID
 END
+
+DECLARE @lastactive DATETIME
+EXEC LastActive 1, @lastactive = @lastactive OUTPUT;
 
 --14
 GO
-CREATE PROCEDURE CommonEmotiobnalState(@state AS varchar(50) output)
+CREATE PROCEDURE CommonEmotionalState(@state AS varchar(50) output)
 AS
 BEGIN
-SELECT
-FROM
-WHERE
+    SELECT TOP 1 emotional_state
+    FROM Emotional_feedback
+    GROUP BY emotional_state
+    ORDER BY COUNT(*) DESC
 END
+DECLARE @state VARCHAR(50)
+EXEC CommonEmotionalState @state = @state OUTPUt;
+/* testing
+INSERT INTO Emotional_feedback ( LearnerID, timestamp, emotional_state) VALUES
+( 1, '2024-11-15 10:30:00', 'Happy')
+select * from Emotional_feedback*/
 
 --15
 GO 
 CREATE PROCEDURE ModuleDifficulty(@courseID AS int)
 AS
 BEGIN
-SELECT difficulty
-FROM Modules 
-INNER JOIN
-WHERE courseID=@courseID
+    SELECT *
+    FROM Modules 
+    WHERE Modules.CourseID = @courseID
+    ORDER BY Modules.difficulty
 END
+EXEC ModuleDifficulty 1
 
---16
+--16 (profeciency level is not numeric)
 GO
 CREATE PROCEDURE Profeciencylevel(@LearnerID AS int, @skill AS varchar(50) Output)
 AS
 BEGIN
-SELECT proficiency_level
-FROM SkillProgression
-WHERE LearnerID=@LearnerID AND skill=@skill
+    SELECT TOP 1 skill_name
+    FROM SkillProgression
+    WHERE LearnerID=@LearnerID
+    ORDER BY proficiency_level DESC
 END
+DECLARE @skill VARCHAR(50)
+EXEC Profeciencylevel 2, @skill = @skill OUTPUT
+/*testing 
+SELECT * from SkillProgression
+*/
 
 --17
 GO 
 CREATE PROCEDURE  ProfeciencyUpdate( @Skill AS varchar(50), @LearnerId AS int, @Level AS varchar(50))
 AS
 BEGIN
-SELECT proficiency_level
-FROM SkillProgression
-INNER JOIN
-WHERE Skill=@Skill AND LearnerId=@LearnerId AND Level=@Level
+    UPDATE SkillProgression 
+    SET proficiency_level = @Level
+    WHERE skill_name=@Skill AND LearnerId=@LearnerId
 END
+EXEC ProfeciencyUpdate 'Creative Writing', 5, 'Beginner'
+-- testing SELECT * from SkillProgression
 
 --18
 GO
 CREATE PROCEDURE LeastBadge (@LearnerID AS int Output)
 AS
 BEGIN
-SELECT
-FROM Badge 
-WHERE LearnerID=@LearnerID
+    SELECT TOP 1 LearnerID
+    FROM Achievement 
+    GROUP BY LearnerID
+    ORDER BY COUNT(BadgeID) ASC
 END
+DECLARE @LearnerID INT
+EXEC LeastBadge @LearnerID = @LearnerID OUTPUT
+--SELECT * from Achievement
 
 --19
 GO 
 CREATE PROCEDURE PreferedType(@type AS varchar(50) output)
 AS
 BEGIN 
-SELECT preference
-FROM LearningPreference
-WHERE type=@tpe
+    SELECT TOP 1 preference
+    FROM LearningPreference
+    GROUP BY preference
+    ORDER BY Count(LearnerID) DESC
 END
+DECLARE @type VARCHAR(50)
+EXEC PreferedType @type = @type OUTPUT
+--Select * from LearningPreference
 
 --20
 GO
 CREATE PROCEDURE AssessmentAnalytics(@CourseID AS int, @ModuleID AS int)
 AS
 BEGIN
-SELECT 
-FROM 
-WHERE CourseID=@CourseID AND ModuleID=@ModuleID
+    SELECT 
+        a.ID AS AssessmentID,
+        a.title AS AssessmentTitle,
+        a.total_marks,
+        a.passing_marks,
+        AVG(t.ScoredPoints) AS AverageScore
+    FROM Assessments a
+    INNER JOIN 
+        takesassesment t ON a.ID = t.assesment_id
+    WHERE 
+        a.CourseID = @CourseID
+        AND a.ModuleID = @ModuleID
+    GROUP BY 
+        a.ID, a.title, a.total_marks, a.passing_marks
+    ORDER BY 
+        a.ID;
 END
+drop procedure AssessmentAnalytics
+EXEC AssessmentAnalytics 1, 1
+/* testing
+SELECT * from takesassesment
+Select * from Assessments*/
 
 --21
 GO
 CREATE PROCEDURE EmotionalTrendAnalysis(@CourseID AS int, @ModuleID AS int, @TimePeriod AS varchar(50))
 AS
 BEGIN
-SELECT 
-FROM Emotional_feedback
-INNER JOIN
-WHERE CourseID=@CourseID AND ModuleID=@ModuleID AND TimePeriod=@TimePeriod
+
 END

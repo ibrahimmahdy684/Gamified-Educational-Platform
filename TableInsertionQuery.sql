@@ -29,7 +29,8 @@ VALUES
 (3, 'Interactive'),
 (3, 'Self-paced'),
 (4, 'Collaborative'),
-(5, 'Hands-on');
+(5, 'Hands-on'),
+(5, 'Visual');
 
 --Insertion into PersonalizationProfiles 
 INSERT INTO PersonalizationProfiles (LearnerID, ProfileID, Prefered_content_type, emotional_state, personality_type)
@@ -78,6 +79,7 @@ VALUES
 INSERT INTO Modules (CourseID, Title, difficulty, contentURL)
 VALUES 
 ( 1, 'Introduction to Variables', 'Beginner', 'https://example.com/course1/module1'),
+( 1, 'Mastering Variables', 'Advanced', 'https://example.com/course1/module1'),
 ( 1, 'Control Structures in Programming', 'Beginner', 'https://example.com/course1/module2'),
 ( 1, 'Functions and Loops', 'Beginner', 'https://example.com/course1/module3'),
 ( 2, 'Data Cleaning and Preparation', 'Advanced', 'https://example.com/course2/module1'),
@@ -178,6 +180,7 @@ VALUES
 INSERT INTO Emotional_feedback ( LearnerID, timestamp, emotional_state)
 VALUES
 ( 1, '2024-11-15 10:30:00', 'Happy'),
+( 1, '2024-11-14 10:30:00', 'Happy'),
 ( 2, '2024-11-15 11:00:00', 'Focused'),
 ( 2, '2024-11-15 11:30:00', 'Anxious'),
 ( 3, '2024-11-15 12:00:00', 'Calm'),
@@ -382,6 +385,8 @@ INSERT INTO Achievement (LearnerID, BadgeID, description, date_earned, type)
 VALUES
 ( 1, 1, 'Completed Introduction to Programming', '2024-11-15 10:30:00', 'Skill'),
 ( 2, 2, 'Mastered Advanced Data Analysis Techniques', '2024-11-15 11:30:00', 'Skill'),
+( 3, 3, 'Demonstrated Proficiency in Graphic Design', '2024-11-15 12:30:00', 'Skill'),
+( 4, 4, 'Delivered Outstanding Public Speaking Presentation', '2024-11-15 13:30:00', 'Skill'),
 ( 3, 3, 'Demonstrated Proficiency in Graphic Design', '2024-11-15 12:30:00', 'Skill'),
 ( 4, 4, 'Delivered Outstanding Public Speaking Presentation', '2024-11-15 13:30:00', 'Skill'),
 ( 5, 5, 'Completed Creative Writing Workshop with Excellence', '2024-11-15 14:30:00', 'Skill'),
