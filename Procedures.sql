@@ -1,8 +1,7 @@
 ﻿USE GamifiedPlatform
 
---ADMIN PROCEDURES
+------ADMIN PROCEDURES----------
 
--- Maher
 --1
 GO
 CREATE PROCEDURE ViewInfo (@LearnerID AS INT)
@@ -140,9 +139,6 @@ SELECT * FROM Badge
 INSERT INTO Badge ( title, description, criteria, points) VALUES
 ( 'test', 'test', 'test', 10)*/
 
--- Joe
-
-
 --12
 go 
 create procedure CriteriaDelete
@@ -201,7 +197,10 @@ where c.CourseID=@CourseID and m.ModuleID = @ModuleID and ce.enrollment_date<=@T
 end;
 exec EmotionalTrendAnalysis 3,2,'2024-11-10 11:30:00'
 
+-----------LEARNER PROCEDURES-----------
+
 --1
+GO
 CREATE PROCEDURE ProfileUpdate
     @LearnerID INT,
     @ProfileID INT,
@@ -225,7 +224,6 @@ END;
 exec ProfileUpdate  1,101,'speaking','sad','shy'
 
 --2
-
 go
 create procedure TotalPoints
 @LearnerID int, @RewardType varchar(50)
@@ -253,7 +251,7 @@ end
 
 exec EnrolledCourses 2
 
-
+--4
 GO
 CREATE PROCEDURE Prerequisites
     @LearnerID INT,
@@ -319,6 +317,7 @@ end
 exec LeaderboardRank 4
 
 --7
+GO
 CREATE PROCEDURE ViewMyDeviceCharge
     @ActivityID INT,
     @LearnerID INT,
@@ -407,7 +406,8 @@ BEGIN
     BEGIN
         PRINT 'Rejection: No space available in the quest.';
     END
-END;--Ibrahim
+END;
+
 --Learner9
 Go
 create proc SkillsProfeciency
@@ -621,11 +621,219 @@ order by rank desc
 end
  
 exec LeaderboardFilter 2
--- Darwish
 
---INSTRUCTOR PROCEDURES
+-----------INSTRUCTOR PROCEDURES-----------
 
--- Mariam
+--1 no data !!!!!!!!
+GO
+CREATE PROCEDURE SkillLearners (@Skillname VARCHAR(50))
+AS
+BEGIN
+    SELECT 
+        s.skill,
+        l.LearnerID,
+        l.first_name,
+        l.last_name
+    FROM 
+        Skills s
+    JOIN 
+        Learner l ON s.LearnerID = l.LearnerID
+    WHERE 
+        s.skill = @Skillname;
+END;
+GO
+EXEC SkillLearners @Skillname = 'Python';
+
+--2
+GO
+CREATE PROCEDURE NewActivity 
+(
+    @CourseID INT, 
+    @ModuleID INT, 
+    @activitytype VARCHAR(50), 
+    @instructiondetails VARCHAR(MAX),
+    @maxpoints INT
+)
+AS
+BEGIN
+    INSERT INTO Learning_activities 
+    (CourseID, ModuleID, activity_type, instruction_details, Max_points)
+    VALUES 
+    (@CourseID, @ModuleID, @activitytype, @instructiondetails, @maxpoints);
+    
+    PRINT 'New activity added successfully!';
+END;
+EXEC NewActivity 
+    @CourseID = 1,  
+    @ModuleID = 2,  
+    @activitytype = 'Quiz',  
+    @instructiondetails = 'Complete the quiz by answering all questions correctly.',  
+    @maxpoints = 20;  
+
+--3
+DROP PROCEDURE IF EXISTS NewAchievement;
+GO
+
+CREATE PROCEDURE NewAchievement
+(
+    @LearnerID INT, 
+    @BadgeID INT, 
+    @description VARCHAR(MAX), 
+    @date_earned DATE, 
+    @type VARCHAR(50)
+)
+AS
+BEGIN
+    INSERT INTO Achievement 
+    (LearnerID, BadgeID, description, date_earned, type)
+    VALUES 
+    (@LearnerID, @BadgeID, @description, @date_earned, @type);
+    
+    PRINT 'Achievement awarded successfully!';
+END;
+GO
+EXEC NewAchievement 
+    @LearnerID = 1, 
+    @BadgeID = 1, 
+    @description = 'Awarded for completing the Python course.', 
+    @date_earned = '2024-11-23', 
+    @type = 'Course Completion';
+
+--4
+GO
+CREATE PROCEDURE LearnerBadge 
+    @BadgeID INT
+AS
+BEGIN
+    SELECT 
+        l.LearnerID,
+        l.first_name,
+        l.last_name,
+        a.date_earned,
+        b.title AS BadgeTitle
+    FROM 
+        Achievement a
+    JOIN 
+        Learner l ON a.LearnerID = l.LearnerID
+    JOIN 
+        Badge b ON a.BadgeID = b.BadgeID
+    WHERE 
+        a.BadgeID = @BadgeID
+    ORDER BY 
+        l.last_name, l.first_name;
+END;
+GO
+
+EXEC LearnerBadge @BadgeID = 1;  
+
+--5
+GO
+CREATE PROCEDURE NewPath
+(
+    @LearnerID INT, 
+    @ProfileID INT, 
+    @completion_status VARCHAR(50), 
+    @custom_content VARCHAR(MAX), 
+    @adaptiverules VARCHAR(MAX)
+)
+AS
+BEGIN
+    INSERT INTO Learning_path
+    (LearnerID, ProfileID, completion_status, custom_content, adaptive_rules)
+    VALUES
+    (@LearnerID, @ProfileID, @completion_status, @custom_content, @adaptiverules);
+    
+    PRINT 'Learning path added successfully!';
+END;
+GO
+EXEC NewPath 
+    @LearnerID = 1, 
+    @ProfileID = 101, 
+    @completion_status = 'In Progress', 
+    @custom_content = 'Extra tutorials on Python basics.', 
+    @adaptiverules = 'Adaptive learning based on quiz scores.';
+
+--6
+GO
+CREATE PROCEDURE TakenCourses (@LearnerID INT)
+AS
+BEGIN
+    SELECT 
+        c.CourseID, 
+        c.Title, 
+        c.learning_objective, 
+        ce.status
+    FROM 
+        Course c
+    JOIN 
+        Course_enrollment ce ON c.CourseID = ce.CourseID
+    WHERE 
+        ce.LearnerID = @LearnerID;
+END;
+GO
+EXEC TakenCourses @LearnerID = 1;  
+
+--7
+GO
+CREATE PROCEDURE CollaborativeQuest
+(
+    @difficulty_level VARCHAR(50), 
+    @criteria VARCHAR(50), 
+    @description VARCHAR(50), 
+    @title VARCHAR(50), 
+    @Maxnumparticipants INT, 
+    @deadline DATETIME
+)
+AS
+BEGIN
+  
+    INSERT INTO Quest 
+    (difficulty_level, criteria, description, title)
+    VALUES
+    (@difficulty_level, @criteria, @description, @title);
+    
+   
+    DECLARE @QuestID INT = SCOPE_IDENTITY();
+    
+    
+    INSERT INTO Collaborative 
+    (QuestID, deadline, max_num_participants)
+    VALUES 
+    (@QuestID, @deadline, @Maxnumparticipants);
+    
+   
+   
+END;
+GO
+EXEC CollaborativeQuest 
+    @difficulty_level = 'Hard', 
+    @criteria = 'Complete 5 challenges', 
+    @description = 'A challenging quest to test your skills.', 
+    @title = 'Ultimate Challenge', 
+    @Maxnumparticipants = 10, 
+    @deadline = '2024-12-31';
+
+--8
+GO
+CREATE PROCEDURE DeadlineUpdate
+(
+    @QuestID INT, 
+    @deadline DATETIME
+)
+AS
+BEGIN
+    
+    UPDATE Collaborative
+    SET deadline = @deadline
+    WHERE QuestID = @QuestID;
+   
+    PRINT 'Quest deadline updated successfully!';
+END;
+GO
+EXEC DeadlineUpdate 
+    @QuestID = 1, 
+    @deadline = '2024-12-31 23:59:59';
+
 --9 (what value to update to?)
 GO
 CREATE PROCEDURE GradeUpdate(@LearnerID AS int, @AssessmentID AS int)
