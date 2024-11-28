@@ -436,15 +436,16 @@ print @score
 --Learner11
 
 Go 
-create proc AssessmentsList(@courseID int,@ModuleID int)
+create proc AssessmentsList(@courseID int,@ModuleID int,@LearnerID int)
 AS
 begin
 select a.title,t.ScoredPoints
 from takesassesment t inner join Assessments a on  t.assesment_id=a.ID 
 inner join Learner l on l.LearnerID=t.learner_id
-where a.ModuleID=@ModuleID AND a.CourseID=@courseID
+where a.ModuleID=@ModuleID AND a.CourseID=@courseID AND t.learner_id=@LearnerID
 end
-exec AssessmentsList 2,4
+
+exec AssessmentsList 2,4,2
 
 --Learner12
 Go
@@ -489,7 +490,7 @@ AS
 begin
 insert into LearnerDiscussion(ForumID,LearnerID,Post) values (@LearnerID,@DiscussionID,@Post);
 end
-exec Post 7,4,'test'
+exec Post 6,5,'hhh'
 /*test
 select *
 from LearnerDiscussion*/
@@ -500,7 +501,7 @@ As
 Begin 
 insert into LearnersGoals(GoalID,LearnerID)values(@LearnerID,@GoalID)
 End
-exec AddGoal 4,5
+exec AddGoal 4,2
 /*test
 select *
 from LearnersGoals*/
@@ -622,7 +623,6 @@ order by rank desc
 end
  
 exec LeaderboardFilter 2
-
 -----------INSTRUCTOR PROCEDURES-----------
 
 GO
