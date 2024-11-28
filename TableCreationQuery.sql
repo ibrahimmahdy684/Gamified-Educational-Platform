@@ -67,8 +67,8 @@ CREATE TABLE Prerequisites (
     course_id INT,
     prereq INT,
     PRIMARY KEY (course_id, prereq),
-    FOREIGN KEY (course_id) REFERENCES Course(CourseID),
-    FOREIGN KEY (prereq) REFERENCES Course(CourseID)
+    FOREIGN KEY (course_id) REFERENCES Course(CourseID) on delete cascade on update cascade,
+    FOREIGN KEY (prereq) REFERENCES Course(CourseID) on delete cascade on update cascade
 );
 
 
@@ -382,8 +382,8 @@ QuestID int,
 skill varchar(50),
 completion_status nvarchar(MAX),
 Primary key(LearnerID,QuestID,skill),
-foreign key(LearnerID) references Learner(LearnerID) ,
-foreign key(QuestID,skill) references Skill_Mastery(QuestID,skill)
+foreign key(LearnerID) references Learner(LearnerID) on delete cascade on update cascade,
+foreign key(QuestID,skill) references Skill_Mastery(QuestID,skill) on delete cascade on update cascade
 );
 --37
 CREATE TABLE Discussion_forum (

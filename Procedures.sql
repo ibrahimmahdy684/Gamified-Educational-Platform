@@ -58,7 +58,7 @@ BEGIN
 END
 EXEC InstructorReview 2
 
---6 (how to remove dependancies?)
+--6 
 GO
 CREATE PROCEDURE CourseRemove (@courseID AS INT)
 AS
@@ -72,7 +72,7 @@ select * from Course
 INSERT INTO Course (CourseID, Title, learning_objective, credit_points, difficulty_level, pre_requisites, description)
 VALUES (10, 'Introduction to Programming', 'Learn the basics of coding', 4, 'Beginner', 'None', 'A beginner-level course.')*/
 
---7 (do i need to display the course itself?)
+--7 
 GO
 CREATE PROCEDURE Highestgrade 
 AS
@@ -105,7 +105,7 @@ BEGIN
 END
 EXEC ViewNot 2
 
---10 (trigger?)(do i need to check if midule or course exists?)
+--10 
 GO 
 CREATE PROCEDURE CreateDiscussion 
 (
@@ -123,7 +123,7 @@ END
 SELECT * FROM Discussion_forum
 EXEC CreateDiscussion 1, 1, 'TEST', 'test description'
 
---11 (do i need to check if it exists?)
+--11 
 GO
 CREATE PROCEDURE RemoveBadge (@BadgeID AS INT)
 AS
@@ -363,6 +363,7 @@ END;
 
 
 --8
+go
 CREATE PROCEDURE JoinQuest
     @LearnerID INT,
     @QuestID INT
@@ -624,7 +625,6 @@ exec LeaderboardFilter 2
 
 -----------INSTRUCTOR PROCEDURES-----------
 
---1 no data !!!!!!!!
 GO
 CREATE PROCEDURE SkillLearners (@Skillname VARCHAR(50))
 AS
@@ -642,7 +642,7 @@ BEGIN
         s.skill = @Skillname;
 END;
 GO
-EXEC SkillLearners @Skillname = 'Python';
+EXEC SkillLearners @Skillname = 'Leadership';
 
 --2
 GO
@@ -834,17 +834,19 @@ EXEC DeadlineUpdate
     @QuestID = 1, 
     @deadline = '2024-12-31 23:59:59';
 
---9 (what value to update to?)
+--9 
 GO
-CREATE PROCEDURE GradeUpdate(@LearnerID AS int, @AssessmentID AS int)
+CREATE PROCEDURE GradeUpdate(@LearnerID AS int, @AssessmentID AS int, @points INT)
 AS
 BEGIN
     UPDATE takesassesment
-    SET ScoredPoints = 
+    SET ScoredPoints = @points
     WHERE learner_id=@LearnerID AND assesment_id=@AssessmentID
 END
+EXEC GradeUpdate 1, 2, 12
+--select * from takesassesment
 
---10 (notification id is identity)
+--10
 GO
 CREATE PROCEDURE AssessmentNot
 ( 
@@ -872,7 +874,7 @@ EXEC AssessmentNot 15, '2024-11-15 10:00:00', 'test', 'test', 1
 Select * from Notification
 */
 
---11 (goal id is identity)
+--11 
 GO
 CREATE PROCEDURE NewGoal 
 (
@@ -959,18 +961,27 @@ BEGIN
 END
 EXEC ModuleDifficulty 1
 
---16 (profeciency level is not numeric)
+--16 
 GO
 CREATE PROCEDURE Profeciencylevel(@LearnerID AS int, @skill AS varchar(50) Output)
 AS
 BEGIN
-    SELECT TOP 1 skill_name
+    SELECT TOP 1 @skill=skill_name
     FROM SkillProgression
     WHERE LearnerID=@LearnerID
-    ORDER BY proficiency_level DESC
+    ORDER BY 
+        CASE  
+            WHEN proficiency_level = 'Expert' THEN 1
+            WHEN proficiency_level = 'Advanced' THEN 2
+            WHEN proficiency_level = 'Intermediate' THEN 3
+            WHEN proficiency_level = 'Beginner' THEN 4
+            Else 5
+            END
 END
 DECLARE @skill VARCHAR(50)
-EXEC Profeciencylevel 2, @skill = @skill OUTPUT
+EXEC Profeciencylevel 1, @skill = @skill OUTPUT
+print @skill
+drop procedure Profeciencylevel
 /*testing 
 SELECT * from SkillProgression
 */
@@ -1037,13 +1048,12 @@ BEGIN
     ORDER BY 
         a.ID;
 END
-drop procedure AssessmentAnalytics
 EXEC AssessmentAnalytics 1, 1
 /* testing
 SELECT * from takesassesment
 Select * from Assessments*/
 
---21
+--21 (CAN"T UNDERSTAND)
 GO
 CREATE PROCEDURE EmotionalTrendAnalysis(@CourseID AS int, @ModuleID AS int, @TimePeriod AS varchar(50))
 AS

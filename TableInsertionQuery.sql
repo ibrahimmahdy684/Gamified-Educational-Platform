@@ -13,6 +13,7 @@ VALUES
 INSERT INTO Skills (LearnerID, skill)
 VALUES
 (1, 'Programming'),
+(1, 'Leadership'),
 (1, 'Problem Solving'),
 (2, 'Graphic Design'),
 (2, 'Public Speaking'),
