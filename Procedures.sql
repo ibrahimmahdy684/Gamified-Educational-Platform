@@ -907,27 +907,38 @@ EXEC NewGoal 15, 'test', '1/1/2005', 'test'
 select * 
 from Learning_goal*/
 
---12 (what is the purpose of courseid?)
+
+--12 
+
 GO
 CREATE PROCEDURE LearnersCourses
-(
-    @CourseID AS INT, 
-    @InstructorID AS INT
-)
+    @CourseID INT,
+    @InstructorID INT
 AS
 BEGIN
     SELECT 
-        ce.LearnerID,
-        ce.CourseID
+        L.LearnerID,
+        L.first_name,
+        L.last_name,
+        L.gender,
+        L.birth_date,
+        L.country,
+        L.cultural_background,
+        C.Title AS CourseTitle
     FROM 
-        Course_enrollment ce
+        Course_enrollment CE
     INNER JOIN 
-        Teaches t
-        ON ce.CourseID = t.CourseID
+        Learner L ON CE.LearnerID = L.LearnerID
+    INNER JOIN 
+        Course C ON CE.CourseID = C.CourseID
+    INNER JOIN 
+        Teaches T ON T.CourseID = C.CourseID
     WHERE 
-        t.InstructorID = @InstructorID
-        AND (@CourseID = @CourseID);
-END
+        T.InstructorID = @InstructorID
+        AND (@CourseID IS NULL OR C.CourseID = @CourseID);
+END;
+
+exec LearnersCourses 1,1
 
 --13
 GO 
@@ -1063,10 +1074,31 @@ EXEC AssessmentAnalytics 1, 1
 SELECT * from takesassesment
 Select * from Assessments*/
 
---21 (CAN"T UNDERSTAND)
-GO
-CREATE PROCEDURE EmotionalTrendAnalysis(@CourseID AS int, @ModuleID AS int, @TimePeriod AS varchar(50))
+--21 
+
+Go
+CREATE PROCEDURE EmotionalTrendAnalysisIns
+    @CourseID INT,
+    @ModuleID INT,
+    @TimePeriod DATETIME
+    
 AS
 BEGIN
-
-END
+    
+    SELECT 
+        EF.timestamp AS FeedbackTime,
+        EF.emotional_state,
+        L.first_name+' '+L.last_name AS LearnerName,
+        M.Title AS ModuleTitle,
+        C.Title AS CourseTitle
+    FROM 
+        Emotional_feedback EF
+    inner join Learner L ON EF.LearnerID = L.LearnerID
+    inner join Course_enrollment CE ON L.LearnerID = CE.LearnerID AND CE.CourseID = @CourseID
+    inner join Modules M ON M.CourseID = @CourseID AND M.ModuleID = @ModuleID
+    inner join Course C ON M.CourseID = C.CourseID
+    WHERE 
+        EF.timestamp >= @TimePeriod
+    
+END;
+exec EmotionalTrendAnalysisIns 1,1,'2024-11-15 10:30:00'
