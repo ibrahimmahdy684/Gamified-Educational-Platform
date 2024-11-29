@@ -195,7 +195,7 @@ create procedure EmotionalTrendAnalysis
 
 where c.CourseID=@CourseID and m.ModuleID = @ModuleID and ce.enrollment_date<=@TimePeriod and ce.completion_date>=@TimePeriod
 end;
-exec EmotionalTrendAnalysis 3,2,'2024-11-10 11:30:00'
+exec EmotionalTrendAnalysis 1,3,'2024-11-10 11:30:00'
 
 -----------LEARNER PROCEDURES-----------
 
@@ -256,7 +256,7 @@ GO
 CREATE PROCEDURE Prerequisites
     @LearnerID INT,
     @CourseID INT,
-    @StatusMessage VARCHAR(100) OUTPUT
+    @StatusMessage VARCHAR(100) OUTPUT 
 AS
 BEGIN
     
@@ -287,7 +287,15 @@ BEGIN
         SET @StatusMessage = 'All prerequisites are completed.';
     END
 END;
-GO
+
+DECLARE @StatusMessage VARCHAR(100);
+
+EXEC Prerequisites 
+    @LearnerID = 1, 
+    @CourseID = 1, 
+    @StatusMessage = @StatusMessage OUTPUT;
+
+SELECT @StatusMessage AS StatusMessage;
 
 --5
 go
@@ -317,8 +325,9 @@ end
 exec LeaderboardRank 4
 
 --7
+
 GO
-CREATE PROCEDURE ViewMyDeviceCharge
+CREATE PROCEDURE ActivityEmotionalFeedback
     @ActivityID INT,
     @LearnerID INT,
     @timestamp TIME,
@@ -363,6 +372,7 @@ END;
 
 
 --8
+drop procedure JoinQuest
 go
 CREATE PROCEDURE JoinQuest
     @LearnerID INT,
