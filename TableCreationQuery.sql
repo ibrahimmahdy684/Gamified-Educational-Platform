@@ -1,11 +1,3 @@
-drop database GamifiedPlatform
-CREATE DATABASE GamifiedPlatform
-
-USE GamifiedPlatform
-
---USE master;  -- Switch to the master database
---DROP DATABASE GamifiedPlatform;
-
  --1
 CREATE TABLE Learner (
     LearnerID INT PRIMARY KEY identity,
@@ -63,16 +55,17 @@ CREATE TABLE Course (
     pre_requisites VARCHAR(50),
     description VARCHAR(50)
 );
+--7
 CREATE TABLE Prerequisites (
     course_id INT,
     prereq INT,
     PRIMARY KEY (course_id, prereq),
-    FOREIGN KEY (course_id) REFERENCES Course(CourseID) on delete cascade on update cascade,
-    FOREIGN KEY (prereq) REFERENCES Course(CourseID) on delete cascade on update cascade
+    FOREIGN KEY (course_id) REFERENCES Course(CourseID),
+    FOREIGN KEY (prereq) REFERENCES Course(CourseID)
 );
 
 
--- 7
+-- 8
 CREATE TABLE Modules (
     ModuleID INT identity ,
     CourseID INT,
@@ -83,7 +76,7 @@ CREATE TABLE Modules (
     FOREIGN KEY (CourseID) REFERENCES Course(CourseID)on delete cascade on update cascade
 );
 
--- 8
+-- 9
 CREATE TABLE Target_traits (
     ModuleID INT,
     CourseID INT,
@@ -92,7 +85,7 @@ CREATE TABLE Target_traits (
     FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)on delete cascade on update cascade
 );
 
---9
+--10
 CREATE TABLE ModuleContent (
     ModuleID INT,
     CourseID INT,
@@ -101,7 +94,7 @@ CREATE TABLE ModuleContent (
     FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)on delete cascade on update cascade
 );
 
---10
+--11
 CREATE TABLE ContentLibrary (
     ID INT PRIMARY KEY identity,
     ModuleID INT,
@@ -114,7 +107,7 @@ CREATE TABLE ContentLibrary (
     FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)on delete cascade on update cascade
 );
 
---11
+--12
 CREATE TABLE Assessments (
     ID INT PRIMARY KEY identity,
     ModuleID INT,
@@ -130,7 +123,7 @@ CREATE TABLE Assessments (
 );
 
 
--- 12
+-- 13
 CREATE TABLE Learning_activities (
     ActivityID INT PRIMARY KEY identity,
     ModuleID INT,
@@ -140,7 +133,7 @@ CREATE TABLE Learning_activities (
     Max_points INT,
     FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)on delete cascade on update cascade
 );
--- 13
+-- 14
 CREATE TABLE Interaction_log (
     LogID INT PRIMARY KEY identity,
     activity_ID INT,
@@ -153,7 +146,7 @@ CREATE TABLE Interaction_log (
 );
 
 
--- 14
+-- 15
 CREATE TABLE Emotional_feedback (
     FeedbackID INT PRIMARY KEY identity,
     LearnerID INT,
@@ -162,7 +155,7 @@ CREATE TABLE Emotional_feedback (
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)on delete cascade on update cascade
 );
 
---15
+--16
 CREATE TABLE Learning_path (
     pathID INT PRIMARY KEY identity,
     LearnerID INT,
@@ -173,7 +166,7 @@ CREATE TABLE Learning_path (
     FOREIGN KEY (LearnerID, ProfileID) REFERENCES PersonalizationProfiles(LearnerID, ProfileID)on delete cascade on update cascade
 );
 
--- 16
+-- 17
 CREATE TABLE Instructor (
     InstructorID INT PRIMARY KEY identity,
     name VARCHAR(50),
@@ -182,7 +175,7 @@ CREATE TABLE Instructor (
     email VARCHAR(50)
 );
 
--- 17
+-- 18
 CREATE TABLE Pathreview (
     InstructorID INT,
     PathID INT,
@@ -192,7 +185,7 @@ CREATE TABLE Pathreview (
     FOREIGN KEY (PathID) REFERENCES Learning_path(pathID)on delete cascade on update cascade
 );
 
--- `8
+-- 19
 CREATE TABLE Emotionalfeedback_review (
     FeedbackID INT,
     InstructorID INT,
@@ -202,7 +195,7 @@ CREATE TABLE Emotionalfeedback_review (
     FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID)on delete cascade on update cascade
 );
 
---19
+--20
 CREATE TABLE Course_enrollment (
     EnrollmentID INT PRIMARY KEY identity,
     CourseID INT,
@@ -214,7 +207,7 @@ CREATE TABLE Course_enrollment (
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)on delete cascade on update cascade
 );
 
--- 20
+-- 21
 CREATE TABLE Teaches (
     InstructorID INT,
     CourseID INT,
@@ -223,13 +216,13 @@ CREATE TABLE Teaches (
     FOREIGN KEY (CourseID) REFERENCES Course(CourseID)on delete cascade on update cascade
 );
 
--- 21
+-- 22
 CREATE TABLE Leaderboard (
     BoardID INT PRIMARY KEY identity,
     season VARCHAR(50)
 );
 
---22
+--23
 CREATE TABLE Ranking (
     BoardID INT,
     LearnerID INT,
@@ -242,7 +235,7 @@ CREATE TABLE Ranking (
     FOREIGN KEY (CourseID) REFERENCES Course(CourseID)on delete cascade on update cascade
 );
 
--- 23
+-- 24
 CREATE TABLE Learning_goal (
     ID INT PRIMARY KEY identity,
     status VARCHAR(50),
@@ -250,7 +243,7 @@ CREATE TABLE Learning_goal (
     description VARCHAR(50)
 );
 
--- 24
+-- 25
 CREATE TABLE LearnersGoals (
     GoalID INT,
     LearnerID INT,
@@ -259,13 +252,13 @@ CREATE TABLE LearnersGoals (
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)on delete cascade on update cascade
 );
 
---25
+--26
 CREATE TABLE Survey (
     ID INT PRIMARY KEY identity,
     Title VARCHAR(50)
 );
 
--- 26
+-- 27
 CREATE TABLE SurveyQuestions (
     SurveyID INT,
     Question VARCHAR(100),
@@ -273,7 +266,7 @@ CREATE TABLE SurveyQuestions (
     FOREIGN KEY (SurveyID) REFERENCES Survey(ID)on delete cascade on update cascade
 );
 
--- 27
+-- 28
 CREATE TABLE FilledSurvey (
     SurveyID INT,
     Question VARCHAR(100),
@@ -287,7 +280,7 @@ CREATE TABLE FilledSurvey (
   
 );
 
---28
+--29
 CREATE TABLE Notification (
     ID INT PRIMARY KEY identity,
     timestamp DATETIME,
@@ -295,7 +288,7 @@ CREATE TABLE Notification (
     urgency_level VARCHAR(50)
 );
 
--- 29
+-- 30
 CREATE TABLE ReceivedNotification (
     NotificationID INT,
     LearnerID INT,
@@ -304,7 +297,7 @@ CREATE TABLE ReceivedNotification (
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)on delete cascade on update cascade
 );
 
---30
+--31
 CREATE TABLE Badge (
     BadgeID INT PRIMARY KEY identity,
     title VARCHAR(100),
@@ -313,7 +306,7 @@ CREATE TABLE Badge (
     points INT
 );
 
--- 31
+-- 32
 CREATE TABLE SkillProgression (
     ID INT PRIMARY KEY identity,
     proficiency_level VARCHAR(50),
@@ -323,7 +316,7 @@ CREATE TABLE SkillProgression (
     FOREIGN KEY (LearnerID, skill_name) REFERENCES Skills(LearnerID, skill)on delete cascade on update cascade
 );
 
--- 32
+-- 33
 CREATE TABLE Achievement (
     AchievementID INT PRIMARY KEY identity,
     LearnerID INT,
@@ -335,7 +328,7 @@ CREATE TABLE Achievement (
     FOREIGN KEY (BadgeID) REFERENCES Badge(BadgeID)on delete cascade on update cascade
 );
 
---33
+--34
 CREATE TABLE Reward (
     RewardID INT PRIMARY KEY identity,
     value DECIMAL(10, 2),
@@ -343,7 +336,7 @@ CREATE TABLE Reward (
     type VARCHAR(50)
 );
 
--- 34
+-- 35
 CREATE TABLE Quest (
     QuestID INT PRIMARY KEY identity,
     difficulty_level VARCHAR(50),
@@ -352,7 +345,7 @@ CREATE TABLE Quest (
     title VARCHAR(50)
 );
 
--- 35
+-- 36
 CREATE TABLE Skill_Mastery (
     QuestID INT,
     skill VARCHAR(50),
@@ -360,7 +353,7 @@ CREATE TABLE Skill_Mastery (
     FOREIGN KEY (QuestID) REFERENCES Quest(QuestID)on delete cascade on update cascade
 );
 
--- 36
+-- 37
 CREATE TABLE Collaborative (
     QuestID INT,
     deadline DATETIME,
@@ -368,6 +361,7 @@ CREATE TABLE Collaborative (
     PRIMARY KEY (QuestID),
     FOREIGN KEY (QuestID) REFERENCES Quest(QuestID)on delete cascade on update cascade
 );
+--38
 create table LearnersCollaboration(
 LearnerID int,
 QuestID int,
@@ -376,16 +370,17 @@ Primary key(LearnerID,QuestID),
 foreign key(LearnerID) references Learner(LearnerID) ,
 foreign key(QuestID) references Collaborative(QuestID)
 );
+--39
 create table LearnerMastery(
 LearnerID int,
 QuestID int,
 skill varchar(50),
 completion_status nvarchar(MAX),
 Primary key(LearnerID,QuestID,skill),
-foreign key(LearnerID) references Learner(LearnerID) on delete cascade on update cascade,
-foreign key(QuestID,skill) references Skill_Mastery(QuestID,skill) on delete cascade on update cascade
+foreign key(LearnerID) references Learner(LearnerID) ,
+foreign key(QuestID,skill) references Skill_Mastery(QuestID,skill)
 );
---37
+--40
 CREATE TABLE Discussion_forum (
     forumID INT PRIMARY KEY identity,
     ModuleID INT,
@@ -397,7 +392,7 @@ CREATE TABLE Discussion_forum (
     FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)on delete cascade on update cascade
 );
 
--- 38
+-- 41
 CREATE TABLE LearnerDiscussion (
     ForumID INT,
     LearnerID INT,
@@ -408,7 +403,7 @@ CREATE TABLE LearnerDiscussion (
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)on delete cascade on update cascade
 );
 
--- 39
+-- 42
 CREATE TABLE QuestReward (
     RewardID INT,
     QuestID INT,
@@ -419,7 +414,7 @@ CREATE TABLE QuestReward (
     FOREIGN KEY (QuestID) REFERENCES Quest(QuestID)on delete cascade on update cascade,
     FOREIGN KEY (LearnerID) REFERENCES Learner(LearnerID)on delete cascade on update cascade
 );
---40(found in ERD but not found in schema)
+--43
 create table takesassesment(
 learner_id int,
 assesment_id int,
