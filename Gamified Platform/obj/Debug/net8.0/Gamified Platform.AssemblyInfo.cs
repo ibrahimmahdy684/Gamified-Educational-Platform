@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Gamified Platform")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+13010f63bc151cb65eec7c4298adae2850e4733a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bf232499ed5b41248b30fda0ea8769a4815b50fc")]
 [assembly: System.Reflection.AssemblyProductAttribute("Gamified Platform")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Gamified Platform")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
