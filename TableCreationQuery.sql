@@ -1,7 +1,13 @@
 CREATE DATABASE GamifiedPlatform
 
 USE GamifiedPlatform
-
+Create table users(
+    UserID INT primary Key Identity,
+    Name NVARCHAR(100),
+    Email NVARCHAR(100),
+    Phone NVARCHAR(15),
+    Address NVARCHAR(255)
+);
 CREATE TABLE Admin (
     AdminID INT PRIMARY KEY IDENTITY,
     first_name VARCHAR(50),
