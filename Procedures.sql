@@ -1,6 +1,50 @@
 ﻿USE GamifiedPlatform
 
 ------ADMIN PROCEDURES----------
+Go 
+create proc AllLearnersInfo
+AS
+begin
+select*
+from PersonalizationProfiles
+end
+exec AllLearnersInfo
+
+Go
+create proc getAllForums
+AS
+begin
+select*
+from Discussion_forum
+end
+exec getAllForums
+
+Go
+create proc monitorSpecificPath(@learnerID int,@pathID int)
+AS
+begin 
+select*
+from Learning_path
+where LearnerID=@learnerID AND pathID=@pathID
+end
+
+Go
+create proc getUserInfo(@UserID int)
+AS
+begin
+select*
+from users
+where UserID=@UserID
+END
+
+Go
+create proc updateUserInfo(@UserID int,@name varchar,@email varchar,@phone varchar,@address varchar)
+AS
+begin
+update users
+set Name=@name,Email=@email,Phone=@phone,Address=@address
+where UserID=@UserID
+End
 
 --1
 GO
@@ -181,7 +225,7 @@ end;
 exec NotificationUpdate 2 ,2 ,1
 
 --14
-drop procedure EmotionalTrendAnalysis
+
 go 
 create procedure EmotionalTrendAnalysis
  @CourseID int, @ModuleID int, @TimePeriod datetime
@@ -195,7 +239,7 @@ create procedure EmotionalTrendAnalysis
 
 where c.CourseID=@CourseID and m.ModuleID = @ModuleID and ce.enrollment_date<=@TimePeriod and ce.completion_date>=@TimePeriod
 end;
-exec EmotionalTrendAnalysis 1,3,'2024-11-10 11:30:00'
+exec EmotionalTrendAnalysis 3,2,'2024-11-10 11:30:00'
 
 -----------LEARNER PROCEDURES-----------
 
@@ -256,7 +300,7 @@ GO
 CREATE PROCEDURE Prerequisites
     @LearnerID INT,
     @CourseID INT,
-    @StatusMessage VARCHAR(100) OUTPUT 
+    @StatusMessage VARCHAR(100) OUTPUT
 AS
 BEGIN
     
@@ -287,15 +331,7 @@ BEGIN
         SET @StatusMessage = 'All prerequisites are completed.';
     END
 END;
-
-DECLARE @StatusMessage VARCHAR(100);
-
-EXEC Prerequisites 
-    @LearnerID = 1, 
-    @CourseID = 1, 
-    @StatusMessage = @StatusMessage OUTPUT;
-
-SELECT @StatusMessage AS StatusMessage;
+GO
 
 --5
 go
@@ -325,9 +361,8 @@ end
 exec LeaderboardRank 4
 
 --7
-
 GO
-CREATE PROCEDURE ActivityEmotionalFeedback
+CREATE PROCEDURE ViewMyDeviceCharge
     @ActivityID INT,
     @LearnerID INT,
     @timestamp TIME,
@@ -372,7 +407,6 @@ END;
 
 
 --8
-drop procedure JoinQuest
 go
 CREATE PROCEDURE JoinQuest
     @LearnerID INT,
@@ -907,9 +941,8 @@ EXEC NewGoal 15, 'test', '1/1/2005', 'test'
 select * 
 from Learning_goal*/
 
-
 --12 
-
+drop proc LearnersCourses
 GO
 CREATE PROCEDURE LearnersCourses
     @CourseID INT,
@@ -1075,7 +1108,7 @@ SELECT * from takesassesment
 Select * from Assessments*/
 
 --21 
-
+drop proc EmotionalTrendAnalysisIns
 Go
 CREATE PROCEDURE EmotionalTrendAnalysisIns
     @CourseID INT,
