@@ -17,6 +17,8 @@ public partial class GamifiedPlatformContext : DbContext
 
     public virtual DbSet<Achievement> Achievements { get; set; }
 
+    public virtual DbSet<Admin> Admins { get; set; }
+
     public virtual DbSet<Assessment> Assessments { get; set; }
 
     public virtual DbSet<Badge> Badges { get; set; }
@@ -129,6 +131,37 @@ public partial class GamifiedPlatformContext : DbContext
                 .HasForeignKey(d => d.LearnerId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Achieveme__Learn__151B244E");
+        });
+
+        modelBuilder.Entity<Admin>(entity =>
+        {
+            entity.HasKey(e => e.AdminId).HasName("PK__Admin__719FE4E80EE80DE7");
+
+            entity.ToTable("Admin");
+
+            entity.Property(e => e.AdminId).HasColumnName("AdminID");
+            entity.Property(e => e.BirthDate).HasColumnName("birth_date");
+            entity.Property(e => e.Country)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("country");
+            entity.Property(e => e.Email)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("email");
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("first_name");
+            entity.Property(e => e.Gender)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("gender");
+            entity.Property(e => e.LastName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("last_name");
         });
 
         modelBuilder.Entity<Assessment>(entity =>

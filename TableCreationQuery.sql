@@ -1,5 +1,17 @@
 CREATE DATABASE GamifiedPlatform
 
+USE GamifiedPlatform
+
+CREATE TABLE Admin (
+    AdminID INT PRIMARY KEY IDENTITY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    gender CHAR(1),
+    birth_date DATE,
+    country VARCHAR(50),
+    email VARCHAR(50)
+)
+
  --1
 CREATE TABLE Learner (
     LearnerID INT PRIMARY KEY identity,
