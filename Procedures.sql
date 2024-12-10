@@ -1,5 +1,5 @@
 ﻿USE GamifiedPlatform
-
+--2
 ------ADMIN PROCEDURES----------
 Go 
 create proc AllLearnersInfo
