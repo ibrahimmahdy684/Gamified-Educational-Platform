@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewData["Title"] = "AddPost";
+}
+
+<h1>AddPost</h1>
+@model projectt.Models.LearnerDiscussion
+
+<h2>Add a Post</h2>
+
+<form asp-action="AddPost" method="post">
+    <div>
+        <label>Learner ID</label>
+        <input type="number" name="LearnerID" required />
+    </div>
+
+    <div>
+        <label>Discussion ID</label>
+        <input type="number" name="DiscussionID" required />
+    </div>
+
+    <div>
+        <label>Post</label>
+        <input type="text" name="post" maxlength="50" required />
+    </div>
+
+
+    <button type="submit">Add Post</button>
+</form>
+
+
+

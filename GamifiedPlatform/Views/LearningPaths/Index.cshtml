@@ -1,0 +1,53 @@
+﻿@model IEnumerable<projectt.Models.LearningPath>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CompletionStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AdaptiveRules)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PersonalizationProfile)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompletionStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomContent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AdaptiveRules)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PersonalizationProfile.LearnerId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.PathId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.PathId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.PathId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

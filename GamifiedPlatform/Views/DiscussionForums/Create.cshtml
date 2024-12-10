@@ -1,0 +1,38 @@
+﻿@model projectt.Models.DiscussionForum
+@{
+    ViewData["Title"] = "Create Forum";
+}
+
+<h2>Create Discussion Forum</h2>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>Module ID</label>
+        <input type="number" name="moduleId" required />
+    </div>
+
+    <div>
+        <label>Course ID</label>
+        <input type="number" name="courseId" required />
+    </div>
+
+    <div>
+        <label>Title</label>
+        <input type="text" name="title" maxlength="50" required />
+    </div>
+
+    <div>
+        <label>Description</label>
+        <textarea name="description" maxlength="50" required></textarea>
+    </div>
+
+    <button type="submit">Create Forum</button>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

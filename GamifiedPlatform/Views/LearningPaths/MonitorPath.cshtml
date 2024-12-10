@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewData["Title"] = "MonitorPath";
+}
+
+<h1>MonitorPath</h1>
+
+
+<
+<form asp-action="AddPath" method="post">
+    <div>
+        <label>Learner ID</label>
+        <input type="number" name="learnerID" required />
+    </div>
+
+    <div>
+        <label>Path ID</label>
+        <input type="number" name="profileID" required />
+    </div>
+    
+
+    <button type="submit">define Goal</button>
+</form>

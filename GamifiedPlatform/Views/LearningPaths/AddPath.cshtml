@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewData["Title"] = "AddPath";
+}
+
+<h1>AddPath</h1>
+
+<form> asp-action="AddPath" method="post">
+    <div>
+        <label>Learner ID</label>
+        <input type="number" name="learnerID" required />
+    </div>
+
+<div>
+    <label>Profile ID</label>
+    <input type="number" name="goalID" required />
+</div>
+    <div>
+        <label>Completion Status</label>
+        <input type="text" name="completionStatus" required />
+    </div>
+    <div>
+        <label>Custom Content</label>
+        <input type="text" name="customContent" required />
+    </div>
+    <div>
+        <label>Adaptive Rules</label>
+        <input type="text" name="adaptiveRules" required />
+    </div>
+    <button type="submit">define path</button>
+</form>

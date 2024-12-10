@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewData["Title"] = "AddGoal";
+}
+
+<h1>AddGoal</h1>
+<form asp-action="AddGoal" method="post">
+    <div>
+        <label>Learner ID</label>
+        <input type="number" name="learnerID" required />
+    </div>
+
+    <div>
+        <label>Goal ID</label>
+        <input type="number" name="goalID" required />
+    </div>
+
+    <button type="submit">define Goal</button>
+</form>
+
