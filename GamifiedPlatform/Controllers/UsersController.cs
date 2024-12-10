@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using YourNamespace.Models;
+//using YourNamespace.Models;
 using GamifiedPlatform.Models;
 
 namespace GamifiedPlatform.Controllers
@@ -35,7 +35,7 @@ namespace GamifiedPlatform.Controllers
             }
 
             var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserID == id);
+                .FirstOrDefaultAsync(m => m.UserId == id);
             if (user == null)
             {
                 return NotFound();
@@ -69,7 +69,7 @@ namespace GamifiedPlatform.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int Userid,string name,string email,string phone,string address)
         {
-            var UserExists = await _context.Users.AnyAsync(d => d.UserID == Userid);
+            var UserExists = await _context.Users.AnyAsync(d => d.UserId == Userid);
             if (!UserExists)
             {
                 ModelState.AddModelError("", "The specified User does not exist.");
@@ -86,7 +86,7 @@ namespace GamifiedPlatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("UserID,Name,Email,Phone,Address")] User user)
         {
-            if (id != user.UserID)
+            if (id != user.UserId)
             {
                 return NotFound();
             }
@@ -100,7 +100,7 @@ namespace GamifiedPlatform.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.UserID))
+                    if (!UserExists(user.UserId))
                     {
                         return NotFound();
                     }
@@ -123,7 +123,7 @@ namespace GamifiedPlatform.Controllers
             }
 
             var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserID == id);
+                .FirstOrDefaultAsync(m => m.UserId == id);
             if (user == null)
             {
                 return NotFound();
@@ -149,7 +149,7 @@ namespace GamifiedPlatform.Controllers
 
         private bool UserExists(int id)
         {
-            return _context.Users.Any(e => e.UserID == id);
+            return _context.Users.Any(e => e.UserId == id);
         }
     }
 }

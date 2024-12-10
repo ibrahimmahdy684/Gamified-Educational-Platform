@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using GamifiedPlatform.Models;
 
 namespace GamifiedPlatform.Models;
+
 
 public partial class GamifiedPlatformContext : DbContext
 {
@@ -14,6 +16,7 @@ public partial class GamifiedPlatformContext : DbContext
         : base(options)
     {
     }
+    public DbSet<User> Users { get; set; }
 
     public virtual DbSet<Achievement> Achievements { get; set; }
 
