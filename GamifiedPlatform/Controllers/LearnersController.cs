@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using projectt.Models;
+using GamifiedPlatform.Models;
 
-namespace projectt.Controllers
+namespace GamifiedPlatform.Controllers
 {
     public class LearnersController : Controller
     {
