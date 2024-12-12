@@ -48,6 +48,34 @@
         </dd>
     </dl>
 </div>
+
+<div>
+    <h4>Modules</h4>
+    <hr />
+    @if (Model.Modules != null && Model.Modules.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var module in Model.Modules)
+                {
+                    <tr>
+                        <td>@module.Title</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No modules available for this course.</p>
+    }
+</div>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.CourseId">Edit</a> |
     <a asp-action="Index">Back to List</a>

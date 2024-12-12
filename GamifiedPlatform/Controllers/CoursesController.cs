@@ -33,7 +33,9 @@ namespace GamifiedPlatform.Controllers
             }
 
             var course = await _context.Courses
+                .Include(c => c.Modules) // Eager loading of modules
                 .FirstOrDefaultAsync(m => m.CourseId == id);
+
             if (course == null)
             {
                 return NotFound();
@@ -138,15 +140,29 @@ namespace GamifiedPlatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var course = await _context.Courses.FindAsync(id);
-            if (course != null)
+            var course = await _context.Courses
+                .Include(c => c.CourseEnrollments) // Assuming CourseEnrollments tracks student enrollments
+                .FirstOrDefaultAsync(c => c.CourseId == id);
+
+            if (course == null)
             {
-                _context.Courses.Remove(course);
+                return NotFound();
             }
 
+            // Check if any students are enrolled
+            if (course.CourseEnrollments != null && course.CourseEnrollments.Any())
+            {
+                // Redirect back with an error message
+                TempData["ErrorMessage"] = "Cannot delete this course because students are enrolled.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
+            _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool CourseExists(int id)
         {

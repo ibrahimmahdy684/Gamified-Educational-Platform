@@ -3,14 +3,12 @@ CREATE DATABASE GamifiedPlatform
 USE GamifiedPlatform
 drop table users
 
-Create table users(
+Create table Users(
     UserID INT primary Key Identity,
     Name NVARCHAR(100),
     Email NVARCHAR(100),
     Password varchar(50),
-    Type varchar(50),
-    Phone NVARCHAR(15),
-    Address NVARCHAR(255)
+    Type varchar(50)
 );
 
 
