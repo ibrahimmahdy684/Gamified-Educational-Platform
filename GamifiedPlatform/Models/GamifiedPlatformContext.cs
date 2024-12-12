@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using GamifiedPlatform.Models;
 
 namespace GamifiedPlatform.Models;
-
 
 public partial class GamifiedPlatformContext : DbContext
 {
@@ -16,7 +14,6 @@ public partial class GamifiedPlatformContext : DbContext
         : base(options)
     {
     }
-    public DbSet<User> Users { get; set; }
 
     public virtual DbSet<Achievement> Achievements { get; set; }
 
@@ -97,6 +94,8 @@ public partial class GamifiedPlatformContext : DbContext
     public virtual DbSet<Takesassesment> Takesassesments { get; set; }
 
     public virtual DbSet<TargetTrait> TargetTraits { get; set; }
+
+    public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -1118,6 +1117,21 @@ public partial class GamifiedPlatformContext : DbContext
             entity.HasOne(d => d.Module).WithMany(p => p.TargetTraits)
                 .HasForeignKey(d => new { d.ModuleId, d.CourseId })
                 .HasConstraintName("FK__Target_traits__4CA06362");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.UserID).HasName("PK__Users__1788CCACC79D2098");
+
+            entity.Property(e => e.UserID).HasColumnName("UserID");
+            entity.Property(e => e.Email).HasMaxLength(100);
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.Password)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Type)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         OnModelCreatingPartial(modelBuilder);

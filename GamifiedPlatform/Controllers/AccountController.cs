@@ -1,50 +1,73 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using GamifiedPlatform.Models;
+﻿using GamifiedPlatform.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GamifiedPlatform.Controllers
 {
     public class AccountController : Controller
     {
-        // GET: Account/Register
+        private readonly GamifiedPlatformContext _context;
+
+        public AccountController(GamifiedPlatformContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
-        // POST: Account/Register
         [HttpPost]
         public IActionResult Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Add logic to save the user to the database
-                // Redirect to another page upon success
-                return RedirectToAction("Index", "Home");
+                var user = new User
+                {
+                    Name = model.Name,
+                    Email = model.Email,
+                    Password = model.Password, // You should hash this in production
+                    Type = model.Type
+                };
+
+                _context.Users.Add(user);
+                _context.SaveChanges();
+
+                return RedirectToAction("Login");
             }
 
-            return View(model); // Return the view with validation errors
+            return View(model);
         }
 
-        // GET: Account/Login
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
-        // POST: Account/Login
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Add logic to authenticate the user
-                // Redirect to another page upon success
-                return RedirectToAction("Index", "Home");
+                var user = _context.Users
+                    .FirstOrDefault(u => u.Email == model.Email && u.Password == model.Password);
+
+                if (user == null)
+                {
+                    // If user is not found, show error message
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View(model);
+                }
+
+                // Redirect to user's profile page or dashboard if credentials are correct
+                return RedirectToAction("Profile", "User", new { id = user.UserID });
             }
 
-            return View(model); // Return the view with validation errors
+            return View(model);
         }
     }
 }
+    
