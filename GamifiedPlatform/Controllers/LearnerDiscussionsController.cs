@@ -41,14 +41,17 @@ namespace GamifiedPlatform.Controllers
             {
                
                 if (ex.Message.Contains("FOREIGN KEY constraint"))
-                {
+                {   var learnerExists= await _context.Learners.AnyAsync(d => d.LearnerId == LearnerID);
                     var discussionExists = await _context.DiscussionForums.AnyAsync(d => d.ForumId == DiscussionID);
-                    if (!discussionExists)
+                    if (!discussionExists && !learnerExists)
                     {
-                        ModelState.AddModelError("", "The specified discussion does not exist.");
-                      
+                        ModelState.AddModelError("", "The specified discussion and Learner do not exist.");
+
                     }
-                    else ModelState.AddModelError("", "The specified Learner does not exist.");
+                    else { if (!learnerExists)
+                     ModelState.AddModelError("", "The specified Learner does not exist.");
+                    else ModelState.AddModelError("", "The specified Discussion does not exist.");
+                    }
                 }
                 else if (ex.Message.Contains("PRIMARY KEY constraint"))
                 {

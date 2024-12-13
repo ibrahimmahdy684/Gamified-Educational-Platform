@@ -68,13 +68,17 @@ namespace GamifiedPlatform.Controllers
 
                 if (ex.Message.Contains("FOREIGN KEY constraint"))
                 {
+                    var courseExists = await _context.Courses.AnyAsync(d => d.CourseId == courseID);
                     var moduleExists = await _context.Modules.AnyAsync(d => d.ModuleId == moduleID);
-                    if (!moduleExists)
+                    if (!moduleExists && !courseExists)
                     {
-                        ModelState.AddModelError("", "The specified module does not exist.");
+                        ModelState.AddModelError("", "The specified module and course do not exist.");
 
                     }
-                    else ModelState.AddModelError("", "The specified course does not exist.");
+                    else {
+                        if (!moduleExists) ModelState.AddModelError("", "The specified Module does not exist.");
+                        else ModelState.AddModelError("", "The specified course does not exist.");
+                    }
                 }
                 else if (ex.Message.Contains("PRIMARY KEY constraint"))
                 {
