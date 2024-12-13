@@ -7,6 +7,8 @@ public partial class Learner
 {
     public int LearnerId { get; set; }
 
+    public int UserId { get; set; }
+
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }
@@ -16,6 +18,8 @@ public partial class Learner
     public DateOnly? BirthDate { get; set; }
 
     public string? Country { get; set; }
+
+    public string? Email { get; set; }
 
     public string? CulturalBackground { get; set; }
 
@@ -46,6 +50,8 @@ public partial class Learner
     public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
 
     public virtual ICollection<Takesassesment> Takesassesments { get; set; } = new List<Takesassesment>();
+
+    public virtual User User { get; set; } = null!;
 
     public virtual ICollection<LearningGoal> Goals { get; set; } = new List<LearningGoal>();
 

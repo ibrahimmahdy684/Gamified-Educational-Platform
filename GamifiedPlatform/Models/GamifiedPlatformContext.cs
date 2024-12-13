@@ -105,7 +105,7 @@ public partial class GamifiedPlatformContext : DbContext
     {
         modelBuilder.Entity<Achievement>(entity =>
         {
-            entity.HasKey(e => e.AchievementId).HasName("PK__Achievem__276330E067DBB8C5");
+            entity.HasKey(e => e.AchievementId).HasName("PK__Achievem__276330E04690E902");
 
             entity.ToTable("Achievement");
 
@@ -127,17 +127,17 @@ public partial class GamifiedPlatformContext : DbContext
             entity.HasOne(d => d.Badge).WithMany(p => p.Achievements)
                 .HasForeignKey(d => d.BadgeId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__Achieveme__Badge__160F4887");
+                .HasConstraintName("FK__Achieveme__Badge__1CBC4616");
 
             entity.HasOne(d => d.Learner).WithMany(p => p.Achievements)
                 .HasForeignKey(d => d.LearnerId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__Achieveme__Learn__151B244E");
+                .HasConstraintName("FK__Achieveme__Learn__1BC821DD");
         });
 
         modelBuilder.Entity<Admin>(entity =>
         {
-            entity.HasKey(e => e.AdminId).HasName("PK__Admin__719FE4E80EE80DE7");
+            entity.HasKey(e => e.AdminId).HasName("PK__Admin__719FE4E8679BC366");
 
             entity.ToTable("Admin");
 
@@ -151,24 +151,25 @@ public partial class GamifiedPlatformContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("email");
-            entity.Property(e => e.FirstName)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("first_name");
             entity.Property(e => e.Gender)
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("gender");
-            entity.Property(e => e.LastName)
+            entity.Property(e => e.Name)
                 .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("last_name");
+                .IsUnicode(false);
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Admins)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Admin__UserID__38996AB5");
         });
 
         modelBuilder.Entity<Assessment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Assessme__3214EC275EE3B557");
+            entity.HasKey(e => e.Id).HasName("PK__Assessme__3214EC2773A30928");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.CourseId).HasColumnName("CourseID");
@@ -196,12 +197,12 @@ public partial class GamifiedPlatformContext : DbContext
             entity.HasOne(d => d.Module).WithMany(p => p.Assessments)
                 .HasForeignKey(d => new { d.ModuleId, d.CourseId })
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__Assessments__5535A963");
+                .HasConstraintName("FK__Assessments__5AEE82B9");
         });
 
         modelBuilder.Entity<Badge>(entity =>
         {
-            entity.HasKey(e => e.BadgeId).HasName("PK__Badge__1918237CC9CCDA01");
+            entity.HasKey(e => e.BadgeId).HasName("PK__Badge__1918237CFAE5875C");
 
             entity.ToTable("Badge");
 
@@ -223,7 +224,7 @@ public partial class GamifiedPlatformContext : DbContext
 
         modelBuilder.Entity<Collaborative>(entity =>
         {
-            entity.HasKey(e => e.QuestId).HasName("PK__Collabor__B6619ACBBBF0E0FC");
+            entity.HasKey(e => e.QuestId).HasName("PK__Collabor__B6619ACB4AB2DF06");
 
             entity.ToTable("Collaborative");
 
@@ -237,12 +238,12 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Quest).WithOne(p => p.Collaborative)
                 .HasForeignKey<Collaborative>(d => d.QuestId)
-                .HasConstraintName("FK__Collabora__Quest__1F98B2C1");
+                .HasConstraintName("FK__Collabora__Quest__2645B050");
         });
 
         modelBuilder.Entity<ContentLibrary>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ContentL__3214EC27DBF13B21");
+            entity.HasKey(e => e.Id).HasName("PK__ContentL__3214EC27E14DB31D");
 
             entity.ToTable("ContentLibrary");
 
@@ -272,12 +273,12 @@ public partial class GamifiedPlatformContext : DbContext
             entity.HasOne(d => d.Module).WithMany(p => p.ContentLibraries)
                 .HasForeignKey(d => new { d.ModuleId, d.CourseId })
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__ContentLibrary__52593CB8");
+                .HasConstraintName("FK__ContentLibrary__5812160E");
         });
 
         modelBuilder.Entity<Course>(entity =>
         {
-            entity.HasKey(e => e.CourseId).HasName("PK__Course__C92D71871B81A91D");
+            entity.HasKey(e => e.CourseId).HasName("PK__Course__C92D71872B8D3778");
 
             entity.ToTable("Course");
 
@@ -309,14 +310,14 @@ public partial class GamifiedPlatformContext : DbContext
                     r => r.HasOne<Course>().WithMany()
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Prerequis__cours__45F365D3"),
+                        .HasConstraintName("FK__Prerequis__cours__4BAC3F29"),
                     l => l.HasOne<Course>().WithMany()
                         .HasForeignKey("Prereq")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Prerequis__prere__46E78A0C"),
+                        .HasConstraintName("FK__Prerequis__prere__4CA06362"),
                     j =>
                     {
-                        j.HasKey("CourseId", "Prereq").HasName("PK__Prerequi__1141CCC73C01BF0B");
+                        j.HasKey("CourseId", "Prereq").HasName("PK__Prerequi__1141CCC7A09E1E6D");
                         j.ToTable("Prerequisites");
                         j.IndexerProperty<int>("CourseId").HasColumnName("course_id");
                         j.IndexerProperty<int>("Prereq").HasColumnName("prereq");
@@ -328,14 +329,14 @@ public partial class GamifiedPlatformContext : DbContext
                     r => r.HasOne<Course>().WithMany()
                         .HasForeignKey("Prereq")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Prerequis__prere__46E78A0C"),
+                        .HasConstraintName("FK__Prerequis__prere__4CA06362"),
                     l => l.HasOne<Course>().WithMany()
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Prerequis__cours__45F365D3"),
+                        .HasConstraintName("FK__Prerequis__cours__4BAC3F29"),
                     j =>
                     {
-                        j.HasKey("CourseId", "Prereq").HasName("PK__Prerequi__1141CCC73C01BF0B");
+                        j.HasKey("CourseId", "Prereq").HasName("PK__Prerequi__1141CCC7A09E1E6D");
                         j.ToTable("Prerequisites");
                         j.IndexerProperty<int>("CourseId").HasColumnName("course_id");
                         j.IndexerProperty<int>("Prereq").HasColumnName("prereq");
@@ -344,7 +345,7 @@ public partial class GamifiedPlatformContext : DbContext
 
         modelBuilder.Entity<CourseEnrollment>(entity =>
         {
-            entity.HasKey(e => e.EnrollmentId).HasName("PK__Course_e__7F6877FBF17DAA6E");
+            entity.HasKey(e => e.EnrollmentId).HasName("PK__Course_e__7F6877FBD613607C");
 
             entity.ToTable("Course_enrollment");
 
@@ -365,17 +366,17 @@ public partial class GamifiedPlatformContext : DbContext
             entity.HasOne(d => d.Course).WithMany(p => p.CourseEnrollments)
                 .HasForeignKey(d => d.CourseId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__Course_en__Cours__6E01572D");
+                .HasConstraintName("FK__Course_en__Cours__74AE54BC");
 
             entity.HasOne(d => d.Learner).WithMany(p => p.CourseEnrollments)
                 .HasForeignKey(d => d.LearnerId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__Course_en__Learn__6EF57B66");
+                .HasConstraintName("FK__Course_en__Learn__75A278F5");
         });
 
         modelBuilder.Entity<DiscussionForum>(entity =>
         {
-            entity.HasKey(e => e.ForumId).HasName("PK__Discussi__BBA7A4405D8D6BFA");
+            entity.HasKey(e => e.ForumId).HasName("PK__Discussi__BBA7A44094E7DA69");
 
             entity.ToTable("Discussion_forum");
 
@@ -400,12 +401,12 @@ public partial class GamifiedPlatformContext : DbContext
             entity.HasOne(d => d.Module).WithMany(p => p.DiscussionForums)
                 .HasForeignKey(d => new { d.ModuleId, d.CourseId })
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__Discussion_forum__2A164134");
+                .HasConstraintName("FK__Discussion_forum__30C33EC3");
         });
 
         modelBuilder.Entity<EmotionalFeedback>(entity =>
         {
-            entity.HasKey(e => e.FeedbackId).HasName("PK__Emotiona__6A4BEDF6EEEA597A");
+            entity.HasKey(e => e.FeedbackId).HasName("PK__Emotiona__6A4BEDF693B75EAC");
 
             entity.ToTable("Emotional_feedback");
 
@@ -422,12 +423,12 @@ public partial class GamifiedPlatformContext : DbContext
             entity.HasOne(d => d.Learner).WithMany(p => p.EmotionalFeedbacks)
                 .HasForeignKey(d => d.LearnerId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__Emotional__Learn__5EBF139D");
+                .HasConstraintName("FK__Emotional__Learn__6477ECF3");
         });
 
         modelBuilder.Entity<EmotionalfeedbackReview>(entity =>
         {
-            entity.HasKey(e => new { e.FeedbackId, e.InstructorId }).HasName("PK__Emotiona__C39BFD413357ED48");
+            entity.HasKey(e => new { e.FeedbackId, e.InstructorId }).HasName("PK__Emotiona__C39BFD411AC5FAF3");
 
             entity.ToTable("Emotionalfeedback_review");
 
@@ -440,16 +441,16 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.FeedbackNavigation).WithMany(p => p.EmotionalfeedbackReviews)
                 .HasForeignKey(d => d.FeedbackId)
-                .HasConstraintName("FK__Emotional__Feedb__6A30C649");
+                .HasConstraintName("FK__Emotional__Feedb__70DDC3D8");
 
             entity.HasOne(d => d.Instructor).WithMany(p => p.EmotionalfeedbackReviews)
                 .HasForeignKey(d => d.InstructorId)
-                .HasConstraintName("FK__Emotional__Instr__6B24EA82");
+                .HasConstraintName("FK__Emotional__Instr__71D1E811");
         });
 
         modelBuilder.Entity<FilledSurvey>(entity =>
         {
-            entity.HasKey(e => new { e.SurveyId, e.Question, e.LearnerId }).HasName("PK__FilledSu__D89C33C7690DCDD4");
+            entity.HasKey(e => new { e.SurveyId, e.Question, e.LearnerId }).HasName("PK__FilledSu__D89C33C7CE37CA6A");
 
             entity.ToTable("FilledSurvey");
 
@@ -464,16 +465,16 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Learner).WithMany(p => p.FilledSurveys)
                 .HasForeignKey(d => d.LearnerId)
-                .HasConstraintName("FK__FilledSur__Learn__07C12930");
+                .HasConstraintName("FK__FilledSur__Learn__0E6E26BF");
 
             entity.HasOne(d => d.SurveyQuestion).WithMany(p => p.FilledSurveys)
                 .HasForeignKey(d => new { d.SurveyId, d.Question })
-                .HasConstraintName("FK__FilledSurvey__06CD04F7");
+                .HasConstraintName("FK__FilledSurvey__0D7A0286");
         });
 
         modelBuilder.Entity<HealthCondition>(entity =>
         {
-            entity.HasKey(e => new { e.LearnerId, e.ProfileId, e.Condition }).HasName("PK__HealthCo__930320B074CC908A");
+            entity.HasKey(e => new { e.LearnerId, e.ProfileId, e.Condition }).HasName("PK__HealthCo__930320B0D4415CA9");
 
             entity.ToTable("HealthCondition");
 
@@ -486,12 +487,12 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.PersonalizationProfile).WithMany(p => p.HealthConditions)
                 .HasForeignKey(d => new { d.LearnerId, d.ProfileId })
-                .HasConstraintName("FK__HealthCondition__412EB0B6");
+                .HasConstraintName("FK__HealthCondition__46E78A0C");
         });
 
         modelBuilder.Entity<Instructor>(entity =>
         {
-            entity.HasKey(e => e.InstructorId).HasName("PK__Instruct__9D010B7BDED0E7AE");
+            entity.HasKey(e => e.InstructorId).HasName("PK__Instruct__9D010B7B8BDC1D58");
 
             entity.ToTable("Instructor");
 
@@ -512,19 +513,25 @@ public partial class GamifiedPlatformContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("name");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Instructors)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Instructo__UserI__6A30C649");
 
             entity.HasMany(d => d.Courses).WithMany(p => p.Instructors)
                 .UsingEntity<Dictionary<string, object>>(
                     "Teach",
                     r => r.HasOne<Course>().WithMany()
                         .HasForeignKey("CourseId")
-                        .HasConstraintName("FK__Teaches__CourseI__72C60C4A"),
+                        .HasConstraintName("FK__Teaches__CourseI__797309D9"),
                     l => l.HasOne<Instructor>().WithMany()
                         .HasForeignKey("InstructorId")
-                        .HasConstraintName("FK__Teaches__Instruc__71D1E811"),
+                        .HasConstraintName("FK__Teaches__Instruc__787EE5A0"),
                     j =>
                     {
-                        j.HasKey("InstructorId", "CourseId").HasName("PK__Teaches__F193DC63802C6EFD");
+                        j.HasKey("InstructorId", "CourseId").HasName("PK__Teaches__F193DC6325E4F56D");
                         j.ToTable("Teaches");
                         j.IndexerProperty<int>("InstructorId").HasColumnName("InstructorID");
                         j.IndexerProperty<int>("CourseId").HasColumnName("CourseID");
@@ -533,7 +540,7 @@ public partial class GamifiedPlatformContext : DbContext
 
         modelBuilder.Entity<InteractionLog>(entity =>
         {
-            entity.HasKey(e => e.LogId).HasName("PK__Interact__5E5499A86F137EB1");
+            entity.HasKey(e => e.LogId).HasName("PK__Interact__5E5499A8B82E5203");
 
             entity.ToTable("Interaction_log");
 
@@ -549,17 +556,17 @@ public partial class GamifiedPlatformContext : DbContext
             entity.HasOne(d => d.Activity).WithMany(p => p.InteractionLogs)
                 .HasForeignKey(d => d.ActivityId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__Interacti__activ__5AEE82B9");
+                .HasConstraintName("FK__Interacti__activ__60A75C0F");
 
             entity.HasOne(d => d.Learner).WithMany(p => p.InteractionLogs)
                 .HasForeignKey(d => d.LearnerId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__Interacti__Learn__5BE2A6F2");
+                .HasConstraintName("FK__Interacti__Learn__619B8048");
         });
 
         modelBuilder.Entity<Leaderboard>(entity =>
         {
-            entity.HasKey(e => e.BoardId).HasName("PK__Leaderbo__F9646BD255B25868");
+            entity.HasKey(e => e.BoardId).HasName("PK__Leaderbo__F9646BD251B61A6A");
 
             entity.ToTable("Leaderboard");
 
@@ -572,7 +579,7 @@ public partial class GamifiedPlatformContext : DbContext
 
         modelBuilder.Entity<Learner>(entity =>
         {
-            entity.HasKey(e => e.LearnerId).HasName("PK__Learner__67ABFCFA7C06D3AB");
+            entity.HasKey(e => e.LearnerId).HasName("PK__Learner__67ABFCFA018F2972");
 
             entity.ToTable("Learner");
 
@@ -586,6 +593,10 @@ public partial class GamifiedPlatformContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("cultural_background");
+            entity.Property(e => e.Email)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("email");
             entity.Property(e => e.FirstName)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -599,11 +610,17 @@ public partial class GamifiedPlatformContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("last_name");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Learners)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Learner__UserID__3B75D760");
         });
 
         modelBuilder.Entity<LearnerDiscussion>(entity =>
         {
-            entity.HasKey(e => new { e.ForumId, e.LearnerId }).HasName("PK__LearnerD__546A1380A1D6A2CA");
+            entity.HasKey(e => new { e.ForumId, e.LearnerId }).HasName("PK__LearnerD__546A1380BCA01ED8");
 
             entity.ToTable("LearnerDiscussion");
 
@@ -618,16 +635,16 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Forum).WithMany(p => p.LearnerDiscussions)
                 .HasForeignKey(d => d.ForumId)
-                .HasConstraintName("FK__LearnerDi__Forum__2CF2ADDF");
+                .HasConstraintName("FK__LearnerDi__Forum__339FAB6E");
 
             entity.HasOne(d => d.Learner).WithMany(p => p.LearnerDiscussions)
                 .HasForeignKey(d => d.LearnerId)
-                .HasConstraintName("FK__LearnerDi__Learn__2DE6D218");
+                .HasConstraintName("FK__LearnerDi__Learn__3493CFA7");
         });
 
         modelBuilder.Entity<LearnerMastery>(entity =>
         {
-            entity.HasKey(e => new { e.LearnerId, e.QuestId, e.Skill }).HasName("PK__LearnerM__36F2E773AE4474BA");
+            entity.HasKey(e => new { e.LearnerId, e.QuestId, e.Skill }).HasName("PK__LearnerM__36F2E773F653C582");
 
             entity.ToTable("LearnerMastery");
 
@@ -642,17 +659,17 @@ public partial class GamifiedPlatformContext : DbContext
             entity.HasOne(d => d.Learner).WithMany(p => p.LearnerMasteries)
                 .HasForeignKey(d => d.LearnerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__LearnerMa__Learn__2645B050");
+                .HasConstraintName("FK__LearnerMa__Learn__2CF2ADDF");
 
             entity.HasOne(d => d.SkillMastery).WithMany(p => p.LearnerMasteries)
                 .HasForeignKey(d => new { d.QuestId, d.Skill })
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__LearnerMastery__2739D489");
+                .HasConstraintName("FK__LearnerMastery__2DE6D218");
         });
 
         modelBuilder.Entity<LearnersCollaboration>(entity =>
         {
-            entity.HasKey(e => new { e.LearnerId, e.QuestId }).HasName("PK__Learners__CCCDE556D8051D62");
+            entity.HasKey(e => new { e.LearnerId, e.QuestId }).HasName("PK__Learners__CCCDE5565EDDD8DC");
 
             entity.ToTable("LearnersCollaboration");
 
@@ -663,17 +680,17 @@ public partial class GamifiedPlatformContext : DbContext
             entity.HasOne(d => d.Learner).WithMany(p => p.LearnersCollaborations)
                 .HasForeignKey(d => d.LearnerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__LearnersC__Learn__22751F6C");
+                .HasConstraintName("FK__LearnersC__Learn__29221CFB");
 
             entity.HasOne(d => d.Quest).WithMany(p => p.LearnersCollaborations)
                 .HasForeignKey(d => d.QuestId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__LearnersC__Quest__236943A5");
+                .HasConstraintName("FK__LearnersC__Quest__2A164134");
         });
 
         modelBuilder.Entity<LearningActivity>(entity =>
         {
-            entity.HasKey(e => e.ActivityId).HasName("PK__Learning__45F4A7F132572FAE");
+            entity.HasKey(e => e.ActivityId).HasName("PK__Learning__45F4A7F1AD5F9E0D");
 
             entity.ToTable("Learning_activities");
 
@@ -693,12 +710,12 @@ public partial class GamifiedPlatformContext : DbContext
             entity.HasOne(d => d.Module).WithMany(p => p.LearningActivities)
                 .HasForeignKey(d => new { d.ModuleId, d.CourseId })
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__Learning_activit__5812160E");
+                .HasConstraintName("FK__Learning_activit__5DCAEF64");
         });
 
         modelBuilder.Entity<LearningGoal>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Learning__3214EC27E361E771");
+            entity.HasKey(e => e.Id).HasName("PK__Learning__3214EC275B31E30E");
 
             entity.ToTable("Learning_goal");
 
@@ -720,13 +737,13 @@ public partial class GamifiedPlatformContext : DbContext
                     "LearnersGoal",
                     r => r.HasOne<Learner>().WithMany()
                         .HasForeignKey("LearnerId")
-                        .HasConstraintName("FK__LearnersG__Learn__7F2BE32F"),
+                        .HasConstraintName("FK__LearnersG__Learn__05D8E0BE"),
                     l => l.HasOne<LearningGoal>().WithMany()
                         .HasForeignKey("GoalId")
-                        .HasConstraintName("FK__LearnersG__GoalI__7E37BEF6"),
+                        .HasConstraintName("FK__LearnersG__GoalI__04E4BC85"),
                     j =>
                     {
-                        j.HasKey("GoalId", "LearnerId").HasName("PK__Learners__3C3540FEE4FDD327");
+                        j.HasKey("GoalId", "LearnerId").HasName("PK__Learners__3C3540FEB08F96BE");
                         j.ToTable("LearnersGoals");
                         j.IndexerProperty<int>("GoalId").HasColumnName("GoalID");
                         j.IndexerProperty<int>("LearnerId").HasColumnName("LearnerID");
@@ -735,7 +752,7 @@ public partial class GamifiedPlatformContext : DbContext
 
         modelBuilder.Entity<LearningPath>(entity =>
         {
-            entity.HasKey(e => e.PathId).HasName("PK__Learning__BFB8200AAF981396");
+            entity.HasKey(e => e.PathId).HasName("PK__Learning__BFB8200A9FBC6920");
 
             entity.ToTable("Learning_path");
 
@@ -758,12 +775,12 @@ public partial class GamifiedPlatformContext : DbContext
             entity.HasOne(d => d.PersonalizationProfile).WithMany(p => p.LearningPaths)
                 .HasForeignKey(d => new { d.LearnerId, d.ProfileId })
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__Learning_path__619B8048");
+                .HasConstraintName("FK__Learning_path__6754599E");
         });
 
         modelBuilder.Entity<LearningPreference>(entity =>
         {
-            entity.HasKey(e => new { e.LearnerId, e.Preference }).HasName("PK__Learning__6032E158B843FE05");
+            entity.HasKey(e => new { e.LearnerId, e.Preference }).HasName("PK__Learning__6032E158D0A83436");
 
             entity.ToTable("LearningPreference");
 
@@ -775,12 +792,12 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Learner).WithMany(p => p.LearningPreferences)
                 .HasForeignKey(d => d.LearnerId)
-                .HasConstraintName("FK__LearningP__Learn__3B75D760");
+                .HasConstraintName("FK__LearningP__Learn__412EB0B6");
         });
 
         modelBuilder.Entity<Module>(entity =>
         {
-            entity.HasKey(e => new { e.ModuleId, e.CourseId }).HasName("PK__Modules__47E6A09F2A6F4D3A");
+            entity.HasKey(e => new { e.ModuleId, e.CourseId }).HasName("PK__Modules__47E6A09FB2EEC056");
 
             entity.Property(e => e.ModuleId)
                 .ValueGeneratedOnAdd()
@@ -800,12 +817,12 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Course).WithMany(p => p.Modules)
                 .HasForeignKey(d => d.CourseId)
-                .HasConstraintName("FK__Modules__CourseI__49C3F6B7");
+                .HasConstraintName("FK__Modules__CourseI__4F7CD00D");
         });
 
         modelBuilder.Entity<ModuleContent>(entity =>
         {
-            entity.HasKey(e => new { e.ModuleId, e.CourseId, e.ContentType }).HasName("PK__ModuleCo__402E75DA1ECFE34B");
+            entity.HasKey(e => new { e.ModuleId, e.CourseId, e.ContentType }).HasName("PK__ModuleCo__402E75DAAFA7F389");
 
             entity.ToTable("ModuleContent");
 
@@ -818,12 +835,12 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Module).WithMany(p => p.ModuleContents)
                 .HasForeignKey(d => new { d.ModuleId, d.CourseId })
-                .HasConstraintName("FK__ModuleContent__4F7CD00D");
+                .HasConstraintName("FK__ModuleContent__5535A963");
         });
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC27CCF2330B");
+            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC2734249BB9");
 
             entity.ToTable("Notification");
 
@@ -845,13 +862,13 @@ public partial class GamifiedPlatformContext : DbContext
                     "ReceivedNotification",
                     r => r.HasOne<Learner>().WithMany()
                         .HasForeignKey("LearnerId")
-                        .HasConstraintName("FK__ReceivedN__Learn__0D7A0286"),
+                        .HasConstraintName("FK__ReceivedN__Learn__14270015"),
                     l => l.HasOne<Notification>().WithMany()
                         .HasForeignKey("NotificationId")
-                        .HasConstraintName("FK__ReceivedN__Notif__0C85DE4D"),
+                        .HasConstraintName("FK__ReceivedN__Notif__1332DBDC"),
                     j =>
                     {
-                        j.HasKey("NotificationId", "LearnerId").HasName("PK__Received__96B591FD3CD073AD");
+                        j.HasKey("NotificationId", "LearnerId").HasName("PK__Received__96B591FD24BB778F");
                         j.ToTable("ReceivedNotification");
                         j.IndexerProperty<int>("NotificationId").HasColumnName("NotificationID");
                         j.IndexerProperty<int>("LearnerId").HasColumnName("LearnerID");
@@ -860,7 +877,7 @@ public partial class GamifiedPlatformContext : DbContext
 
         modelBuilder.Entity<Pathreview>(entity =>
         {
-            entity.HasKey(e => new { e.InstructorId, e.PathId }).HasName("PK__Pathrevi__11D776B8558156A5");
+            entity.HasKey(e => new { e.InstructorId, e.PathId }).HasName("PK__Pathrevi__11D776B858A7A62C");
 
             entity.ToTable("Pathreview");
 
@@ -873,16 +890,16 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Instructor).WithMany(p => p.Pathreviews)
                 .HasForeignKey(d => d.InstructorId)
-                .HasConstraintName("FK__Pathrevie__Instr__66603565");
+                .HasConstraintName("FK__Pathrevie__Instr__6D0D32F4");
 
             entity.HasOne(d => d.Path).WithMany(p => p.Pathreviews)
                 .HasForeignKey(d => d.PathId)
-                .HasConstraintName("FK__Pathrevie__PathI__6754599E");
+                .HasConstraintName("FK__Pathrevie__PathI__6E01572D");
         });
 
         modelBuilder.Entity<PersonalizationProfile>(entity =>
         {
-            entity.HasKey(e => new { e.LearnerId, e.ProfileId }).HasName("PK__Personal__353B34726CC20F7D");
+            entity.HasKey(e => new { e.LearnerId, e.ProfileId }).HasName("PK__Personal__353B34726BA72B73");
 
             entity.Property(e => e.LearnerId).HasColumnName("LearnerID");
             entity.Property(e => e.ProfileId).HasColumnName("ProfileID");
@@ -901,12 +918,12 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Learner).WithMany(p => p.PersonalizationProfiles)
                 .HasForeignKey(d => d.LearnerId)
-                .HasConstraintName("FK__Personali__Learn__3E52440B");
+                .HasConstraintName("FK__Personali__Learn__440B1D61");
         });
 
         modelBuilder.Entity<Quest>(entity =>
         {
-            entity.HasKey(e => e.QuestId).HasName("PK__Quest__B6619ACB13F0B73C");
+            entity.HasKey(e => e.QuestId).HasName("PK__Quest__B6619ACB5629DC87");
 
             entity.ToTable("Quest");
 
@@ -931,7 +948,7 @@ public partial class GamifiedPlatformContext : DbContext
 
         modelBuilder.Entity<QuestReward>(entity =>
         {
-            entity.HasKey(e => new { e.RewardId, e.QuestId, e.LearnerId }).HasName("PK__QuestRew__D251A7C9F611D0DF");
+            entity.HasKey(e => new { e.RewardId, e.QuestId, e.LearnerId }).HasName("PK__QuestRew__D251A7C99104570D");
 
             entity.ToTable("QuestReward");
 
@@ -944,20 +961,20 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Learner).WithMany(p => p.QuestRewards)
                 .HasForeignKey(d => d.LearnerId)
-                .HasConstraintName("FK__QuestRewa__Learn__32AB8735");
+                .HasConstraintName("FK__QuestRewa__Learn__395884C4");
 
             entity.HasOne(d => d.Quest).WithMany(p => p.QuestRewards)
                 .HasForeignKey(d => d.QuestId)
-                .HasConstraintName("FK__QuestRewa__Quest__31B762FC");
+                .HasConstraintName("FK__QuestRewa__Quest__3864608B");
 
             entity.HasOne(d => d.Reward).WithMany(p => p.QuestRewards)
                 .HasForeignKey(d => d.RewardId)
-                .HasConstraintName("FK__QuestRewa__Rewar__30C33EC3");
+                .HasConstraintName("FK__QuestRewa__Rewar__37703C52");
         });
 
         modelBuilder.Entity<Ranking>(entity =>
         {
-            entity.HasKey(e => new { e.BoardId, e.LearnerId, e.CourseId }).HasName("PK__Ranking__C9D7F96C0FF9940F");
+            entity.HasKey(e => new { e.BoardId, e.LearnerId, e.CourseId }).HasName("PK__Ranking__C9D7F96C51EF667B");
 
             entity.ToTable("Ranking");
 
@@ -969,20 +986,20 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Board).WithMany(p => p.Rankings)
                 .HasForeignKey(d => d.BoardId)
-                .HasConstraintName("FK__Ranking__BoardID__778AC167");
+                .HasConstraintName("FK__Ranking__BoardID__7E37BEF6");
 
             entity.HasOne(d => d.Course).WithMany(p => p.Rankings)
                 .HasForeignKey(d => d.CourseId)
-                .HasConstraintName("FK__Ranking__CourseI__797309D9");
+                .HasConstraintName("FK__Ranking__CourseI__00200768");
 
             entity.HasOne(d => d.Learner).WithMany(p => p.Rankings)
                 .HasForeignKey(d => d.LearnerId)
-                .HasConstraintName("FK__Ranking__Learner__787EE5A0");
+                .HasConstraintName("FK__Ranking__Learner__7F2BE32F");
         });
 
         modelBuilder.Entity<Reward>(entity =>
         {
-            entity.HasKey(e => e.RewardId).HasName("PK__Reward__825015993D18CE5F");
+            entity.HasKey(e => e.RewardId).HasName("PK__Reward__825015993B4E5F07");
 
             entity.ToTable("Reward");
 
@@ -1002,7 +1019,7 @@ public partial class GamifiedPlatformContext : DbContext
 
         modelBuilder.Entity<Skill>(entity =>
         {
-            entity.HasKey(e => new { e.LearnerId, e.Skill1 }).HasName("PK__Skills__C45BDEA5EFD5A703");
+            entity.HasKey(e => new { e.LearnerId, e.Skill1 }).HasName("PK__Skills__C45BDEA5DB8F657C");
 
             entity.Property(e => e.LearnerId).HasColumnName("LearnerID");
             entity.Property(e => e.Skill1)
@@ -1012,12 +1029,12 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Learner).WithMany(p => p.Skills)
                 .HasForeignKey(d => d.LearnerId)
-                .HasConstraintName("FK__Skills__LearnerI__38996AB5");
+                .HasConstraintName("FK__Skills__LearnerI__3E52440B");
         });
 
         modelBuilder.Entity<SkillMastery>(entity =>
         {
-            entity.HasKey(e => new { e.QuestId, e.Skill }).HasName("PK__Skill_Ma__1591B894FFC7C97E");
+            entity.HasKey(e => new { e.QuestId, e.Skill }).HasName("PK__Skill_Ma__1591B89460F7A46E");
 
             entity.ToTable("Skill_Mastery");
 
@@ -1029,12 +1046,12 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Quest).WithMany(p => p.SkillMasteries)
                 .HasForeignKey(d => d.QuestId)
-                .HasConstraintName("FK__Skill_Mas__Quest__1CBC4616");
+                .HasConstraintName("FK__Skill_Mas__Quest__236943A5");
         });
 
         modelBuilder.Entity<SkillProgression>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SkillPro__3214EC27D4AD2E0B");
+            entity.HasKey(e => e.Id).HasName("PK__SkillPro__3214EC274A756EC3");
 
             entity.ToTable("SkillProgression");
 
@@ -1055,12 +1072,12 @@ public partial class GamifiedPlatformContext : DbContext
             entity.HasOne(d => d.Skill).WithMany(p => p.SkillProgressions)
                 .HasForeignKey(d => new { d.LearnerId, d.SkillName })
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__SkillProgression__123EB7A3");
+                .HasConstraintName("FK__SkillProgression__18EBB532");
         });
 
         modelBuilder.Entity<Survey>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Survey__3214EC270E612E80");
+            entity.HasKey(e => e.Id).HasName("PK__Survey__3214EC2743489E3E");
 
             entity.ToTable("Survey");
 
@@ -1072,7 +1089,7 @@ public partial class GamifiedPlatformContext : DbContext
 
         modelBuilder.Entity<SurveyQuestion>(entity =>
         {
-            entity.HasKey(e => new { e.SurveyId, e.Question }).HasName("PK__SurveyQu__23FB983B6C44CF00");
+            entity.HasKey(e => new { e.SurveyId, e.Question }).HasName("PK__SurveyQu__23FB983BA300FC2D");
 
             entity.Property(e => e.SurveyId).HasColumnName("SurveyID");
             entity.Property(e => e.Question)
@@ -1081,12 +1098,12 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Survey).WithMany(p => p.SurveyQuestions)
                 .HasForeignKey(d => d.SurveyId)
-                .HasConstraintName("FK__SurveyQue__Surve__03F0984C");
+                .HasConstraintName("FK__SurveyQue__Surve__0A9D95DB");
         });
 
         modelBuilder.Entity<Takesassesment>(entity =>
         {
-            entity.HasKey(e => new { e.LearnerId, e.AssesmentId }).HasName("PK__takesass__4D87F993BC84C5CB");
+            entity.HasKey(e => new { e.LearnerId, e.AssesmentId }).HasName("PK__takesass__4D87F993510C445F");
 
             entity.ToTable("takesassesment");
 
@@ -1095,16 +1112,16 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Assesment).WithMany(p => p.Takesassesments)
                 .HasForeignKey(d => d.AssesmentId)
-                .HasConstraintName("FK__takesasse__asses__367C1819");
+                .HasConstraintName("FK__takesasse__asses__3D2915A8");
 
             entity.HasOne(d => d.Learner).WithMany(p => p.Takesassesments)
                 .HasForeignKey(d => d.LearnerId)
-                .HasConstraintName("FK__takesasse__learn__3587F3E0");
+                .HasConstraintName("FK__takesasse__learn__3C34F16F");
         });
 
         modelBuilder.Entity<TargetTrait>(entity =>
         {
-            entity.HasKey(e => new { e.ModuleId, e.CourseId, e.Trait }).HasName("PK__Target_t__4E005E4C9BF9365B");
+            entity.HasKey(e => new { e.ModuleId, e.CourseId, e.Trait }).HasName("PK__Target_t__4E005E4CC43B6CF2");
 
             entity.ToTable("Target_traits");
 
@@ -1116,14 +1133,14 @@ public partial class GamifiedPlatformContext : DbContext
 
             entity.HasOne(d => d.Module).WithMany(p => p.TargetTraits)
                 .HasForeignKey(d => new { d.ModuleId, d.CourseId })
-                .HasConstraintName("FK__Target_traits__4CA06362");
+                .HasConstraintName("FK__Target_traits__52593CB8");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserID).HasName("PK__Users__1788CCACC79D2098");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCACA5E17589");
 
-            entity.Property(e => e.UserID).HasColumnName("UserID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Password)
