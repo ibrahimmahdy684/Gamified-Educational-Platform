@@ -1,7 +1,7 @@
+DROP DATABASE GamifiedPlatform
 CREATE DATABASE GamifiedPlatform
 --test2
 USE GamifiedPlatform
-drop table users
 
 Create table Users(
     UserID INT primary Key Identity,
@@ -11,26 +11,29 @@ Create table Users(
     Type varchar(50)
 );
 
-
 CREATE TABLE Admin (
     AdminID INT PRIMARY KEY IDENTITY,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
+    UserID INT NOT NULL,
+    Name VARCHAR(50),
     gender CHAR(1),
     birth_date DATE,
     country VARCHAR(50),
-    email VARCHAR(50)
+    email VARCHAR(50),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
 )
 
  --1
 CREATE TABLE Learner (
     LearnerID INT PRIMARY KEY identity,
+    UserID INT NOT NULL,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     gender CHAR(1),
     birth_date DATE,
     country VARCHAR(50),
-    cultural_background VARCHAR(50)
+    email VARCHAR(50),
+    cultural_background VARCHAR(50),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 
 -- 2
@@ -193,10 +196,12 @@ CREATE TABLE Learning_path (
 -- 17
 CREATE TABLE Instructor (
     InstructorID INT PRIMARY KEY identity,
+    UserID INT NOT NULL, 
     name VARCHAR(50),
     latest_qualification VARCHAR(50),
     expertise_area VARCHAR(50),
-    email VARCHAR(50)
+    email VARCHAR(50),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
 
 -- 18
