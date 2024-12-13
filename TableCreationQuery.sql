@@ -35,6 +35,16 @@ CREATE TABLE Learner (
     cultural_background VARCHAR(50),
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
+-- 17
+--CREATE TABLE Instructor (
+--    InstructorID INT PRIMARY KEY identity,
+--    UserID INT NOT NULL, 
+--    name VARCHAR(50),
+--    latest_qualification VARCHAR(50),
+--    expertise_area VARCHAR(50),
+--   email VARCHAR(50),
+--    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+--);
 
 -- 2
 CREATE TABLE Skills (
