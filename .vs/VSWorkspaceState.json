@@ -2,11 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\GamifiedPlatform",
-    "\\GamifiedPlatform\\Controllers",
     "\\GamifiedPlatform\\Models",
     "\\GamifiedPlatform\\Views",
+    "\\GamifiedPlatform\\Views\\Learners",
     "\\GamifiedPlatform\\Views\\Users"
   ],
-  "SelectedNode": "\\GamifiedPlatform\\Models\\GamifiedPlatformContext.cs",
+  "SelectedNode": "\\TableCreationQuery.sql",
   "PreviewInSolutionExplorer": false
 }
