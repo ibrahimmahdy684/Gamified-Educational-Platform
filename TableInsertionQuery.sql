@@ -1,13 +1,59 @@
 USE GamifiedPlatform
 
---Insertion into Learner 
-INSERT INTO Learner ( first_name, last_name, gender, birth_date, country, cultural_background)
+--Insertion into Users
+-- Insert 5 Learners
+INSERT INTO Users (Name, Email, Password, Type)
+VALUES 
+('Learner1', 'learner1@example.com', 'password123', 'Learner'),
+('Learner2', 'learner2@example.com', 'password123', 'Learner'),
+('Learner3', 'learner3@example.com', 'password123', 'Learner'),
+('Learner4', 'learner4@example.com', 'password123', 'Learner'),
+('Learner5', 'learner5@example.com', 'password123', 'Learner');
+
+-- Insert 5 Instructors
+INSERT INTO Users (Name, Email, Password, Type)
+VALUES 
+('Instructor1', 'instructor1@example.com', 'password123', 'Instructor'),
+('Instructor2', 'instructor2@example.com', 'password123', 'Instructor'),
+('Instructor3', 'instructor3@example.com', 'password123', 'Instructor'),
+('Instructor4', 'instructor4@example.com', 'password123', 'Instructor'),
+('Instructor5', 'instructor5@example.com', 'password123', 'Instructor');
+INSERT INTO Users (Name, Email, Password, Type)
+VALUES 
+('Instructor6', 'instructor6@example.com', 'password123', 'Instructor'),
+('Instructor7', 'instructor7@example.com', 'password123', 'Instructor')
+
+-- Insert 5 Admins
+INSERT INTO Users (Name, Email, Password, Type)
+VALUES 
+('Admin1', 'admin1@example.com', 'password123', 'Admin'),
+('Admin2', 'admin2@example.com', 'password123', 'Admin'),
+('Admin3', 'admin3@example.com', 'password123', 'Admin'),
+('Admin4', 'admin4@example.com', 'password123', 'Admin'),
+('Admin5', 'admin5@example.com', 'password123', 'Admin');
+
+
+--Insertion into Admin
+-- Insert 5 records into the Admin table
+INSERT INTO Admin (UserID, Name, Gender, Birth_Date, Country, Email)
 VALUES
-( 'Alice', 'Smith', 'F', '1998-05-14', 'USA', 'Western'),
-( 'Mohammed', 'Ali', 'M', '2000-03-22', 'Egypt', 'Middle Eastern'),
-( 'Wei', 'Zhang', 'M', '1995-07-10', 'China', 'Asian'),
-( 'Maria', 'Gonzalez', 'F', '1997-11-05', 'Mexico', 'Latin American'),
-( 'John', 'Doe', 'M', '1999-02-18', 'UK', 'Western');
+((SELECT UserID FROM Users WHERE Email = 'admin1@example.com'), 'Admin1', 'M', '1985-01-15', 'USA', 'admin1@example.com'),
+((SELECT UserID FROM Users WHERE Email = 'admin2@example.com'), 'Admin2', 'F', '1990-05-22', 'UK', 'admin2@example.com'),
+((SELECT UserID FROM Users WHERE Email = 'admin3@example.com'), 'Admin3', 'M', '1988-03-18', 'Canada', 'admin3@example.com'),
+((SELECT UserID FROM Users WHERE Email = 'admin4@example.com'), 'Admin4', 'F', '1992-07-09', 'Australia', 'admin4@example.com'),
+((SELECT UserID FROM Users WHERE Email = 'admin5@example.com'), 'Admin5', 'M', '1980-11-30', 'India', 'admin5@example.com');
+
+
+--Insertion into Learner 
+-- Insert 5 records into the Learner table
+INSERT INTO Learner (UserID, First_Name, Last_Name, Gender, Birth_Date, Country, Email, Cultural_Background)
+VALUES
+((SELECT UserID FROM Users WHERE Email = 'learner1@example.com'), 'Learner1', 'Doe', 'M', '2000-04-12', 'USA', 'learner1@example.com', 'American'),
+((SELECT UserID FROM Users WHERE Email = 'learner2@example.com'), 'Learner2', 'Smith', 'F', '1999-08-25', 'UK', 'learner2@example.com', 'British'),
+((SELECT UserID FROM Users WHERE Email = 'learner3@example.com'), 'Learner3', 'Ahmed', 'M', '1998-01-10', 'Egypt', 'learner3@example.com', 'Middle Eastern'),
+((SELECT UserID FROM Users WHERE Email = 'learner4@example.com'), 'Learner4', 'Gonzalez', 'F', '2001-06-15', 'Spain', 'learner4@example.com', 'Hispanic'),
+((SELECT UserID FROM Users WHERE Email = 'learner5@example.com'), 'Learner5', 'Zhang', 'M', '1997-03-05', 'China', 'learner5@example.com', 'Asian');
+
 
 --Insertion into Skills 
 INSERT INTO Skills (LearnerID, skill)
@@ -198,15 +244,20 @@ VALUES
 ( 1, 107, 'In Progress', 'Data Science Fundamentals', 'Adaptive Learning Path');
 
 --Insertion into Instructor 
-INSERT INTO Instructor ( name, latest_qualification, expertise_area, email)
+-- Insert 5 records into the Instructor table with consistent names from the Users table
+INSERT INTO Instructor (UserID, Name, Latest_Qualification, Expertise_Area, Email)
 VALUES
-( 'Joe', 'PhD in Computer Science', 'Software Engineering', 'joe@example.com'),
-( 'Ibrahim', 'Masters in Graphic Design', 'Design Principles', 'ibrahim@example.com'),
-('Darwish', 'PhD in Data Science', 'Data Analysis and Machine Learning', 'darwish@example.com'),
-( 'Mariam', 'Masters in Communication', 'Public Speaking', 'mariam@example.com'),
-( 'Alice Johnson', 'PhD in Literature', 'Creative Writing', 'alice.johnson@example.com'),
-( 'Ahmed Ali', 'PhD in Psychology', 'Emotional Intelligence in Learning', 'ahmed.ali@example.com'),
-( 'Sara Lee', 'Masters in Education', 'Curriculum Design', 'sara.lee@example.com');
+((SELECT UserID FROM Users WHERE Email = 'instructor1@example.com'), 'Instructor1', 'PhD in Computer Science', 'Artificial Intelligence', 'instructor1@example.com'),
+((SELECT UserID FROM Users WHERE Email = 'instructor2@example.com'), 'Instructor2', 'Masters in Education', 'Pedagogy', 'instructor2@example.com'),
+((SELECT UserID FROM Users WHERE Email = 'instructor3@example.com'), 'Instructor3', 'PhD in Physics', 'Quantum Mechanics', 'instructor3@example.com'),
+((SELECT UserID FROM Users WHERE Email = 'instructor4@example.com'), 'Instructor4', 'PhD in History', 'Ancient Civilizations', 'instructor4@example.com'),
+((SELECT UserID FROM Users WHERE Email = 'instructor5@example.com'), 'Instructor5', 'Masters in Mechanical Engineering', 'Robotics', 'instructor5@example.com');
+-- Insert 2 more records into the Instructor table with consistent names from the Users table
+INSERT INTO Instructor (UserID, Name, Latest_Qualification, Expertise_Area, Email)
+VALUES
+((SELECT UserID FROM Users WHERE Email = 'instructor6@example.com'), 'Instructor6', 'Masters in Computer Engineering', 'Software Development', 'instructor6@example.com'),
+((SELECT UserID FROM Users WHERE Email = 'instructor7@example.com'), 'Instructor7', 'PhD in Environmental Science', 'Sustainability', 'instructor7@example.com');
+
 
 --Insertion into Pathreview 
 INSERT INTO Pathreview (InstructorID, PathID, feedback)
