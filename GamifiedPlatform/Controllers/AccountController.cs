@@ -63,7 +63,7 @@ namespace GamifiedPlatform.Controllers
                 }
 
                 // Redirect to user's profile page or dashboard if credentials are correct
-                return RedirectToAction("Profile", "User", new { id = user.UserID });
+                return RedirectToAction("Profile", "User", new { id = user.UserId });
             }
 
             return View(model);
