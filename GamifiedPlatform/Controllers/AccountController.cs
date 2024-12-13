@@ -34,6 +34,39 @@ namespace GamifiedPlatform.Controllers
                 _context.Users.Add(user);
                 _context.SaveChanges();
 
+                if (model.Type == "Learner")
+                {
+                    var learner = new Learner
+                    {
+                        UserId = user.UserId,
+                        FirstName = model.Name,
+                    };
+                    _context.Learners.Add(learner);
+                }
+                else if (model.Type == "Instructor")
+                {
+                    var instructor = new Instructor
+                    {
+                        UserId = user.UserId,
+                        Name = model.Name,
+                        Email = model.Email // Or you can just reference model.Email from Users table
+                    };
+                    _context.Instructors.Add(instructor);
+                }
+                else if (model.Type == "Admin")
+                {
+                    var admin = new Admin
+                    {
+                        UserId = user.UserId,
+                        Name = model.Name,
+                        Email = model.Email
+                    };
+                    _context.Admins.Add(admin);
+                }
+
+                // Save the changes for the corresponding table
+                _context.SaveChangesAsync();
+
                 return RedirectToAction("Login");
             }
 
