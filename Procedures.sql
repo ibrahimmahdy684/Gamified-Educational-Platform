@@ -117,15 +117,23 @@ INSERT INTO Course (CourseID, Title, learning_objective, credit_points, difficul
 VALUES (10, 'Introduction to Programming', 'Learn the basics of coding', 4, 'Beginner', 'None', 'A beginner-level course.')*/
 
 --7 
-GO
-CREATE PROCEDURE Highestgrade 
+drop procedure Highestgrade
+go
+CREATE PROCEDURE HighestGrade
+    @CourseId AS INT
 AS
 BEGIN
-	SELECT MAX(total_marks)
-	FROM Assessments
-	GROUP BY CourseID
+    SELECT TOP 1
+        a.ID AS AssessmentId,         -- Ensure this matches the model property name
+        a.Title AS AssessmentTitle,
+        a.total_marks AS HighestGrade               
+    FROM Assessments a
+    WHERE a.CourseID = @CourseId
+    ORDER BY a.total_marks DESC
 END
-EXEC Highestgrade
+
+
+EXEC Highestgrade 1
 
 --8 (how no output?)
 GO
