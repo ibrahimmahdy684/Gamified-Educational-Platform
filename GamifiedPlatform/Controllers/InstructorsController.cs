@@ -18,6 +18,30 @@ namespace GamifiedPlatform.Controllers
             _context = context;
         }
 
+        public IActionResult Dashboard(int id)
+        {
+            var instructor = _context.Instructors
+                .FirstOrDefault(i => i.UserId == id);
+
+            if (instructor == null)
+            {
+                return NotFound();
+            }
+
+            return View(instructor);
+        }
+
+        public IActionResult Profile(int id)
+        {
+            var instructor = _context.Instructors.FirstOrDefault(i => i.UserId == id);
+            if (instructor == null)
+            {
+                return NotFound();
+            }
+
+            return View(instructor);
+        }
+
         // GET: Instructors
         public async Task<IActionResult> Index()
         {

@@ -1,5 +1,6 @@
 ﻿using GamifiedPlatform.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace GamifiedPlatform.Controllers
 {
@@ -39,7 +40,7 @@ namespace GamifiedPlatform.Controllers
                     var learner = new Learner
                     {
                         UserId = user.UserId,
-                        FirstName = model.Name,
+                        FirstName = model.Name
                     };
                     _context.Learners.Add(learner);
                 }
@@ -65,7 +66,7 @@ namespace GamifiedPlatform.Controllers
                 }
 
                 // Save the changes for the corresponding table
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
 
                 return RedirectToAction("Login");
             }
@@ -95,12 +96,26 @@ namespace GamifiedPlatform.Controllers
                     return View(model);
                 }
 
-                // Redirect to user's profile page or dashboard if credentials are correct
-                return RedirectToAction("Profile", "User", new { id = user.UserId });
+                // Redirect based on the user type
+                if (user.Type == "Learner")
+                {
+                    return RedirectToAction("Profile", "Learners", new { id = user.UserId });
+                }
+                else if (user.Type == "Instructor")
+                {
+                    return RedirectToAction("Profile", "Instructors", new { id = user.UserId });
+                }
+                else if (user.Type == "Admin")
+                {
+                    return RedirectToAction("Profile", "Admins", new { id = user.UserId });
+                }
+
+                // If none of the conditions match, you can handle it accordingly.
+                return RedirectToAction("Index", "Home");
             }
 
             return View(model);
         }
+
     }
 }
-    

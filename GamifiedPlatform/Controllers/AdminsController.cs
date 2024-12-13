@@ -18,6 +18,30 @@ namespace GamifiedPlatform.Controllers
             _context = context;
         }
 
+        public IActionResult Dashboard(int id)
+        {
+            var admin = _context.Admins
+                .FirstOrDefault(a => a.UserId == id);
+
+            if (admin == null)
+            {
+                return NotFound();
+            }
+
+            return View(admin);
+        }
+
+        public IActionResult Profile(int id)
+        {
+            var admin = _context.Admins.FirstOrDefault(a => a.UserId == id);
+            if (admin == null)
+            {
+                return NotFound();
+            }
+
+            return View(admin);
+        }
+
         // GET: Admins
         public async Task<IActionResult> Index()
         {

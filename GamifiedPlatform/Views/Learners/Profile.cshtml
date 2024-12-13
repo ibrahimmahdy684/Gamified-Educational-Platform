@@ -1,0 +1,21 @@
+﻿@model GamifiedPlatform.Models.Learner
+
+@{
+    ViewData["Title"] = "Learner Dashboard";
+}
+
+<h2>Welcome, @Model.FirstName @Model.LastName</h2>
+
+<div>
+    <h3>Your Profile Details:</h3>
+    <ul>
+        <li><strong>Name:</strong> @Model.FirstName @Model.LastName</li>
+        <li><strong>Email:</strong> @Model.Email</li>
+        <li><strong>Gender:</strong> @Model.Gender</li>
+        <li><strong>Birth Date:</strong> @(Model.BirthDate?.ToString("dd/MM/yyyy") ?? "Not provided")</li>
+        <li><strong>Country:</strong> @Model.Country</li>
+        <li><strong>Cultural Background:</strong> @Model.CulturalBackground</li>
+    </ul>
+</div>
+
+<a href="@Url.Action("EditProfile", "Learner", new { id = Model.UserId })">Edit Profile</a>
