@@ -4,7 +4,12 @@
 }
 
 <h2>Create Discussion Forum</h2>
-
+@if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary(false, "Please fix the following errors:")
+    </div>
+}
 <form asp-action="Create" method="post">
     <div>
         <label>Module ID</label>
@@ -33,6 +38,4 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+

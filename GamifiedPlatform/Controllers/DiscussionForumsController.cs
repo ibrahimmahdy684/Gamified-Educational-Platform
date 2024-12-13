@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GamifiedPlatform.Models;
+using Microsoft.Data.SqlClient;
 
 namespace GamifiedPlatform.Controllers
 {
@@ -58,8 +59,41 @@ namespace GamifiedPlatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int moduleID,int courseID,string title,string description)
         {
-            await _context.Database.ExecuteSqlInterpolatedAsync($"Exec CreateDiscussion @ModuleID={moduleID},@courseID={ courseID},@title={title},@description={description}");
-            
+            try
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec CreateDiscussion @ModuleID={moduleID},@courseID={courseID},@title={title},@description={description}");
+            }
+            catch (SqlException ex)
+            {
+
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+                    var moduleExists = await _context.Modules.AnyAsync(d => d.ModuleId == moduleID);
+                    if (!moduleExists)
+                    {
+                        ModelState.AddModelError("", "The specified module does not exist.");
+
+                    }
+                    else ModelState.AddModelError("", "The specified course does not exist.");
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "This forum already Exists");
+                }
+                else
+                {
+
+                    ModelState.AddModelError("", "An error occurred while adding the post. Please try again.");
+                }
+
+                return View("Create");
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Create");
+            }
             return RedirectToAction("Index");
         }
        
