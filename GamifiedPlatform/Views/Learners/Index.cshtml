@@ -1,4 +1,7 @@
-﻿@model IEnumerable<GamifiedPlatform.Models.Learner>
+﻿
+
+
+@model IEnumerable<GamifiedPlatform.Models.Learner>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,8 +12,6 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-</
-
 <table class="table">
     <thead>
         <tr>
@@ -36,32 +37,33 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gender)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BirthDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Country)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CulturalBackground)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.LearnerId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.LearnerId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.LearnerId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gender)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BirthDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Country)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CulturalBackground)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.LearnerId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.LearnerId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.LearnerId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
