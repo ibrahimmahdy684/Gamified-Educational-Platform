@@ -7,7 +7,12 @@
 @model GamifiedPlatform.Models.LearnerDiscussion
 
 <h2>Add a Post</h2>
-
+@if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary(false, "Please fix the following errors:")
+    </div>
+}
 <form asp-action="AddPost" method="post">
     <div>
         <label>Learner ID</label>
