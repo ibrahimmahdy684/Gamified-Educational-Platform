@@ -1,0 +1,39 @@
+﻿@model IEnumerable<GamifiedPlatform.Models.Assessment>
+
+<h2>Your Assessments</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Assessment ID</th>
+            <th>Course ID</th>
+            <th>Module ID</th>
+            <th>Assessment Title</th>
+            <th>Type</th>
+            <th>Grade</th>
+            <th>Total Marks</th>
+            <th>Passing Marks</th>
+            <th>Weightage</th>
+            <th>Criteria</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var assessment in Model)
+        {
+            <tr>
+                <td>@assessment.Id</td>
+                <td>@assessment.CourseId</td>
+                <td>@assessment.ModuleId</td>
+                <td>@assessment.Title</td>
+                <td>@assessment.Type</td>
+                <td>@assessment.Grade</td>
+                <td>@assessment.TotalMarks</td>
+                <td>@assessment.PassingMarks</td>
+                <td>@assessment.Weightage</td>
+                <td>@assessment.Criteria</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("LearnerProfile", "Learner", new { id = ViewBag.UserId })" class="btn btn-secondary">Back to Profile</a>

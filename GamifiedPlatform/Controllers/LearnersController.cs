@@ -33,6 +33,24 @@ namespace GamifiedPlatform.Controllers
             return View(learner);
         }
 
+        public IActionResult ViewAssessments(int learnerId)
+        {
+            // Prepare the SQL parameter
+            var learnerIdParam = new SqlParameter("@LearnerID", learnerId);
+
+            // Execute the stored procedure and get the list of assessments
+            var assessments = _context.Assessments
+                .FromSqlRaw("EXEC AssessmentAnalysis @LearnerID", learnerIdParam)
+                .ToList();
+
+            // Pass the learnerId to ViewBag for the "Back to Profile" button
+            ViewBag.UserId = learnerId;
+
+            // Pass the assessments data to the view
+            return View(assessments);
+        }
+
+
         public IActionResult Profile(int id)
         {
             var learner = _context.Learners.FirstOrDefault(l => l.UserId == id);

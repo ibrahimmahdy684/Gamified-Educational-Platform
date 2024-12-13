@@ -4,6 +4,9 @@
     ViewData["Title"] = "Learner Dashboard";
 }
 
+<h1>Dashboard</12>
+
+
 <h2>Welcome, @Model.FirstName @Model.LastName</h2>
 
 <div>
@@ -16,6 +19,9 @@
         <li><strong>Country:</strong> @Model.Country</li>
         <li><strong>Cultural Background:</strong> @Model.CulturalBackground</li>
     </ul>
+
+    <a asp-action="ViewAssessments" asp-route-learnerId="@Model.LearnerId" class="btn btn-primary">View Your Assessments</a>
+
 </div>
 
 <a href="@Url.Action("EditProfile", "Learner", new { id = Model.UserId })">Edit Profile</a>

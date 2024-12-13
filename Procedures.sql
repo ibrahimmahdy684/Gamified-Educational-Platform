@@ -648,11 +648,13 @@ END;
 exec SkillProgressHistory 2,'Graphic Design'
 
 --Learner20
+drop procedure AssessmentAnalysis
 Go 
 create proc  AssessmentAnalysis(@LearnerID int)
 AS 
 begin
-select a.title as Assessment,t.ScoredPoints as grade
+select a.ID, a.title, a.description, a.CourseID, a.ModuleID, a.title as Assessment, a.type,  t.ScoredPoints as grade,
+a.total_marks, a.passing_marks, a.criteria, a.weightage
 from takesassesment t inner join Assessments a on t.assesment_id=a.ID
 where t.learner_id=@LearnerID
 end

@@ -25,6 +25,8 @@ public partial class Assessment
 
     public string? Title { get; set; }
 
+    public int? Grade { get; set; }
+
     public virtual Module? Module { get; set; }
 
     public virtual ICollection<Takesassesment> Takesassesments { get; set; } = new List<Takesassesment>();
