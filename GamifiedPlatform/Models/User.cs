@@ -1,23 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace GamifiedPlatform.Models
+namespace GamifiedPlatform.Models;
+
+public partial class User
 {
-    public class User
-    {
-        [Key]
-        public int UserID { get; set; }
+    public int UserId { get; set; }
 
-        [Required]
-        public string Name { get; set; }
+    public string? Name { get; set; }
 
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+    public string? Email { get; set; }
 
-        [Required]
-        public string Password { get; set; }
+    public string? Password { get; set; }
 
-        [Required]
-        public string Type { get; set; }
-    }
+    public string? Type { get; set; }
+
+    public virtual ICollection<Admin> Admins { get; set; } = new List<Admin>();
+
+    public virtual ICollection<Instructor> Instructors { get; set; } = new List<Instructor>();
+
+    public virtual ICollection<Learner> Learners { get; set; } = new List<Learner>();
 }
