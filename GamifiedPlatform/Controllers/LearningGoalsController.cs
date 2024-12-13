@@ -23,7 +23,7 @@ namespace GamifiedPlatform.Controllers
         {
             return View(await _context.LearningGoals.ToListAsync());
         }
-
+       
         public async Task<IActionResult> AddGoal(int learnerID,int goalID) {
             var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
             if (!LearnerExists)

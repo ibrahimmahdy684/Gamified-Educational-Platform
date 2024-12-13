@@ -5,7 +5,13 @@
 }
 
 <h1>Index</h1>
-
+<form  method="post" action="LearningGoals/Index">
+    <div>
+        <label>Learner ID</label>
+        <input type="number" name="learnerID" required />
+        <button type="submit">filter</button>
+    </div>
+    </form>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
