@@ -41,10 +41,10 @@ namespace GamifiedPlatform.Controllers
             return RedirectToAction("Index"); 
         }
         // GET: LearningPaths
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int learnerID)
         {
-            var gamifiedPlatformContext = _context.LearningPaths.Include(l => l.PersonalizationProfile);
-            return View(await gamifiedPlatformContext.ToListAsync());
+            var Path = await _context.LearningPaths.FromSqlRaw($"Exec monitorSpecificPath @learnerID={learnerID}").ToListAsync();
+            return View(Path);
         }
 
         // GET: LearningPaths/Details/5

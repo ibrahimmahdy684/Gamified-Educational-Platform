@@ -6,9 +6,11 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<form method="post" action="/LearningPaths/Index">
+    <label for="learnerID"> LearnerID</label>
+    <input type="number" id="learnerID" name="LearnerID" />
+    <button type="submit"> filter </button>
+</form>
 <table class="table">
     <thead>
         <tr>
