@@ -19,6 +19,8 @@ public partial class Course
 
     public string? Description { get; set; }
 
+    public string Status { get; set; } // New property
+
     public virtual ICollection<CourseEnrollment> CourseEnrollments { get; set; } = new List<CourseEnrollment>();
 
     public virtual ICollection<Module> Modules { get; set; } = new List<Module>();

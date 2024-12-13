@@ -288,7 +288,7 @@ create procedure EnrolledCourses
     @LearnerID int
 AS
 BEGIN
-select c.CourseID, c.Title, c.learning_objective, c.credit_points, c.description, c.difficulty_level, c.pre_requisites
+select c.CourseID, c.Title, c.learning_objective, c.credit_points, c.description, c.difficulty_level, c.pre_requisites, ce.status
 from Course_enrollment ce inner join Learner l on l.LearnerID=ce.LearnerID
                           inner join Course c on c.CourseID=ce.CourseID
 where l.LearnerID=@LearnerID
