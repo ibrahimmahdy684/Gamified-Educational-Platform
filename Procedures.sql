@@ -1,5 +1,5 @@
 ﻿USE GamifiedPlatform
---2
+
 ------ADMIN PROCEDURES----------
 Go 
 create proc AllLearnersInfo
@@ -20,14 +20,14 @@ end
 exec getAllForums
 
 Go
-create proc monitorSpecificPath(@learnerID int,@pathID int)
+create proc monitorSpecificPath(@learnerID int)
 AS
 begin 
 select*
 from Learning_path
-where LearnerID=@learnerID AND pathID=@pathID
+where LearnerID=@learnerID
 end
-
+drop proc monitorSpecificPath
 Go
 create proc getUserInfo(@UserID int)
 AS
@@ -532,12 +532,13 @@ Go
 create proc Post(@LearnerID int,@DiscussionID int,@Post varchar(max))
 AS
 begin
-insert into LearnerDiscussion(ForumID,LearnerID,Post) values (@LearnerID,@DiscussionID,@Post);
+insert into LearnerDiscussion(ForumID,LearnerID,Post) values (@DiscussionID,@LearnerID,@Post);
 end
 exec Post 6,5,'hhh'
 /*test
 select *
 from LearnerDiscussion*/
+
 --Learner14
 Go
 create proc AddGoal(@LearnerID int, @GoalID int)
