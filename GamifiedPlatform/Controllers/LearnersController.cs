@@ -44,6 +44,36 @@ namespace GamifiedPlatform.Controllers
             return View(learner);
         }
 
+        public IActionResult Modules(int courseId)
+        {
+            // Create the SQL parameter for the stored procedure
+            var courseIdParam = new SqlParameter("@courseID", courseId);
+
+            // Execute the stored procedure to get modules for the course
+            var modules = _context.Modules
+                .FromSqlRaw("EXEC ModuleDifficulty @courseID", courseIdParam)
+                .ToList();
+
+            // Retrieve the LearnerId from the Course_enrollment table based on the courseId
+            var enrollment = _context.CourseEnrollments
+                .FirstOrDefault(ce => ce.CourseId == courseId);
+
+            // If enrollment is found, get the corresponding Learner and UserId
+            if (enrollment != null)
+            {
+                var learner = _context.Learners
+                    .FirstOrDefault(l => l.LearnerId == enrollment.LearnerId);
+
+                if (learner != null)
+                {
+                    // Set the UserId in ViewBag to be used in the view
+                    ViewBag.UserId = learner.UserId;
+                }
+            }
+
+            return View(modules);
+        }
+
         public IActionResult EnrolledCourses(int id)
         {
             var learner = _context.Learners.FirstOrDefault(l => l.UserId == id);
@@ -56,6 +86,7 @@ namespace GamifiedPlatform.Controllers
             var enrolledCourses = _context.GetEnrolledCourses(learner.LearnerId);
             return View(enrolledCourses);
         }
+
 
 
         // GET: Learners

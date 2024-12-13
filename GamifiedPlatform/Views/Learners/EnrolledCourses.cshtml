@@ -13,6 +13,7 @@
             <th>Difficulty Level</th>
             <th>Pre-Requisites</th>
             <th>Status</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -27,6 +28,9 @@
                 <td>@course.DifficultyLevel</td>
                 <td>@course.PreRequisites</td>
                 <td>@course.Status</td>
+                <td>
+                    <a asp-action="Modules" asp-route-courseId="@course.CourseId" class="btn btn-info">View Modules</a>
+                </td>
             </tr>
         }
     </tbody>

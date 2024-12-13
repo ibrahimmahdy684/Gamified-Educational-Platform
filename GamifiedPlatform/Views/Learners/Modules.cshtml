@@ -1,0 +1,25 @@
+﻿@model IEnumerable<Module>
+
+<h2>Modules</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Module ID</th>
+            <th>Title</th>
+            <th>Difficulty</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var module in Model)
+        {
+            <tr>
+                <td>@module.ModuleId</td>
+                <td>@module.Title</td>
+                <td>@module.Difficulty</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="EnrolledCourses" asp-controller="Learners" asp-route-id="@ViewBag.UserId" class="btn btn-secondary">Back to Courses</a>
