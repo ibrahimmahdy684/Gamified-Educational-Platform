@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GamifiedPlatform.Models;
+using Microsoft.Data.SqlClient;
 
 namespace GamifiedPlatform.Controllers
 {
@@ -26,16 +27,47 @@ namespace GamifiedPlatform.Controllers
         }
         public async Task<IActionResult> AddPost(int LearnerID, int DiscussionID, string post)
         {
-            var discussionExists = await _context.DiscussionForums.AnyAsync(d => d.ForumId == DiscussionID);
-            if (!discussionExists)
+        
+           
+            try
             {
-                ModelState.AddModelError("", "The specified discussion does not exist.");
+                
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec Post @LearnerID={LearnerID}, @DiscussionID={DiscussionID}, @Post={post}");
+
+                
+                return RedirectToAction("Index");
+            }
+            catch (SqlException ex)
+            {
+               
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+                    var discussionExists = await _context.DiscussionForums.AnyAsync(d => d.ForumId == DiscussionID);
+                    if (!discussionExists)
+                    {
+                        ModelState.AddModelError("", "The specified discussion does not exist.");
+                      
+                    }
+                    else ModelState.AddModelError("", "The specified Learner does not exist.");
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "A post for this learner in this discussion already exists.");
+                }
+                else
+                {
+                    
+                    ModelState.AddModelError("", "An error occurred while adding the post. Please try again.");
+                }
+                
                 return View("AddPost");
             }
-
-            await _context.Database.ExecuteSqlInterpolatedAsync($"Exec Post @LearnerID={LearnerID},@DiscussionID={DiscussionID},@Post={post}");
-           
-            return RedirectToAction("Index");
+            catch (Exception ex)
+            {
+                
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("AddPost");
+            }
         }
         // GET: LearnerDiscussions/Details/5
         public async Task<IActionResult> Details(int? id)
