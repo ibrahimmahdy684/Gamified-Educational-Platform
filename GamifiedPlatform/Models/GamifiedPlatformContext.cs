@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace GamifiedPlatform.Models;
@@ -96,6 +97,12 @@ public partial class GamifiedPlatformContext : DbContext
     public virtual DbSet<TargetTrait> TargetTraits { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+
+    public IEnumerable<Course> GetEnrolledCourses(int learnerId)
+    {
+        var learnerIdParam = new SqlParameter("@LearnerID", learnerId);
+        return this.Courses.FromSqlRaw("EXEC EnrolledCourses @LearnerID", learnerIdParam).ToList();
+    }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.

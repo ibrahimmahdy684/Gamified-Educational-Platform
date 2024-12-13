@@ -44,6 +44,20 @@ namespace GamifiedPlatform.Controllers
             return View(learner);
         }
 
+        public IActionResult EnrolledCourses(int id)
+        {
+            var learner = _context.Learners.FirstOrDefault(l => l.UserId == id);
+            if (learner == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.UserId = id; // Pass UserId to the view
+            var enrolledCourses = _context.GetEnrolledCourses(learner.LearnerId);
+            return View(enrolledCourses);
+        }
+
+
         // GET: Learners
         public async Task<IActionResult> Index()
         {

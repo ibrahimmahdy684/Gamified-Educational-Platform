@@ -291,6 +291,9 @@ VALUES
 ( 5, 5, '2024-12-25', '2024-11-12', 'In Progress'),
 ( 6, 1, '2024-12-30', '2024-11-15', 'In Progress'),
 ( 7, 2, '2024-12-18', '2024-11-08', 'Completed');
+INSERT INTO Course_enrollment ( CourseID, LearnerID, completion_date, enrollment_date, status)
+VALUES
+( 1, 6, '2024-12-10', '2024-11-01', 'In Progress')
 
 --Insertion into Teaches 
 INSERT INTO Teaches (InstructorID, CourseID)

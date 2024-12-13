@@ -19,3 +19,5 @@
 </div>
 
 <a href="@Url.Action("EditProfile", "Learner", new { id = Model.UserId })">Edit Profile</a>
+
+<a asp-action="EnrolledCourses" asp-route-id="@Model.UserId" class="btn btn-primary">View Enrolled Courses</a>
