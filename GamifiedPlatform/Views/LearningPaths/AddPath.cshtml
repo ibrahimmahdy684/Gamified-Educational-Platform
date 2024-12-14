@@ -1,31 +1,36 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "AddPath";
 }
 
 <h1>AddPath</h1>
 
-<form> asp-action="AddPath" method="post">
+@if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary(true, "Please fix the following errors:")
+    </div>
+}
+
+<form asp-action="AddPath" method="post">
     <div>
         <label>Learner ID</label>
-        <input type="number" name="learnerID" required />
+        <input type="number" name="LearnerID" required />
     </div>
-
-<div>
-    <label>Profile ID</label>
-    <input type="number" name="goalID" required />
-</div>
+    <div>
+        <label>Profile ID</label>
+        <input type="number" name="ProfileID" required />
+    </div>
     <div>
         <label>Completion Status</label>
-        <input type="text" name="completionStatus" required />
+        <input type="text" name="CompletionStatus" required />
     </div>
     <div>
         <label>Custom Content</label>
-        <input type="text" name="customContent" required />
+        <input type="text" name="CustomContent" required />
     </div>
     <div>
         <label>Adaptive Rules</label>
-        <input type="text" name="adaptiveRules" required />
+        <input type="text" name="AdaptiveRules" required />
     </div>
-    <button type="submit">define path</button>
+    <button type="submit">Define Path</button>
 </form>

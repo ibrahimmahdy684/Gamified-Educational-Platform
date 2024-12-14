@@ -26,10 +26,11 @@ namespace GamifiedPlatform.Controllers
         }
         public async Task<IActionResult> AddPath(int LearnerID, int profileID, string completionStatus, string customContent, string adaptiveRules) 
         {
+            try { 
                 await _context.Database.ExecuteSqlInterpolatedAsync($"Exec NewPath @LearnerID={LearnerID},@ProfileID={profileID},@completion_status={completionStatus},@custom_content={customContent},@adaptiverules={adaptiveRules}");
-                
+                }
             
-           /* catch (SqlException ex)
+            catch (SqlException ex)
             {
 
                 if (ex.Message.Contains("FOREIGN KEY constraint"))
@@ -53,17 +54,17 @@ namespace GamifiedPlatform.Controllers
                 else
                 {
 
-                    ModelState.AddModelError("", "An error occurred while adding the post. Please try again.");
+                    ModelState.AddModelError("", "An error occurred while adding the path. Please try again.");
                 }
 
-                return View("Create");
+                return View("AddPath");
             }
             catch (Exception ex)
             {
 
                 ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
-                return View("Create");
-            }*/
+                return View("AddPath");
+            }
             return RedirectToAction("Index");
         }
         
@@ -99,22 +100,56 @@ namespace GamifiedPlatform.Controllers
             ViewData["LearnerId"] = new SelectList(_context.PersonalizationProfiles, "LearnerId", "LearnerId");
             return View();
         }
-
+       
         // POST: LearningPaths/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PathId,LearnerId,ProfileId,CompletionStatus,CustomContent,AdaptiveRules")] LearningPath learningPath)
+        public async Task<IActionResult> Create(int LearnerID, int profileID, string completionStatus, string customContent, string adaptiveRules)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(learningPath);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec NewPath @LearnerID={LearnerID},@ProfileID={profileID},@completion_status={completionStatus},@custom_content={customContent},@adaptiverules={adaptiveRules}");
             }
-            ViewData["LearnerId"] = new SelectList(_context.PersonalizationProfiles, "LearnerId", "LearnerId", learningPath.LearnerId);
-            return View(learningPath);
+
+            catch (SqlException ex)
+            {
+
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+                    var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == LearnerID);
+                    var profileExists = await _context.PersonalizationProfiles.AnyAsync(d => d.ProfileId == profileID);
+                    if (!LearnerExists && !profileExists)
+                    {
+                        ModelState.AddModelError("", "The specified Learner and profile do not exist.");
+
+                    }
+                    else
+                    {
+                        if (!LearnerExists) ModelState.AddModelError("", "The specified Learner does not exist.");
+                        else ModelState.AddModelError("", "The specified Profile does not exist.");
+                    }
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "This path already Assigned to this Learner");
+                }
+                else
+                {
+
+                    ModelState.AddModelError("", "An error occurred while adding the post. Please try again.");
+                }
+
+                return View("Create");
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Create");
+            }
+            return RedirectToAction("Index");
         }
 
         // GET: LearningPaths/Edit/5
