@@ -1,6 +1,16 @@
 ﻿USE GamifiedPlatform
 
 ------ADMIN PROCEDURES----------
+ Go
+create proc updateLearnerInfo(@learnerID int,@firstName VARCHAR(50),@lastName VARCHAR(50)
+,@country VARCHAR(50),@email VARCHAR(50),@cultural_background VARCHAR(50))
+As
+begin
+update Learner
+set first_name=@firstName , last_name=@lastName,country=@country,email=@email,cultural_background=@cultural_background
+where @learnerID=@learnerID
+end
+
 Go 
 create proc AllLearnersInfo
 AS
