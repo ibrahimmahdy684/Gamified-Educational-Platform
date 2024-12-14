@@ -4,26 +4,75 @@
     ViewData["Title"] = "Learner Dashboard";
 }
 
-<h1>Dashboard</12>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-
-<h2>Welcome, @Model.FirstName @Model.LastName</h2>
-
-<div>
-    <h3>Your Profile Details:</h3>
-    <ul>
-        <li><strong>Name:</strong> @Model.FirstName @Model.LastName</li>
-        <li><strong>Email:</strong> @Model.Email</li>
-        <li><strong>Gender:</strong> @Model.Gender</li>
-        <li><strong>Birth Date:</strong> @(Model.BirthDate?.ToString("dd/MM/yyyy") ?? "Not provided")</li>
-        <li><strong>Country:</strong> @Model.Country</li>
-        <li><strong>Cultural Background:</strong> @Model.CulturalBackground</li>
-    </ul>
-
-    <a asp-action="ViewAssessments" asp-route-learnerId="@Model.LearnerId" class="btn btn-primary">View Your Assessments</a>
-
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header text-white bg-primary">
+            <h2>Welcome, @Model.FirstName @Model.LastName</h2>
+        </div>
+        <div class="card-body">
+            <h4>Your Profile Details:</h4>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Name:</strong> @Model.FirstName @Model.LastName</li>
+                <li class="list-group-item"><strong>Email:</strong> @Model.Email</li>
+                <li class="list-group-item"><strong>Gender:</strong> @Model.Gender</li>
+                <li class="list-group-item"><strong>Birth Date:</strong> @(Model.BirthDate?.ToString("dd/MM/yyyy") ?? "Not provided")</li>
+                <li class="list-group-item"><strong>Country:</strong> @Model.Country</li>
+                <li class="list-group-item"><strong>Cultural Background:</strong> @Model.CulturalBackground</li>
+            </ul>
+        </div>
+        <div class="card-footer text-center">
+            <!-- Buttons to navigate to different actions -->
+            <a asp-action="EditProfile" asp-route-id="@Model.UserId" class="btn btn-warning mr-2">Edit Profile</a>
+            <a asp-action="ViewAssessments" asp-route-learnerId="@Model.LearnerId" class="btn btn-primary mr-2">View Your Assessments</a>
+            <a asp-action="EnrolledCourses" asp-route-id="@Model.UserId" class="btn btn-secondary">View Enrolled Courses</a>
+        </div>
+    </div>
 </div>
 
-<a href="@Url.Action("EditProfile", "Learner", new { id = Model.UserId })">Edit Profile</a>
+<style>
+    .card-header {
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
 
-<a asp-action="EnrolledCourses" asp-route-id="@Model.UserId" class="btn btn-primary">View Enrolled Courses</a>
+    .card-body {
+        padding: 20px;
+    }
+
+    .list-group-item {
+        font-size: 1rem;
+        padding: 10px 15px;
+    }
+
+    .card-footer {
+        padding: 15px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+
+    .btn-warning {
+        background-color: #f39c12;
+        border-color: #e67e22;
+    }
+
+        .btn-warning:hover {
+            background-color: #e67e22;
+            border-color: #d35400;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #5a6268;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #4e555b;
+        }
+</style>

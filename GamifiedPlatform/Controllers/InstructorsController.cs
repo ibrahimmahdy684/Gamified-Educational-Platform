@@ -33,6 +33,60 @@ namespace GamifiedPlatform.Controllers
             return View(instructor);
         }
 
+        public IActionResult ViewScores()
+        {
+            // Retrieve all learners' scores from the database and map them to the view model
+            var learnerScores = _context.Takesassesments
+                .Join(_context.Learners, ta => ta.LearnerId, l => l.LearnerId, (ta, l) => new LearnerScoreViewModel
+                {
+                    LearnerId = l.LearnerId,
+                    LearnerName = l.FirstName,
+                    LearnerEmail = l.Email,
+                    AssessmentId = ta.AssesmentId,
+                    ScoredPoints = ta.ScoredPoints
+                })
+                .ToList();
+
+            return View(learnerScores);
+        }
+
+        // Action to view learner scores
+        //public IActionResult ViewScores()
+        //{
+        //    // Retrieve all learners' scores from the database
+        //    var learnerScores = _context.Takesassesments
+        //        .Join(_context.Learners, ta => ta.LearnerId, l => l.LearnerId, (ta, l) => new
+        //        {
+        //            l.FirstName,
+        //            l.Email,
+        //            ta.AssesmentId,
+        //            ta.ScoredPoints
+        //        })
+        //        .ToList();
+
+        //    return View(learnerScores);
+        //}
+
+        // Action to update learner's grade
+        [HttpPost]
+        public IActionResult UpdateGrade(int learnerId, int assessmentId, int scoredPoints)
+        {
+            try
+            {
+                // Call the stored procedure to update the grade
+                _context.Database.ExecuteSqlRaw("EXEC GradeUpdate @LearnerID = {0}, @AssessmentID = {1}, @points = {2}",
+                    learnerId, assessmentId, scoredPoints);
+
+                TempData["SuccessMessage"] = "Grade updated successfully!";
+                return RedirectToAction("ViewScores");
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "An error occurred while updating the grade.";
+                return RedirectToAction("ViewScores");
+            }
+        }
+
         public IActionResult Profile(int id)
         {
             var instructor = _context.Instructors.FirstOrDefault(i => i.UserId == id);
