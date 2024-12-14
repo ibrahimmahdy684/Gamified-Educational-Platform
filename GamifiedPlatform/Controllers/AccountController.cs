@@ -40,7 +40,8 @@ namespace GamifiedPlatform.Controllers
                     var learner = new Learner
                     {
                         UserId = user.UserId,
-                        FirstName = model.Name
+                        FirstName = model.Name,
+                        Email = model.Email
                     };
                     _context.Learners.Add(learner);
                 }
