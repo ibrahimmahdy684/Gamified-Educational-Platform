@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using GamifiedPlatform.Models;
+using System.Reflection;
 
 namespace GamifiedPlatform.Controllers
 {
@@ -49,8 +50,23 @@ namespace GamifiedPlatform.Controllers
             // Pass the assessments data to the view
             return View(assessments);
         }
-
-
+        public async Task<IActionResult> UpdateInfo(int learnerID,string firstName,string lastName,string country,string email,
+            string culturalBackground)
+        {
+            var learnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
+            if (!learnerExists)
+            {
+                ModelState.AddModelError("", "The specified learner does not exist.");
+                return View("UpdateInfo");
+            }
+            else
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec updateLearnerInfo @learnerID={learnerID},@firstName={firstName},@lastName={lastName},@country={country},@email={email},@cultural_background={culturalBackground}");
+                TempData["SuccessMessage"] = "Learner information updated successfully!";
+                return RedirectToAction("Index");
+            }
+            
+        }
         public IActionResult Profile(int id)
         {
             var learner = _context.Learners.FirstOrDefault(l => l.UserId == id);
