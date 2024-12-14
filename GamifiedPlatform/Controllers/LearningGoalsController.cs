@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GamifiedPlatform.Models;
+using Microsoft.Data.SqlClient;
+using System.Reflection;
 
 namespace GamifiedPlatform.Controllers
 {
@@ -25,19 +27,45 @@ namespace GamifiedPlatform.Controllers
         }
        
         public async Task<IActionResult> AddGoal(int learnerID,int goalID) {
-            var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
-            if (!LearnerExists)
+           
+            
+            try {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec AddGoal @learnerID={learnerID},@goalID={goalID} ");
+            }
+            catch (SqlException ex)
             {
-                ModelState.AddModelError("", "The specified learner does not exist.");
+
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+
+                    var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
+                    if (!LearnerExists)
+                    {
+                        ModelState.AddModelError("", "The specified learner does not exist.");
+                        
+                    }
+                    else ModelState.AddModelError("", "The specified goal does not exist.");
+
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "This goal already specified");
+                }
+                else
+                {
+
+                    ModelState.AddModelError("", "An error occurred while specifying the goal. Please try again.");
+                }
+
                 return View("AddGoal");
             }
-            var GoalExists = await _context.LearningGoals.AnyAsync(d => d.Id == goalID);
-            if (!GoalExists)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "The specified goal does not exist.");
-                return View("AddGoal");
+
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Create");
             }
-            await _context.Database.ExecuteSqlInterpolatedAsync($"Exec AddGoal @learnerID={learnerID},@goalID={goalID} ");
+           
             return RedirectToAction("Index");
         }
         // GET: LearningGoals/Details/5
