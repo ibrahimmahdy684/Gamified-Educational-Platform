@@ -1,65 +1,93 @@
 ﻿@model IEnumerable<GamifiedPlatform.Models.Course>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Courses";
 }
 
-<h1>Index</h1>
+<style>
+    .btn-sm {
+        font-size: 14px; /* Smaller text */
+        padding: 5px 10px; /* Less padding */
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LearningObjective)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreditPoints)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DifficultyLevel)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PreRequisites)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LearningObjective)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreditPoints)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DifficultyLevel)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PreRequisites)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CourseId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CourseId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CourseId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    .btn-warning {
+        background-color: #ffc107;
+        border: none;
+    }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border: none;
+    }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+</style>
+
+
+<div class="container mt-5">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white text-center">
+            <h2>@ViewData["Title"]</h2>
+        </div>
+        <div class="card-body">
+            <!-- Create New Course Button -->
+            <a href="@Url.Action("Create", "Courses")" class="btn btn-success btn-sm mb-3">Create New Course</a>
+
+            <!-- Table for existing courses -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Title)</th>
+                        <th>@Html.DisplayNameFor(model => model.LearningObjective)</th>
+                        <th>@Html.DisplayNameFor(model => model.CreditPoints)</th>
+                        <th>@Html.DisplayNameFor(model => model.DifficultyLevel)</th>
+                        <th>@Html.DisplayNameFor(model => model.PreRequisites)</th>
+                        <th>@Html.DisplayNameFor(model => model.Description)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                            <td>@Html.DisplayFor(modelItem => item.LearningObjective)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CreditPoints)</td>
+                            <td>@Html.DisplayFor(modelItem => item.DifficultyLevel)</td>
+                            <td>@Html.DisplayFor(modelItem => item.PreRequisites)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td>
+                                <!-- Edit, Details, Delete Buttons with smaller size and theme colors -->
+                                <a href="@Url.Action("Edit", "Courses", new { id = item.CourseId })" class="btn btn-warning btn-sm">Edit</a> |
+                                <a href="@Url.Action("Details", "Courses", new { id = item.CourseId })" class="btn btn-info btn-sm">Details</a> |
+                                <a href="@Url.Action("Delete", "Courses", new { id = item.CourseId })" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

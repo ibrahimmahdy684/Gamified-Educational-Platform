@@ -7,6 +7,18 @@ ALTER TABLE Assessments
 ADD Grade INT NULL; -- Adjust the data type if necessary
 
 
+ALTER TABLE Course
+Add Status varchar(20)
+
+ALTER TABLE Course
+add HighestAssessmentId int
+
+ALTER TABLE Course
+add HighestAssessmentTitle varchar(50)
+
+ALTER TABLE Course
+add HighestAssessmentGrade int
+
 Create table Users(
     UserID INT primary Key Identity,
     Name NVARCHAR(100),

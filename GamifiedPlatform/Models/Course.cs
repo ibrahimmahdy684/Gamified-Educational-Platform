@@ -19,7 +19,7 @@ public partial class Course
 
     public string? Description { get; set; }
 
-    public string Status { get; set; } // New property
+    public string? Status { get; set; } // New property
 
     // New properties to hold the highest grade details
     public int? HighestAssessmentId { get; set; }

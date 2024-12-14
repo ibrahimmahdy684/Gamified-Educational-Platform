@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GamifiedPlatform.Models;
+using Microsoft.Data.SqlClient;
 
 namespace GamifiedPlatform.Controllers
 {
@@ -118,21 +119,33 @@ namespace GamifiedPlatform.Controllers
         }
 
         // GET: Courses/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var course = await _context.Courses
-                .FirstOrDefaultAsync(m => m.CourseId == id);
+            var course = await _context.Courses.FindAsync(id);
             if (course == null)
             {
                 return NotFound();
             }
 
-            return View(course);
+            // Check if any students are enrolled in the course
+            var enrollmentCount = await _context.CourseEnrollments
+                .Where(e => e.CourseId == id)
+                .CountAsync();
+
+            if (enrollmentCount > 0)
+            {
+                // If students are enrolled, show an error message
+                TempData["ErrorMessage"] = "Cannot delete course as there are students enrolled in it.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // If no students are enrolled, proceed with deletion
+            var courseRemoveCommand = new SqlParameter("@courseID", id);
+            await _context.Database.ExecuteSqlRawAsync("EXEC CourseRemove @courseID", courseRemoveCommand);
+
+            // Redirect to the courses list after deletion
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Courses/Delete/5
