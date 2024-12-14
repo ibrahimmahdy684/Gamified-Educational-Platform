@@ -6,6 +6,13 @@
 
 <h2>Send Notification to Learner</h2>
 
+@if (ViewData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success mt-3">
+        @ViewData["SuccessMessage"]
+    </div>
+}
+
 <form asp-action="SendNotification" method="post">
     <div class="form-group">
         <label for="LearnerID">Learner ID</label>
@@ -27,7 +34,7 @@
     </div>
 
     <button type="submit" class="btn btn-success mt-3">Send Notification</button>
-    <a href="@Url.Action("Index", "Instructors")" class="btn btn-secondary mt-3">Back to Assessments</a>
+    <a href="@Url.Action("Profile", "Instructors")" class="btn btn-secondary mt-3">Back to Profile</a>
 </form>
 
 @if (ViewData["ErrorMessage"] != null)

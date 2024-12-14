@@ -4,40 +4,125 @@
     ViewData["Title"] = "Instructor Dashboard";
 }
 
+@* Use Bootstrap 4/5 for clean, responsive design *@
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
 <style>
-    .btn {
-        display: inline-block;
-        padding: 10px 15px;
-        font-size: 14px;
-        color: #fff;
-        background-color: #007bff;
-        border: none;
-        border-radius: 4px;
-        text-decoration: none;
+    .dashboard-container {
+        margin-top: 30px;
     }
 
+    .card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        background-color: #6c757d; /* Grey color for card header */
+        color: white;
+        font-size: 18px;
+        padding: 15px;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .card-body {
+        background-color: #f4f4f4; /* Soft grey background for content */
+        padding: 20px;
+        border-radius: 0 0 8px 8px;
+    }
+
+        .card-body ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+            .card-body ul li {
+                font-size: 16px;
+                padding: 5px 0;
+            }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        width: 100%;
+    }
+
+    .btn-primary {
+        background-color: #28a745; /* Green for primary buttons */
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
     .btn-secondary {
-        background-color: #6c757d;
+        background-color: #17a2b8; /* Light blue for secondary buttons */
+        border: none;
+    }
+
+        .btn-secondary:hover {
+            background-color: #138496; /* Darker blue on hover */
+        }
+
+    .mt-3 {
+        margin-top: 15px;
+    }
+
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .btn-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
     }
 </style>
 
-<h2>Welcome, @Model.Name</h2>
+<div class="container dashboard-container">
+    <div class="dashboard-header">
+        <h2>Welcome, @Model.Name</h2>
+        <p class="lead">Your instructor dashboard for managing your profile and assessments.</p>
+    </div>
 
-<div>
-    <h3>Your Profile Details:</h3>
-    <ul>
-        <li><strong>Name:</strong> @Model.Name</li>
-        <li><strong>Email:</strong> @Model.Email</li>
-        <li><strong>Latest Qualification:</strong> @Model.LatestQualification</li>
-        <li><strong>Expertise Area:</strong> @Model.ExpertiseArea</li>
-    </ul>
-</div>
+    <!-- Profile Section -->
+    <div class="card">
+        <div class="card-header">
+            <h4>Your Profile Details</h4>
+        </div>
+        <div class="card-body">
+            <ul>
+                <li><strong>Name:</strong> @Model.Name</li>
+                <li><strong>Email:</strong> @Model.Email</li>
+                <li><strong>Latest Qualification:</strong> @Model.LatestQualification</li>
+                <li><strong>Expertise Area:</strong> @Model.ExpertiseArea</li>
+            </ul>
+            <a href="@Url.Action("EditProfile", "Instructor", new { id = Model.UserId })" class="btn btn-primary">Edit Profile</a>
+        </div>
+    </div>
 
-<a href="@Url.Action("EditProfile", "Instructor", new { id = Model.UserId })" class="btn btn-primary">Edit Profile</a>
+    <!-- Assessments Section -->
+    <div class="card">
+        <div class="card-header">
+            <h4>Assessments Management</h4>
+        </div>
+        <div class="card-body">
+            <a href="@Url.Action("Index", "Assessments")" class="btn btn-secondary">View All Assessments</a>
+        </div>
+    </div>
 
-<!-- Button to navigate to Assessments View -->
-<a href="@Url.Action("Index", "Assessments")" class="btn btn-secondary" style="margin-top: 10px;">View All Assessments</a>
-
-<div>
-    <a href="@Url.Action("SendNotification", "Instructors")" class="btn btn-primary mt-3">Send Notification to Learner</a>
+    <!-- Notification Section -->
+    <div class="card">
+        <div class="card-header">
+            <h4>Send Notification</h4>
+        </div>
+        <div class="card-body">
+            <a href="@Url.Action("SendNotification", "Instructors")" class="btn btn-primary mt-3">Send Notification to Learner</a>
+        </div>
+    </div>
 </div>
