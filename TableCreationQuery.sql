@@ -3,6 +3,10 @@ CREATE DATABASE GamifiedPlatform
 --test2
 USE GamifiedPlatform
 
+ALTER TABLE Assessments
+ADD Grade INT NULL; -- Adjust the data type if necessary
+
+
 Create table Users(
     UserID INT primary Key Identity,
     Name NVARCHAR(100),

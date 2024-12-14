@@ -100,6 +100,9 @@ public partial class GamifiedPlatformContext : DbContext
 
     public DbSet<HighestGradeResult> HighestGrades { get; set; }
 
+    public DbSet<AssessmentAnalyticsResult> AssessmentAnalytics { get; set; }
+
+
     public IEnumerable<Course> GetEnrolledCourses(int learnerId)
     {
         var learnerIdParam = new SqlParameter("@LearnerID", learnerId);
@@ -117,6 +120,8 @@ public partial class GamifiedPlatformContext : DbContext
 
         // Define 'HighestGradeResult' as keyless
         modelBuilder.Entity<HighestGradeResult>().HasNoKey();
+
+        modelBuilder.Entity<AssessmentAnalyticsResult>().HasNoKey();
 
         modelBuilder.Entity<Achievement>(entity =>
         {

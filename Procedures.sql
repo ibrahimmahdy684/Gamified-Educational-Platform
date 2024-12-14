@@ -1134,26 +1134,28 @@ EXEC PreferedType @type = @type OUTPUT
 --Select * from LearningPreference
 
 --20
+drop procedure AssessmentAnalytics
 GO
 CREATE PROCEDURE AssessmentAnalytics(@CourseID AS int, @ModuleID AS int)
 AS
 BEGIN
     SELECT 
-        a.ID AS AssessmentID,
-        a.title AS AssessmentTitle,
-        a.total_marks,
-        a.passing_marks,
-        AVG(t.ScoredPoints) AS AverageScore
-    FROM Assessments a
-    INNER JOIN 
-        takesassesment t ON a.ID = t.assesment_id
-    WHERE 
-        a.CourseID = @CourseID
-        AND a.ModuleID = @ModuleID
-    GROUP BY 
-        a.ID, a.title, a.total_marks, a.passing_marks
-    ORDER BY 
-        a.ID;
+    a.ID AS AssessmentID,
+    a.title AS AssessmentTitle,
+    a.total_marks AS TotalMarks,
+    a.passing_marks AS PassingMarks, -- Ensure this matches the model property
+    AVG(t.ScoredPoints) AS AverageScore
+FROM Assessments a
+INNER JOIN 
+    takesassesment t ON a.ID = t.assesment_id
+WHERE 
+    a.CourseID = @CourseID
+    AND a.ModuleID = @ModuleID
+GROUP BY 
+    a.ID, a.title, a.total_marks, a.passing_marks
+ORDER BY 
+    a.ID;
+
 END
 EXEC AssessmentAnalytics 1, 1
 /* testing

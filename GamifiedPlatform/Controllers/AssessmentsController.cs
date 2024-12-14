@@ -18,6 +18,18 @@ namespace GamifiedPlatform.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> Analytics(int courseId, int moduleId)
+        {
+            // Call the stored procedure to get analytics data
+            var analytics = await _context.AssessmentAnalytics
+                .FromSqlInterpolated($"EXEC AssessmentAnalytics {courseId}, {moduleId}")
+                .ToListAsync();
+
+            // Pass the data to the view
+            return View("Analytics", analytics);
+        }
+
+
         // GET: Assessments
         public async Task<IActionResult> Index()
         {
