@@ -24,7 +24,7 @@
         </div>
         <div class="card-footer text-center">
             <!-- Buttons to navigate to different actions -->
-            <a asp-action="EditProfile" asp-route-id="@Model.UserId" class="btn btn-warning mr-2">Edit Profile</a>
+            <a asp-action="Edit" asp-route-id="@Model.LearnerId" class="btn btn-warning mr-2">Edit Profile</a>
             <a asp-action="ViewAssessments" asp-route-learnerId="@Model.LearnerId" class="btn btn-primary mr-2">View Your Assessments</a>
             <a asp-action="EnrolledCourses" asp-route-id="@Model.UserId" class="btn btn-secondary">View Enrolled Courses</a>
         </div>
