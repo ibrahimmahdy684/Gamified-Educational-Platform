@@ -27,32 +27,32 @@ namespace GamifiedPlatform.Controllers
         }
         public async Task<IActionResult> AddPost(int LearnerID, int DiscussionID, string post)
         {
-        
-           
+
+
             try
             {
-                
+
                 await _context.Database.ExecuteSqlInterpolatedAsync($"Exec Post @LearnerID={LearnerID}, @DiscussionID={DiscussionID}, @Post={post}");
 
-                
-                return RedirectToAction("Index");
+
+               
             }
             catch (SqlException ex)
             {
-               
+
                 if (ex.Message.Contains("FOREIGN KEY constraint"))
-                {   var learnerExists= await _context.Learners.AnyAsync(d => d.LearnerId == LearnerID);
-                    var discussionExists = await _context.DiscussionForums.AnyAsync(d => d.ForumId == DiscussionID);
-                    if (!discussionExists && !learnerExists)
+                { var learnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == LearnerID);
+
+                    if (!learnerExists)
                     {
-                        ModelState.AddModelError("", "The specified discussion and Learner do not exist.");
+                        ModelState.AddModelError("", "The specified  Learner do not exist.");
 
                     }
-                    else { if (!learnerExists)
-                     ModelState.AddModelError("", "The specified Learner does not exist.");
+
                     else ModelState.AddModelError("", "The specified Discussion does not exist.");
-                    }
                 }
+            
+        
                 else if (ex.Message.Contains("PRIMARY KEY constraint"))
                 {
                     ModelState.AddModelError("", "A post for this learner in this discussion already exists.");
@@ -71,6 +71,7 @@ namespace GamifiedPlatform.Controllers
                 ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
                 return View("AddPost");
             }
+            return RedirectToAction("Index");
         }
         // GET: LearnerDiscussions/Details/5
         public async Task<IActionResult> Details(int? id)
