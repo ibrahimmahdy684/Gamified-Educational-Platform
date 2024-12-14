@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Update Learner Info";
+}
+
+<h2>Update Learner Information</h2>
+
+@if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary(false, "Please fix the following errors:")
+    </div>
+}
+    
+
+    <form method="post" action="@Url.Action("UpdateInfo")">
+        <div class="form-group">
+            <label for="learnerID">Learner ID</label>
+            <input type="number" id="learnerID" name="learnerID" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="country">Country</label>
+            <input type="text" id="country" name="country" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <label for="culturalBackground">Cultural Background</label>
+            <input type="text" id="culturalBackground" name="culturalBackground" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Information</button>
+    </form>
+
