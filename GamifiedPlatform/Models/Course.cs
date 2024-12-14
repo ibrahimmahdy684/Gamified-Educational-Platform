@@ -21,6 +21,12 @@ public partial class Course
 
     public string Status { get; set; } // New property
 
+    // New properties to hold the highest grade details
+    public int? HighestAssessmentId { get; set; }
+    public string? HighestAssessmentTitle { get; set; }
+    public int? HighestAssessmentGrade { get; set; }
+
+
     public virtual ICollection<CourseEnrollment> CourseEnrollments { get; set; } = new List<CourseEnrollment>();
 
     public virtual ICollection<Module> Modules { get; set; } = new List<Module>();

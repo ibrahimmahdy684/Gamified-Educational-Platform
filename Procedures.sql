@@ -302,7 +302,48 @@ from Course_enrollment ce inner join Learner l on l.LearnerID=ce.LearnerID
 where l.LearnerID=@LearnerID
 end
 
-exec EnrolledCourses 2
+GO
+CREATE PROCEDURE EnrolledCourses
+    @LearnerID INT
+AS
+BEGIN
+    SELECT 
+        c.CourseID, 
+        c.Title, 
+        c.learning_objective, 
+        c.credit_points, 
+        c.description, 
+        c.difficulty_level, 
+        c.pre_requisites, 
+        ce.status,
+        ISNULL(ha.HighestAssessmentGrade, 0) AS HighestAssessmentGrade, -- Use ISNULL to handle NULLs
+        ha.HighestAssessmentTitle, 
+        ha.HighestAssessmentId
+    FROM Course_enrollment ce
+    INNER JOIN Learner l ON l.LearnerID = ce.LearnerID
+    INNER JOIN Course c ON c.CourseID = ce.CourseID
+    LEFT JOIN (
+        SELECT 
+            ranked.CourseID, 
+            ranked.total_marks AS HighestAssessmentGrade, 
+            ranked.Title AS HighestAssessmentTitle, 
+            ranked.ID AS HighestAssessmentId
+        FROM (
+            SELECT 
+                a.CourseID, 
+                a.total_marks, 
+                a.Title, 
+                a.ID, 
+                ROW_NUMBER() OVER (PARTITION BY a.CourseID ORDER BY a.total_marks DESC) AS Rank
+            FROM Assessments a
+        ) ranked
+        WHERE ranked.Rank = 1
+    ) ha ON ha.CourseID = c.CourseID
+    WHERE l.LearnerID = @LearnerID
+END
+GO
+
+exec EnrolledCourses 1
 
 --4
 GO

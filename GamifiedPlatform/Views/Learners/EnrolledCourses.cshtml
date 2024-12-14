@@ -13,6 +13,8 @@
             <th>Difficulty Level</th>
             <th>Pre-Requisites</th>
             <th>Status</th>
+            <th>Highest Assessment</th>
+            <th>Highest Grade</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -28,6 +30,26 @@
                 <td>@course.DifficultyLevel</td>
                 <td>@course.PreRequisites</td>
                 <td>@course.Status</td>
+                <td>
+                    @if (course.HighestAssessmentTitle != null)
+                    {
+                        <span>@course.HighestAssessmentTitle</span>
+                    }
+                    else
+                    {
+                        <span>N/A</span>
+                    }
+                </td>
+                <td>
+                    @if (course.HighestAssessmentGrade.HasValue)
+                    {
+                        <span>@course.HighestAssessmentGrade</span>
+                    }
+                    else
+                    {
+                        <span>N/A</span>
+                    }
+                </td>
                 <td>
                     <a asp-action="Modules" asp-route-courseId="@course.CourseId" class="btn btn-info">View Modules</a>
                 </td>

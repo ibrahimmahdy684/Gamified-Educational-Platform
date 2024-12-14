@@ -100,10 +100,18 @@ namespace GamifiedPlatform.Controllers
                 return NotFound();
             }
 
-            ViewBag.UserId = id; // Pass UserId to the view
-            var enrolledCourses = _context.GetEnrolledCourses(learner.LearnerId);
+            ViewBag.UserId = id;
+
+            var learnerIdParam = new SqlParameter("@LearnerID", learner.LearnerId);
+
+            // Execute the stored procedure and map the result to the Course entity
+            var enrolledCourses = _context.Courses
+                .FromSqlRaw("EXEC EnrolledCourses @LearnerID", learnerIdParam)
+                .ToList();
+
             return View(enrolledCourses);
         }
+
 
 
 
