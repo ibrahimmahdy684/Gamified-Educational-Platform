@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GamifiedPlatform.Models;
+using Microsoft.Data.SqlClient;
 
 namespace GamifiedPlatform.Controllers
 {
@@ -25,21 +26,47 @@ namespace GamifiedPlatform.Controllers
         }
         public async Task<IActionResult> AddPath(int LearnerID, int profileID, string completionStatus, string customContent, string adaptiveRules) 
         {
-            var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == LearnerID);
-            if (!LearnerExists)
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec NewPath @LearnerID={LearnerID},@ProfileID={profileID},@completion_status={completionStatus},@custom_content={customContent},@adaptiverules={adaptiveRules}");
+                
+            
+           /* catch (SqlException ex)
             {
-                ModelState.AddModelError("", "The specified learner does not exist.");
-                return View("AddPath");
+
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+                    var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == LearnerID);
+                    var profileExists = await _context.PersonalizationProfiles.AnyAsync(d => d.ProfileId == profileID);
+                    if (!LearnerExists && !profileExists)
+                    {
+                        ModelState.AddModelError("", "The specified Learner and profile do not exist.");
+
+                    }
+                    else {
+                        if (!LearnerExists) ModelState.AddModelError("", "The specified Learner does not exist.");
+                        else ModelState.AddModelError("", "The specified Profile does not exist.");
+                    }
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "This path already Assigned to this Learner");
+                }
+                else
+                {
+
+                    ModelState.AddModelError("", "An error occurred while adding the post. Please try again.");
+                }
+
+                return View("Create");
             }
-            var ProfileExists = await _context.PersonalizationProfiles.AnyAsync(d => d.ProfileId == profileID);
-            if (!ProfileExists)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "The specified profile does not exist.");
-                return View("AddPath");
-            }
-            await _context.Database.ExecuteSqlInterpolatedAsync($"Exec NewPath @LearnerID={LearnerID},@ProfileID={profileID},@completion_status={completionStatus},@custom_content={customContent},@adaptiverules={adaptiveRules}");
-            return RedirectToAction("Index"); 
+
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Create");
+            }*/
+            return RedirectToAction("Index");
         }
+        
         // GET: LearningPaths
         public async Task<IActionResult> Index(int learnerID)
         {

@@ -68,17 +68,15 @@ namespace GamifiedPlatform.Controllers
 
                 if (ex.Message.Contains("FOREIGN KEY constraint"))
                 {
-                    var courseExists = await _context.Courses.AnyAsync(d => d.CourseId == courseID);
+                   
                     var moduleExists = await _context.Modules.AnyAsync(d => d.ModuleId == moduleID);
-                    if (!moduleExists && !courseExists)
+                    if (!moduleExists )
                     {
-                        ModelState.AddModelError("", "The specified module and course do not exist.");
+                        ModelState.AddModelError("", "The specified module does not exist.");
 
                     }
-                    else {
-                        if (!moduleExists) ModelState.AddModelError("", "The specified Module does not exist.");
-                        else ModelState.AddModelError("", "The specified course does not exist.");
-                    }
+                    else ModelState.AddModelError("", "The specified course does not exist.");
+                    
                 }
                 else if (ex.Message.Contains("PRIMARY KEY constraint"))
                 {
@@ -87,7 +85,7 @@ namespace GamifiedPlatform.Controllers
                 else
                 {
 
-                    ModelState.AddModelError("", "An error occurred while adding the post. Please try again.");
+                    ModelState.AddModelError("", "An error occurred while creating the forum. Please try again.");
                 }
 
                 return View("Create");
