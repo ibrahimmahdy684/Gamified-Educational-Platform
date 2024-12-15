@@ -5,6 +5,12 @@
 }
 
 <h1>Index</h1>
+@if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary(true, "Please fix the following errors:")
+    </div>
+}
 
 <form method="post" action="/LearningPaths/Index">
     <label for="learnerID"> LearnerID</label>

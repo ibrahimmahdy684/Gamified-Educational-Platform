@@ -71,6 +71,9 @@ namespace GamifiedPlatform.Controllers
         // GET: LearningPaths
         public async Task<IActionResult> Index(int learnerID)
         {
+            var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
+            if(!LearnerExists)
+                ModelState.AddModelError("", "The specified Learner does not exist.");
             var Path = await _context.LearningPaths.FromSqlRaw($"Exec monitorSpecificPath @learnerID={learnerID}").ToListAsync();
             return View(Path);
         }

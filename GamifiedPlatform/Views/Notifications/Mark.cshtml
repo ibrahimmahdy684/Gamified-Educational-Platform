@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewData["Title"] = "Mark";
+}
+
+<h1>Mark</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary(false, "Please fix the following errors:")
+    </div>
+}
+
+
+<form method="post" action="@Url.Action("Mark")">
+    <div class="form-group">
+        <label for="learnerID">Learner ID</label>
+        <input type="number" id="learnerID" name="learnerID" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="notificationID">Notification ID</label>
+        <input type="number" id="notificationID" name="notificationID" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Mark AS Read</button>
+</form>
