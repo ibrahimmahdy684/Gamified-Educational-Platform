@@ -15,6 +15,8 @@ public partial class Quest
 
     public string? Title { get; set; }
 
+    public string? deadline { get; set; }
+
     public virtual Collaborative? Collaborative { get; set; }
 
     public virtual ICollection<QuestReward> QuestRewards { get; set; } = new List<QuestReward>();
