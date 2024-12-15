@@ -4,17 +4,107 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<h2>Welcome, @Model.Name</h2>
+@* Use Bootstrap 4/5 for styling *@
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-<div>
-    <h3>Your Profile Details:</h3>
-    <ul>
-        <li><strong>Name:</strong> @Model.Name</li>
-        <li><strong>Email:</strong> @Model.Email</li>
-        <li><strong>Gender:</strong> @Model.Gender</li>
-        <li><strong>Birth Date:</strong> @(Model.BirthDate?.ToString("dd/MM/yyyy") ?? "Not provided")</li>
-        <li><strong>Country:</strong> @Model.Country</li>
-    </ul>
+<style>
+    .dashboard-container {
+        margin-top: 30px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        background-color: #343a40; /* Dark grey for card header */
+        color: white;
+        font-size: 18px;
+        padding: 15px;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .card-body {
+        background-color: #f8f9fa; /* Light grey background for content */
+        padding: 20px;
+        border-radius: 0 0 8px 8px;
+    }
+
+        .card-body ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+            .card-body ul li {
+                font-size: 16px;
+                padding: 5px 0;
+            }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        width: 100%;
+    }
+
+    .btn-primary {
+        background-color: #007bff; /* Bootstrap primary color */
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+    .btn-secondary {
+        background-color: #6c757d; /* Grey for secondary buttons */
+        border: none;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268; /* Darker grey on hover */
+        }
+
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+</style>
+
+<div class="container dashboard-container">
+    <!-- Welcome Header -->
+    <div class="dashboard-header">
+        <h2>Welcome, @Model.Name</h2>
+        <p class="lead">Your admin dashboard for managing the platform and users.</p>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="card">
+        <div class="card-header">
+            <h4>Your Profile Details</h4>
+        </div>
+        <div class="card-body">
+            <ul>
+                <li><strong>Name:</strong> @Model.Name</li>
+                <li><strong>Email:</strong> @Model.Email</li>
+                <li><strong>Gender:</strong> @Model.Gender</li>
+                <li><strong>Birth Date:</strong> @(Model.BirthDate?.ToString("dd/MM/yyyy") ?? "Not provided")</li>
+                <li><strong>Country:</strong> @Model.Country</li>
+            </ul>
+            <a href="@Url.Action("EditProfile", "Admin", new { id = Model.UserId })" class="btn btn-primary mt-3">Edit Profile</a>
+        </div>
+    </div>
+
+    <!-- TEMPLATE CARD -->
+    <div class="card">
+        <div class="card-header">
+            <h4>TEMPPPPP</h4>
+        </div>
+        <div class="card-body">
+            <a href="@Url.Action("Index", "Users")" class="btn btn-secondary">Temppppp</a>
+        </div>
+    </div>
 </div>
-
-<a href="@Url.Action("EditProfile", "Admin", new { id = Model.UserId })">Edit Profile</a>
