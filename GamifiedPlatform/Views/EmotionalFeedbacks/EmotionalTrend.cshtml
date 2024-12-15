@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotional Trend Analysis</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Add a CSS file for styling -->
+</head>
+<body>
+    <div class="container">
+        <h1>Emotional Trend Analysis</h1>
+
+        <form asp-action="EmotionalTrend" asp-controller="GamifiedPlatform" method="post">
+            <div class="form-group">
+                <label for="courseID">Course ID:</label>
+                <input type="number" id="courseID" name="courseID" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="moduleID">Module ID:</label>
+                <input type="number" id="moduleID" name="moduleID" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="period">Time Period:</label>
+                <input type="datetime-local" id="period" name="period" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Get Emotional Trend</button>
+        </form>
+
+        <div class="results">
+            @if (ViewBag.Errors != null && ViewBag.Errors.Count > 0)
+            {
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach (var error in ViewBag.Errors)
+                        {
+                            <li>@error</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            @if (Model != null && Model.Count > 0)
+            {
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Feedback Time</th>
+                            <th>Emotional State</th>
+                            <th>Learner Name</th>
+                            <th>Module Title</th>
+                            <th>Course Title</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var trend in Model)
+                        {
+                            <tr>
+                                <td>@trend.FeedbackTime</td>
+                                <td>@trend.EmotionalState</td>
+                                <td>@trend.LearnerName</td>
+                                <td>@trend.ModuleTitle</td>
+                                <td>@trend.CourseTitle</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</body>
+</html>

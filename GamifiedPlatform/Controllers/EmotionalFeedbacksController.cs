@@ -69,6 +69,28 @@ namespace GamifiedPlatform.Controllers
             return RedirectToAction("Index");
         }
         // GET: EmotionalFeedbacks/Details/5
+        public async Task<IActionResult> EmotionalTrend(int courseID,int moduleID,DateTime period) {
+            var moduleExists = await _context.Modules.AnyAsync(d => d.ModuleId == moduleID);
+            var courseExists = await _context.Modules.AnyAsync(d => d.CourseId == courseID);
+            if (!moduleExists)
+            {
+                ModelState.AddModelError("", "The specified module does not exist.");
+                return View("EmotionalTrend");
+            }
+            else
+            {
+                if (!courseExists)
+                {
+                    ModelState.AddModelError("", "The specified course does not exist.");
+                    return View("EmotionalTrend");
+                }
+                else
+                {
+                    var Trend = await _context.EmotionalFeedbacks.FromSqlRaw($"Exec EmotionalTrendAnalysisIns @CourseID={courseID},@ModuleID={moduleID},@TimePeriod={period}").ToListAsync();
+                    return View(Trend);
+                }
+            }
+        }
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
