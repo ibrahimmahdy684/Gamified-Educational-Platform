@@ -12,13 +12,14 @@ where @learnerID=@learnerID
 end
 	 
 Go 
-create proc getCurrentLearnerPassword(@learnerID int,@password int output)
+create proc getCurrentLearnerPassword(@learnerID int,@password varchar(50) output)
 AS
 begin
 select @password=u.Password
 from Learner l inner join Users u on l.UserID=u.UserID
 where l.LearnerID=@learnerID
 end
+
 	 
 Go 
 create proc AllLearnersInfo
