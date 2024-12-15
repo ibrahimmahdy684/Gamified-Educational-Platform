@@ -19,9 +19,15 @@ namespace GamifiedPlatform.Controllers
         }
 
         // GET: PersonalizationProfiles
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int learnerID)
         {
-            var Learners=await _context.PersonalizationProfiles.FromSqlRaw("Exec AllLearnersInfo").ToListAsync();
+            var learnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
+            if (!learnerExists)
+            {
+                ModelState.AddModelError("", "The specified learner does not exist.");
+                return View("Index");
+            }
+            var Learners=await _context.PersonalizationProfiles.FromSqlRaw($"Exec viewInfo @LearnerID={learnerID}").ToListAsync();
             return View(Learners);
         }
 
