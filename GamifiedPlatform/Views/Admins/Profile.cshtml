@@ -4,7 +4,6 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-@* Use Bootstrap 4/5 for styling *@
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
@@ -32,16 +31,6 @@
         padding: 20px;
         border-radius: 0 0 8px 8px;
     }
-
-        .card-body ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-
-            .card-body ul li {
-                font-size: 16px;
-                padding: 5px 0;
-            }
 
     .btn {
         padding: 10px 20px;
@@ -98,13 +87,25 @@
         </div>
     </div>
 
-    <!-- TEMPLATE CARD -->
+    <!-- Card for All Learners -->
     <div class="card">
         <div class="card-header">
-            <h4>TEMPPPPP</h4>
+            <h4>View All Learners</h4>
         </div>
         <div class="card-body">
-            <a href="@Url.Action("Index", "Users")" class="btn btn-secondary">Temppppp</a>
+            <p>Manage and view all learners registered on the platform.</p>
+            <a href="@Url.Action("Index", "Learners")" class="btn btn-secondary">Go to Learners</a>
+        </div>
+    </div>
+
+    <!-- Card for All Instructors -->
+    <div class="card">
+        <div class="card-header">
+            <h4>View All Instructors</h4>
+        </div>
+        <div class="card-body">
+            <p>Manage and view all instructors on the platform.</p>
+            <a href="@Url.Action("Index", "Instructors")" class="btn btn-secondary">Go to Instructors</a>
         </div>
     </div>
 </div>
