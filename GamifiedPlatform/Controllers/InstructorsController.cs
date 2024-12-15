@@ -32,7 +32,23 @@ namespace GamifiedPlatform.Controllers
 
             return View(instructor);
         }
-
+        public async Task<IActionResult> UpdateInfo(int instructorID,string name,string latest_qualification, string expertise_area, string email)
+            
+        {
+            var learnerExists = await _context.Instructors.AnyAsync(d => d.InstructorId == instructorID);
+            if (!learnerExists)
+            {
+                ModelState.AddModelError("", "The specified learner does not exist.");
+                return View("UpdateInfo");
+            }
+            else
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec updateInstructorInfo @InstructorID={instructorID},@name={name},@latest_qualification={latest_qualification},@expertise_area={expertise_area},@email={email}");
+                TempData["SuccessMessage"] = "Instructor information updated successfully!";
+                return RedirectToAction("Index");
+            }
+            
+        }
         public IActionResult ViewScores()
         {
             // Retrieve all learners' scores from the database and map them to the view model
