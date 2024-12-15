@@ -31,29 +31,43 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DifficultyLevel)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Criteria)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
+        @foreach (var item in Model)
+        {
+            <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.deadline)
+                    @Html.DisplayFor(modelItem => item.DifficultyLevel)
                 </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.QuestId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.QuestId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.QuestId">Delete</a>
-            </td>
-        </tr>
-}
+                <td>
+                    @Html.DisplayFor(modelItem => item.Criteria)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <!-- Handle Deadline -->
+                <td>
+                    @{
+                        DateTime parsedDeadline;
+                        if (DateTime.TryParse(item.deadline, out parsedDeadline))
+                        {
+                            // If parsing succeeds, format the deadline as "yyyy-MM-dd HH:mm:ss"
+                            @parsedDeadline.ToString("yyyy-MM-dd HH:mm:ss")
+                        }
+                        else
+                        {
+                            // If parsing fails, display the original string
+                            @item.deadline
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.QuestId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.QuestId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.QuestId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

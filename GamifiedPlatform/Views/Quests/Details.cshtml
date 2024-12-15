@@ -10,35 +10,46 @@
     <h4>Quest</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DifficultyLevel)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DifficultyLevel)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Criteria)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Criteria)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
-        <dt class = "col-sm-2">
+        <!-- Convert Deadline to DateTime Format -->
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.deadline)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.deadline)
+        <dd class="col-sm-10">
+            @{
+                DateTime parsedDeadline;
+                if (DateTime.TryParse(Model.deadline, out parsedDeadline))
+                {
+                    @parsedDeadline.ToString("yyyy-MM-dd HH:mm:ss")
+                }
+                else
+                {
+                    @Model.deadline <!-- Display raw string if parsing fails -->
+                }
+            }
         </dd>
     </dl>
 </div>
