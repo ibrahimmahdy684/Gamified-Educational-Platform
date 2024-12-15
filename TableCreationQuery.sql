@@ -19,6 +19,12 @@ add HighestAssessmentTitle varchar(50)
 ALTER TABLE Course
 add HighestAssessmentGrade int
 
+
+ALTER TABLE Quest
+add deadline datetime  
+
+
+
 Create table Users(
     UserID INT primary Key Identity,
     Name NVARCHAR(100),
