@@ -177,7 +177,79 @@ namespace GamifiedPlatform.Controllers
             return View(learner);
         }
 
+        [HttpPost]
+        public IActionResult EnrollInCourse(int LearnerId, int CourseId)
+        {
+            if (LearnerId <= 0)
+            {
+                TempData["ErrorMessage"] = "Invalid learner ID.";
+                return RedirectToAction("Profile", new { id = LearnerId });
+            }
 
+            // Check if the course exists
+            var courseExists = _context.Courses.Any(c => c.CourseId == CourseId);
+            if (!courseExists)
+            {
+                TempData["ErrorMessage"] = "Enrollment failed: The course does not exist.";
+                // Retrieve the UserId from the Learner table
+                var learner1 = _context.Learners.FirstOrDefault(l => l.LearnerId == LearnerId);
+                if (learner1 == null)
+                {
+                    TempData["ErrorMessage"] = "Learner not found.";
+                    return RedirectToAction("Index"); // Redirect to a default view if learner is not found
+                }
+
+                return RedirectToAction("Profile", new { id = learner1.UserId });
+
+            }
+
+            // Check if the learner is already enrolled in the course
+            var alreadyEnrolled = _context.CourseEnrollments
+                .Any(ce => ce.LearnerId == LearnerId && ce.CourseId == CourseId);
+            if (alreadyEnrolled)
+            {
+                TempData["ErrorMessage"] = "Enrollment failed: You are already enrolled in this course.";
+                // Retrieve the UserId from the Learner table
+                var learner2 = _context.Learners.FirstOrDefault(l => l.LearnerId == LearnerId);
+                if (learner2 == null)
+                {
+                    TempData["ErrorMessage"] = "Learner not found.";
+                    return RedirectToAction("Index"); // Redirect to a default view if learner is not found
+                }
+
+                return RedirectToAction("Profile", new { id = learner2.UserId });
+            }
+
+            try
+            {
+                var connection = _context.Database.GetDbConnection();
+                using (var command = connection.CreateCommand())
+                {
+                    connection.Open();
+                    command.CommandText = "EXEC Courseregister @LearnerID, @CourseID";
+                    command.Parameters.Add(new SqlParameter("@LearnerID", LearnerId));
+                    command.Parameters.Add(new SqlParameter("@CourseID", CourseId));
+
+                    command.ExecuteNonQuery();
+                    TempData["SuccessMessage"] = "Enrollment successful!";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Enrollment failed: {ex.Message}";
+            }
+
+            // Retrieve the UserId from the Learner table
+            var learner = _context.Learners.FirstOrDefault(l => l.LearnerId == LearnerId);
+            if (learner == null)
+            {
+                TempData["ErrorMessage"] = "Learner not found.";
+                return RedirectToAction("Index"); // Redirect to a default view if learner is not found
+            }
+
+            return RedirectToAction("Profile", new { id = learner.UserId });
+
+        }
 
         // GET: Learners/Edit/5
         [HttpGet]

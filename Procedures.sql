@@ -595,7 +595,7 @@ begin
 print 'Registeration Failed,You did not complete all prerequisites of this course'
 end
 end
-exec Courseregister 3,5
+exec Courseregister 6,5
 --Learner13
 Go
 

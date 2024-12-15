@@ -23,10 +23,39 @@
             </ul>
         </div>
         <div class="card-footer text-center">
-            <!-- Buttons to navigate to different actions -->
             <a asp-action="Edit" asp-route-id="@Model.LearnerId" class="btn btn-warning mr-2">Edit Profile</a>
             <a asp-action="ViewAssessments" asp-route-learnerId="@Model.LearnerId" class="btn btn-primary mr-2">View Your Assessments</a>
             <a asp-action="EnrolledCourses" asp-route-id="@Model.UserId" class="btn btn-secondary">View Enrolled Courses</a>
+        </div>
+    </div>
+
+    <!-- Enrollment Card -->
+    <div class="card mt-4">
+        <div class="card-header text-white bg-success">
+            <h3>Enroll in a Course</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="EnrollInCourse" method="post">
+                <input type="hidden" name="LearnerId" value="@Model.LearnerId" />
+                <div class="form-group">
+                    <label for="CourseId">Course ID:</label>
+                    <input type="number" class="form-control" id="CourseId" name="CourseId" placeholder="Enter Course ID" required>
+                </div>
+                <button type="submit" class="btn btn-success">Enroll</button>
+            </form>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger mt-3">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -47,32 +76,14 @@
         padding: 10px 15px;
     }
 
-    .card-footer {
-        padding: 15px;
+    .btn-success {
+        color: #fff;
+        background-color: #28a745;
+        border-color: #218838;
     }
 
-    .btn {
-        padding: 10px 20px;
-        font-size: 1rem;
-    }
-
-    .btn-warning {
-        background-color: #f39c12;
-        border-color: #e67e22;
-    }
-
-        .btn-warning:hover {
-            background-color: #e67e22;
-            border-color: #d35400;
-        }
-
-    .btn-secondary {
-        background-color: #6c757d;
-        border-color: #5a6268;
-    }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            border-color: #4e555b;
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
         }
 </style>
