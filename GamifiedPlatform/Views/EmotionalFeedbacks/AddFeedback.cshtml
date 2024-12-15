@@ -5,32 +5,34 @@
 <h1>AddFeedback</h1>
 @model GamifiedPlatform.Models.EmotionalFeedback
 
-<h2>Add a Post</h2>
+<h2>AddFeedback</h2>
 @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger">
         @Html.ValidationSummary(false, "Please fix the following errors:")
     </div>
 }
-<form asp-action="AddFeedback" method="post">
-    <div>
-        <label>Learner ID</label>
-        <input type="number" name="learnerID" required />
+<form method="post" asp-action="AddFeedback" class="form-group">
+    <div class="mb-3">
+        <label for="activityID" class="form-label">Activity ID</label>
+        <input type="number" id="activityID" name="activityID" class="form-control" required />
     </div>
 
-    <div>
-        <label>Activity ID</label>
-        <input type="number" name="activityID" required />
+    <div class="mb-3">
+        <label for="learnerID" class="form-label">Learner ID</label>
+        <input type="number" id="learnerID" name="learnerID" class="form-control" required />
     </div>
 
-    <div>
-        <label>feedback</label>
-        <input type="text" name="feedback" maxlength="50" required />
+    <div class="mb-3">
+        <label for="feedback" class="form-label">Feedback</label>
+        <textarea id="feedback" name="feedback" class="form-control" rows="3" required></textarea>
     </div>
 
-
-    <button type="submit">Add feedback</button>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+    </div>
 </form>
+
 
 
 
