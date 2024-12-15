@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "ADDfeedback";
+}
+
+<h1>AddFeedback</h1>
+@model GamifiedPlatform.Models.EmotionalFeedback
+
+<h2>Add a Post</h2>
+@if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary(false, "Please fix the following errors:")
+    </div>
+}
+<form asp-action="AddFeedback" method="post">
+    <div>
+        <label>Learner ID</label>
+        <input type="number" name="learnerID" required />
+    </div>
+
+    <div>
+        <label>Activity ID</label>
+        <input type="number" name="activityID" required />
+    </div>
+
+    <div>
+        <label>feedback</label>
+        <input type="text" name="feedback" maxlength="50" required />
+    </div>
+
+
+    <button type="submit">Add feedback</button>
+</form>
+
+
+

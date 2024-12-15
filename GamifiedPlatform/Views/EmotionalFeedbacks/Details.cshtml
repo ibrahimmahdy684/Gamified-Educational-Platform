@@ -1,0 +1,36 @@
+﻿@model GamifiedPlatform.Models.EmotionalFeedback
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>EmotionalFeedback</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Timestamp)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Timestamp)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EmotionalState)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EmotionalState)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Learner)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Learner.LearnerId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.FeedbackId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
