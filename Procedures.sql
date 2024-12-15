@@ -10,7 +10,16 @@ update Learner
 set first_name=@firstName , last_name=@lastName,country=@country,email=@email,cultural_background=@cultural_background
 where @learnerID=@learnerID
 end
-
+	 
+Go 
+create proc getCurrentLearnerPassword(@learnerID int,@password int output)
+AS
+begin
+select @password=u.Password
+from Learner l inner join Users u on l.UserID=u.UserID
+where l.LearnerID=@learnerID
+end
+	 
 Go 
 create proc AllLearnersInfo
 AS
