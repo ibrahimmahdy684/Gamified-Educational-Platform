@@ -183,7 +183,7 @@ namespace GamifiedPlatform.Controllers
             if (LearnerId <= 0)
             {
                 TempData["ErrorMessage"] = "Invalid learner ID.";
-                return RedirectToAction("Profile", new { id = LearnerId });
+                return RedirectToLearnerProfile(LearnerId);
             }
 
             // Check if the course exists
@@ -191,16 +191,7 @@ namespace GamifiedPlatform.Controllers
             if (!courseExists)
             {
                 TempData["ErrorMessage"] = "Enrollment failed: The course does not exist.";
-                // Retrieve the UserId from the Learner table
-                var learner1 = _context.Learners.FirstOrDefault(l => l.LearnerId == LearnerId);
-                if (learner1 == null)
-                {
-                    TempData["ErrorMessage"] = "Learner not found.";
-                    return RedirectToAction("Index"); // Redirect to a default view if learner is not found
-                }
-
-                return RedirectToAction("Profile", new { id = learner1.UserId });
-
+                return RedirectToLearnerProfile(LearnerId);
             }
 
             // Check if the learner is already enrolled in the course
@@ -209,15 +200,7 @@ namespace GamifiedPlatform.Controllers
             if (alreadyEnrolled)
             {
                 TempData["ErrorMessage"] = "Enrollment failed: You are already enrolled in this course.";
-                // Retrieve the UserId from the Learner table
-                var learner2 = _context.Learners.FirstOrDefault(l => l.LearnerId == LearnerId);
-                if (learner2 == null)
-                {
-                    TempData["ErrorMessage"] = "Learner not found.";
-                    return RedirectToAction("Index"); // Redirect to a default view if learner is not found
-                }
-
-                return RedirectToAction("Profile", new { id = learner2.UserId });
+                return RedirectToLearnerProfile(LearnerId);
             }
 
             try
@@ -230,8 +213,21 @@ namespace GamifiedPlatform.Controllers
                     command.Parameters.Add(new SqlParameter("@LearnerID", LearnerId));
                     command.Parameters.Add(new SqlParameter("@CourseID", CourseId));
 
-                    command.ExecuteNonQuery();
-                    TempData["SuccessMessage"] = "Enrollment successful!";
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            string resultMessage = reader.GetString(0);
+                            if (resultMessage.Contains("Failed"))
+                            {
+                                TempData["ErrorMessage"] = resultMessage;
+                            }
+                            else
+                            {
+                                TempData["SuccessMessage"] = resultMessage;
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -239,16 +235,20 @@ namespace GamifiedPlatform.Controllers
                 TempData["ErrorMessage"] = $"Enrollment failed: {ex.Message}";
             }
 
-            // Retrieve the UserId from the Learner table
-            var learner = _context.Learners.FirstOrDefault(l => l.LearnerId == LearnerId);
+            return RedirectToLearnerProfile(LearnerId);
+        }
+
+        // Helper method for profile redirection
+        private IActionResult RedirectToLearnerProfile(int learnerId)
+        {
+            var learner = _context.Learners.FirstOrDefault(l => l.LearnerId == learnerId);
             if (learner == null)
             {
                 TempData["ErrorMessage"] = "Learner not found.";
-                return RedirectToAction("Index"); // Redirect to a default view if learner is not found
+                return RedirectToAction("Index");
             }
 
             return RedirectToAction("Profile", new { id = learner.UserId });
-
         }
 
         // GET: Learners/Edit/5

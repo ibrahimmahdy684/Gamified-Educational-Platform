@@ -1,61 +1,73 @@
 ﻿@model IEnumerable<Course>
 
-<h2>Enrolled Courses</h2>
+<div class="container mt-5">
+    <h2 class="text-primary text-center mb-4">Enrolled Courses</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Course ID</th>
-            <th>Title</th>
-            <th>Learning Objective</th>
-            <th>Credit Points</th>
-            <th>Description</th>
-            <th>Difficulty Level</th>
-            <th>Pre-Requisites</th>
-            <th>Status</th>
-            <th>Highest Assessment</th>
-            <th>Highest Grade</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var course in Model)
-        {
+    <table class="table table-hover table-striped">
+        <thead class="thead-dark">
             <tr>
-                <td>@course.CourseId</td>
-                <td>@course.Title</td>
-                <td>@course.LearningObjective</td>
-                <td>@course.CreditPoints</td>
-                <td>@course.Description</td>
-                <td>@course.DifficultyLevel</td>
-                <td>@course.PreRequisites</td>
-                <td>@course.Status</td>
-                <td>
-                    @if (course.HighestAssessmentTitle != null)
-                    {
-                        <span>@course.HighestAssessmentTitle</span>
-                    }
-                    else
-                    {
-                        <span>N/A</span>
-                    }
-                </td>
-                <td>
-                    @if (course.HighestAssessmentGrade.HasValue)
-                    {
-                        <span>@course.HighestAssessmentGrade</span>
-                    }
-                    else
-                    {
-                        <span>N/A</span>
-                    }
-                </td>
-                <td>
-                    <a asp-action="Modules" asp-route-courseId="@course.CourseId" class="btn btn-info">View Modules</a>
-                </td>
+                <th>Course ID</th>
+                <th>Title</th>
+                <th>Learning Objective</th>
+                <th>Credit Points</th>
+                <th>Description</th>
+                <th>Difficulty Level</th>
+                <th>Pre-Requisites</th>
+                <th>Status</th>
+                <th>Highest Assessment</th>
+                <th>Highest Grade</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var course in Model)
+            {
+                <tr>
+                    <td>@course.CourseId</td>
+                    <td><strong>@course.Title</strong></td>
+                    <td>@course.LearningObjective</td>
+                    <td>@course.CreditPoints</td>
+                    <td>@course.Description</td>
+                    <td>@course.DifficultyLevel</td>
+                    <td>@course.PreRequisites</td>
+                    <td>
+                        <span class="badge @(course.Status == "Completed" ? "badge-success" : "badge-warning")">
+                            @course.Status
+                        </span>
+                    </td>
+                    <td>
+                        @if (course.HighestAssessmentTitle != null)
+                        {
+                            <span>@course.HighestAssessmentTitle</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">N/A</span>
+                        }
+                    </td>
+                    <td>
+                        @if (course.HighestAssessmentGrade.HasValue)
+                        {
+                            <span>@course.HighestAssessmentGrade</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">N/A</span>
+                        }
+                    </td>
+                    <td>
+                    <td>
+                        <a asp-action="Modules" asp-route-courseId="@course.CourseId" class="btn btn-outline-primary btn-sm d-flex justify-content-center align-items-center">
+                            <i class="fas fa-book-open mr-2"></i> View Modules
+                        </a>
+                    </td>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<a asp-action="Profile" asp-route-id="@ViewBag.UserId" class="btn btn-secondary">Back to Profile</a>
+    <div class="text-center mt-4">
+        <a asp-action="Profile" asp-route-id="@ViewBag.UserId" class="btn btn-secondary">Back to Profile</a>
+    </div>
+</div>

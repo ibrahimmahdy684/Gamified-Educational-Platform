@@ -1,39 +1,52 @@
 ﻿@model IEnumerable<GamifiedPlatform.Models.Assessment>
 
-<h2>Your Assessments</h2>
+<div class="container mt-5">
+    <h2 class="text-primary text-center mb-4">Your Assessments</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Assessment ID</th>
-            <th>Course ID</th>
-            <th>Module ID</th>
-            <th>Assessment Title</th>
-            <th>Type</th>
-            <th>Grade</th>
-            <th>Total Marks</th>
-            <th>Passing Marks</th>
-            <th>Weightage</th>
-            <th>Criteria</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var assessment in Model)
-        {
+    <table class="table table-hover table-striped">
+        <thead class="thead-dark">
             <tr>
-                <td>@assessment.Id</td>
-                <td>@assessment.CourseId</td>
-                <td>@assessment.ModuleId</td>
-                <td>@assessment.Title</td>
-                <td>@assessment.Type</td>
-                <td>@assessment.Grade</td>
-                <td>@assessment.TotalMarks</td>
-                <td>@assessment.PassingMarks</td>
-                <td>@assessment.Weightage</td>
-                <td>@assessment.Criteria</td>
+                <th>Assessment ID</th>
+                <th>Course ID</th>
+                <th>Module ID</th>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Grade</th>
+                <th>Total Marks</th>
+                <th>Passing Marks</th>
+                <th>Weightage</th>
+                <th>Criteria</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var assessment in Model)
+            {
+                <tr>
+                    <td>@assessment.Id</td>
+                    <td>@assessment.CourseId</td>
+                    <td>@assessment.ModuleId</td>
+                    <td><strong>@assessment.Title</strong></td>
+                    <td>@assessment.Type</td>
+                    <td>
+                        @if (@assessment.Grade >= @assessment.PassingMarks)
+                        {
+                            <span class="badge badge-success">@assessment.Grade</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger">@assessment.Grade</span>
+                        }
+                    </td>
+                    <td>@assessment.TotalMarks</td>
+                    <td>@assessment.PassingMarks</td>
+                    <td>@assessment.Weightage %</td>
+                    <td>@assessment.Criteria</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<a href="@Url.Action("LearnerProfile", "Learner", new { id = ViewBag.UserId })" class="btn btn-secondary">Back to Profile</a>
+    <div class="text-center mt-4">
+        <a href="@Url.Action("LearnerProfile", "Learner", new { id = ViewBag.UserId })" class="btn btn-secondary">Back to Profile</a>
+    </div>
+</div>

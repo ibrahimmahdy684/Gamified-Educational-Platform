@@ -562,39 +562,43 @@ end
 exec AssessmentsList 2,4,2
 
 --Learner12
-Go
-create proc Courseregister( @LearnerID int, @CourseID int)
+GO
+CREATE PROCEDURE Courseregister(@LearnerID INT, @CourseID INT)
 AS
-begin
-declare @preq int
-declare @preqmet int
+BEGIN
+    DECLARE @preq INT
+    DECLARE @preqmet INT
 
-select @preq=count(*)
-from Prerequisites p
-where p.course_id=@CourseID
+    SELECT @preq = COUNT(*)
+    FROM Prerequisites p
+    WHERE p.course_id = @CourseID
 
-select @preqmet=COUNT(*)
-from Course_enrollment ce inner join Prerequisites p on ce.CourseID=p.prereq
-where p.course_id=@CourseID and ce.LearnerID=@LearnerID and ce.status='Completed'
+    SELECT @preqmet = COUNT(*)
+    FROM Course_enrollment ce 
+    INNER JOIN Prerequisites p ON ce.CourseID = p.prereq
+    WHERE p.course_id = @CourseID 
+      AND ce.LearnerID = @LearnerID 
+      AND ce.status = 'Completed'
 
-if @preq=0
-Begin 
-insert into Course_enrollment(CourseID,LearnerID,enrollment_date,status)
-values(@CourseID,@LearnerID,GETDATE(),'Enrolled')
-print 'Registration approved'
-end
+    IF @preq = 0
+    BEGIN
+        INSERT INTO Course_enrollment (CourseID, LearnerID, enrollment_date, status)
+        VALUES (@CourseID, @LearnerID, GETDATE(), 'Enrolled')
+        SELECT 'Registration approved' AS Message
+    END
+    ELSE IF @preqmet = @preq
+    BEGIN
+        INSERT INTO Course_enrollment (CourseID, LearnerID, enrollment_date, status)
+        VALUES (@CourseID, @LearnerID, GETDATE(), 'Enrolled')
+        SELECT 'Registration approved' AS Message
+    END
+    ELSE
+    BEGIN
+        SELECT 'Registration Failed, You did not complete all prerequisites of this course' AS Message
+    END
+END
 
-else if @preqmet=@preq
-begin 
-insert into Course_enrollment(CourseID,LearnerID,enrollment_date,status)
-values(@CourseID,@LearnerID,GETDATE(),'Enrolled')
-print 'Registration approved'
-end
-else 
-begin
-print 'Registeration Failed,You did not complete all prerequisites of this course'
-end
-end
+drop procedure Courseregister
 exec Courseregister 6,5
 --Learner13
 Go
