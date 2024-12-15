@@ -2,7 +2,100 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+
+    <!-- Hero Section -->
+    <div class="row align-items-center bg-primary text-white py-5 rounded mb-5">
+        <div class="col-md-6">
+            <h1 class="display-4">Welcome to Our Platform</h1>
+            <p class="lead">Empowering learners to achieve their dreams through high-quality education and personalized support.</p>
+            <a href="@Url.Action("About", "Home")" class="btn btn-light btn-lg">Learn More</a>
+        </div>
+        <div class="col-md-6">
+            <img src="@Url.Content("~/images/hero.jpg")" alt="Hero Image" class="img-fluid rounded">
+        </div>
+    </div>
+
+    <!-- Mission and Vision Section -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <h2 class="text-primary">Our Mission</h2>
+            <p>To create an inclusive learning environment that fosters growth, innovation, and excellence.</p>
+        </div>
+        <div class="col-md-6 bg-light py-4 px-4 rounded">
+            <h2 class="text-secondary">Our Vision</h2>
+            <p>To become a global leader in education by equipping learners with the skills and knowledge to excel in their careers.</p>
+        </div>
+    </div>
+
+    <!-- Goals Section -->
+    <div class="py-5 bg-light rounded mb-5">
+        <h2 class="text-center text-primary mb-4">Our Goals</h2>
+        <div class="row text-center">
+            <div class="col-md-4">
+                <i class="bi bi-award-fill text-success mb-2" style="font-size: 2rem;"></i>
+                <h5>World-Class Education</h5>
+                <p>Providing high-quality resources for learners everywhere.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bi bi-person-lines-fill text-info mb-2" style="font-size: 2rem;"></i>
+                <h5>Build Community</h5>
+                <p>Creating a vibrant and supportive learning community.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bi bi-lightbulb-fill text-warning mb-2" style="font-size: 2rem;"></i>
+                <h5>Foster Innovation</h5>
+                <p>Encouraging lifelong learning and innovation.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Partners Section -->
+    <div class="row mb-5">
+        <h2 class="text-center text-primary mb-4">Our Partners</h2>
+        <div class="d-flex justify-content-around align-items-center flex-wrap">
+            <img src="@Url.Content("~/images/partner-1.png")" alt="Partner 1" class="img-fluid" style="max-width: 150px; margin: 10px;">
+            <img src="@Url.Content("~/images/partner-2.png")" alt="Partner 2" class="img-fluid" style="max-width: 150px; margin: 10px;">
+            <img src="@Url.Content("~/images/partner-3.png")" alt="Partner 3" class="img-fluid" style="max-width: 150px; margin: 10px;">
+        </div>
+    </div>
+
+    <!-- Student Experiences Section -->
+    <div class="py-5">
+        <h2 class="text-center text-primary mb-4">What Students Say</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <p>"This platform has completely changed my career trajectory."</p>
+                        <footer class="blockquote-footer">Sarah A., Software Engineer</footer>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <p>"I gained the skills and confidence to start my own business."</p>
+                        <footer class="blockquote-footer">John D., Entrepreneur</footer>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <p>"The community support and resources are incredible!"</p>
+                        <footer class="blockquote-footer">Emily R., Data Scientist</footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call-to-Action Section -->
+    <div class="bg-secondary text-white py-5 text-center rounded">
+        <h2>Start Your Journey Today</h2>
+        <p>Join thousands of learners achieving their goals with our platform.</p>
+        <a href="@Url.Action("Register", "Account")" class="btn btn-light btn-lg">Get Started</a>
+    </div>
+
 </div>
