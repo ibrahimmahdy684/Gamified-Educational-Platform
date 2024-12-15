@@ -23,7 +23,17 @@ namespace GamifiedPlatform.Controllers
         {
             return View(await _context.Leaderboards.ToListAsync());
         }
-
+       /* public async Task<IActionResult> Index(int learnerID)
+        {
+            var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
+            if (!LearnerExists)
+            {
+                ModelState.AddModelError("", "The specified Learner does not exist.");
+                return View("Index");
+            }
+            var Leaderboard = await _context.Leaderboards.FromSqlRaw($"Exec LeaderboardFilter @LearnerID={learnerID}").ToListAsync();
+            return View(Leaderboard);
+        }*/
         // GET: Leaderboards/Details/5
         public async Task<IActionResult> Details(int? id)
         {
