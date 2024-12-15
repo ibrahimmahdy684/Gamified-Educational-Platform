@@ -1,57 +1,59 @@
 ﻿@model IEnumerable<LearnerScoreViewModel>
 
 @{
-    ViewData["Title"] = "View Learners' Assessment Scores";
+    ViewData["Title"] = "Learners' Assessment Scores";
 }
 
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
 <div class="container mt-5">
-    <h2>Learners' Assessment Scores</h2>
-
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success mt-3">
-            @TempData["SuccessMessage"]
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Learners' Assessment Scores</h2>
         </div>
-    }
-
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger mt-3">
-            @TempData["ErrorMessage"]
-        </div>
-    }
-
-    <table class="table table-striped mt-3">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Assessment ID</th>
-                <th>Score</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
+        <div class="card-body">
+            @if (TempData["SuccessMessage"] != null)
             {
-                <tr>
-                    <td>@item.LearnerName</td>
-                    <td>@item.LearnerEmail</td>
-                    <td>@item.AssessmentId</td>
-                    <td>@item.ScoredPoints</td>
-                    <td>
-                        <!-- Form to edit grade -->
-                        <form asp-action="UpdateGrade" method="post">
-                            <input type="hidden" name="learnerId" value="@item.LearnerId" />
-                            <input type="hidden" name="assessmentId" value="@item.AssessmentId" />
-                            <input type="number" name="scoredPoints" value="@item.ScoredPoints" class="form-control" required />
-                            <button type="submit" class="btn btn-primary mt-2">Update Grade</button>
-                        </form>
-                    </td>
-                </tr>
+                <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
             }
-        </tbody>
-    </table>
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <table class="table table-striped table-hover mt-3">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Assessment ID</th>
+                        <th>Score</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.LearnerName</td>
+                            <td>@item.LearnerEmail</td>
+                            <td>@item.AssessmentId</td>
+                            <td>@item.ScoredPoints</td>
+                            <td>
+                                <form asp-action="UpdateGrade" method="post" class="d-inline">
+                                    <input type="hidden" name="learnerId" value="@item.LearnerId" />
+                                    <input type="hidden" name="assessmentId" value="@item.AssessmentId" />
+                                    <input type="number" name="scoredPoints" value="@item.ScoredPoints" class="form-control form-control-sm d-inline w-50" required />
+                                    <button type="submit" class="btn btn-primary btn-sm mt-2">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

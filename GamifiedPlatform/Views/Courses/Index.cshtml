@@ -4,41 +4,6 @@
     ViewData["Title"] = "Courses";
 }
 
-<style>
-    .btn-sm {
-        font-size: 14px; /* Smaller text */
-        padding: 5px 10px; /* Less padding */
-    }
-
-    .btn-warning {
-        background-color: #ffc107;
-        border: none;
-    }
-
-        .btn-warning:hover {
-            background-color: #e0a800;
-        }
-
-    .btn-info {
-        background-color: #17a2b8;
-        border: none;
-    }
-
-        .btn-info:hover {
-            background-color: #138496;
-        }
-
-    .btn-danger {
-        background-color: #dc3545;
-        border: none;
-    }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-</style>
-
-
 <div class="container mt-5">
     @if (TempData["ErrorMessage"] != null)
     {
@@ -52,19 +17,17 @@
             <h2>@ViewData["Title"]</h2>
         </div>
         <div class="card-body">
-            <!-- Create New Course Button -->
-            <a href="@Url.Action("Create", "Courses")" class="btn btn-success btn-sm mb-3">Create New Course</a>
+            <a href="@Url.Action("Create", "Courses")" class="btn btn-success mb-3">Create New Course</a>
 
-            <!-- Table for existing courses -->
-            <table class="table">
-                <thead>
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.Title)</th>
-                        <th>@Html.DisplayNameFor(model => model.LearningObjective)</th>
-                        <th>@Html.DisplayNameFor(model => model.CreditPoints)</th>
-                        <th>@Html.DisplayNameFor(model => model.DifficultyLevel)</th>
-                        <th>@Html.DisplayNameFor(model => model.PreRequisites)</th>
-                        <th>@Html.DisplayNameFor(model => model.Description)</th>
+                        <th>Title</th>
+                        <th>Learning Objective</th>
+                        <th>Credit Points</th>
+                        <th>Difficulty Level</th>
+                        <th>Pre-Requisites</th>
+                        <th>Description</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -79,9 +42,8 @@
                             <td>@Html.DisplayFor(modelItem => item.PreRequisites)</td>
                             <td>@Html.DisplayFor(modelItem => item.Description)</td>
                             <td>
-                                <!-- Edit, Details, Delete Buttons with smaller size and theme colors -->
-                                <a href="@Url.Action("Edit", "Courses", new { id = item.CourseId })" class="btn btn-warning btn-sm">Edit</a> |
-                                <a href="@Url.Action("Details", "Courses", new { id = item.CourseId })" class="btn btn-info btn-sm">Details</a> |
+                                <a href="@Url.Action("Edit", "Courses", new { id = item.CourseId })" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="@Url.Action("Details", "Courses", new { id = item.CourseId })" class="btn btn-info btn-sm">Details</a>
                                 <a href="@Url.Action("Delete", "Courses", new { id = item.CourseId })" class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>
