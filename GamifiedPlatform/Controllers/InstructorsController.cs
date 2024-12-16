@@ -49,6 +49,58 @@ namespace GamifiedPlatform.Controllers
             }
             
         }
+        public async Task<IActionResult> AddForum(int instructorID,int moduleID, int courseID, string title, string description)
+        {
+            var instructor = await _context.Instructors.FirstOrDefaultAsync(l => l.InstructorId ==instructorID );
+
+            if (instructor == null)
+            {
+                ModelState.AddModelError("", "The specified instructor does not exist.");
+                return View("Profile", instructor); // Return a new model to prevent null
+            }
+            try
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec CreateDiscussion @ModuleID={moduleID},@courseID={courseID},@title={title},@description={description}");
+            }
+            catch (SqlException ex)
+            {
+
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+
+                    var moduleExists = await _context.Modules.AnyAsync(d => d.ModuleId == moduleID);
+                    if (!moduleExists)
+                    {
+                        ModelState.AddModelError("", "The specified module does not exist.");
+
+                    }
+                    else ModelState.AddModelError("", "The specified course does not exist.");
+
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "This forum already Exists");
+                }
+                else
+                {
+
+                    ModelState.AddModelError("", "An error occurred while creating the forum. Please try again.");
+                }
+
+                return View("Profile",instructor);
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Profile",instructor);
+            }
+            ViewData["SuccessMessage"] = "Forum created successfully!";
+            return View("Profile",instructor);
+        }
+        [HttpPost]
+        [HttpPost]
+        
         public async Task<IActionResult> AddPath(int instructorID,int LearnerID, int profileID, string completionStatus, string customContent, string adaptiveRules)
         {
 
