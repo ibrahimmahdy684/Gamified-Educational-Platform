@@ -153,7 +153,7 @@ namespace GamifiedPlatform.Controllers
                 ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
                 return View("Profile",instructor);
             }
-            TempData["SuccessMessage"] = "Path created successfully!";
+            ViewData["SuccessMessage"] = "Path created successfully!";
             return View("Profile", instructor);
         }
 

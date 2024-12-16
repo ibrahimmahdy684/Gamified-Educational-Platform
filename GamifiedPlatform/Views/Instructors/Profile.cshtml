@@ -252,16 +252,16 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Assign Path</button>
             </form>
-            @if (TempData["ErrorMessage"] != null)
+            @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
             {
-                <div class="alert alert-danger mt-3">
-                    @TempData["ErrorMessage"]
+                <div class="alert alert-danger">
+                    @Html.ValidationSummary(false, "Please fix the following errors:")
                 </div>
             }
-            @if (TempData["SuccessMessage"] != null)
+            @if (ViewData["SuccessMessage"] != null)
             {
                 <div class="alert alert-success mt-3">
-                    @TempData["SuccessMessage"]
+                    @ViewData["SuccessMessage"]
                 </div>
             }
         </div>
