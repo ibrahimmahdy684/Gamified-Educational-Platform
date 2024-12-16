@@ -577,6 +577,7 @@ end
 exec AssessmentsList 2,4,2
 
 --Learner12
+drop procedure Courseregister
 GO
 CREATE PROCEDURE Courseregister(@LearnerID INT, @CourseID INT)
 AS
