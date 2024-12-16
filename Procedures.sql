@@ -6,8 +6,9 @@ Go
 create proc PostINS(@instructorID int,@DiscussionID int,@Post varchar(max))
 AS
 begin
-insert into InstructorDiscussion(ForumID,InstructorID,Post) values (@DiscussionID,@instructorID,@Post);
+insert into InstructorDiscussion(ForumID,InstructorID,Post,time) values (@DiscussionID,@instructorID,@Post,GETDATE());
 end
+
 
 GO
 CREATE PROCEDURE DeleteLearner
@@ -679,7 +680,7 @@ Go
 create proc Post(@LearnerID int,@DiscussionID int,@Post varchar(max))
 AS
 begin
-insert into LearnerDiscussion(ForumID,LearnerID,Post) values (@DiscussionID,@LearnerID,@Post);
+insert into LearnerDiscussion(ForumID,LearnerID,Post,time) values (@DiscussionID,@LearnerID,@Post,GETDATE());
 end
 exec Post 6,5,'hhh'
 /*test
