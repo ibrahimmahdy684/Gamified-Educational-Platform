@@ -179,6 +179,48 @@
             <a href="@Url.Action("EnrollLearner", "Instructors")" class="btn btn-primary">Enroll Learner</a>
         </div>
     </div>
+    <!-- Create Discussion Section -->
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+            <h4>Create Discussion Forum</h4>
+        </div>
+        <div class="card-body">
+            <p>Use this form to create a discussion forum for a specific course module.</p>
+            <form asp-action="AddForum" method="post">
+                <input for="instructorID" type="hidden" name="instructorID" value="@Model.InstructorId" />
+                <div class="form-group">
+                    <label for="moduleID">Module ID</label>
+                    <input type="number" class="form-control" id="moduleID" name="moduleID" placeholder="Enter Module ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="courseID">Course ID</label>
+                    <input type="number" class="form-control" id="courseID" name="courseID" placeholder="Enter Course ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter Discussion Title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter Description" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Discussion</button>
+            </form>
+            @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    @Html.ValidationSummary(false, "Please fix the following errors:")
+                </div>
+            }
+            @if (ViewData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3">
+                    @ViewData["SuccessMessage"]
+                </div>
+            }
+        </div>
+    </div>
+
     <!-- Add Path Section -->
     <div class="card mt-4">
         <div class="card-header bg-success text-white">
@@ -210,16 +252,16 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Assign Path</button>
             </form>
-            @if (TempData["ErrorMessage"] != null)
+            @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
             {
-                <div class="alert alert-danger mt-3">
-                    @TempData["ErrorMessage"]
+                <div class="alert alert-danger">
+                    @Html.ValidationSummary(false, "Please fix the following errors:")
                 </div>
             }
-            @if (TempData["SuccessMessage"] != null)
+            @if (ViewData["SuccessMessage"] != null)
             {
                 <div class="alert alert-success mt-3">
-                    @TempData["SuccessMessage"]
+                    @ViewData["SuccessMessage"]
                 </div>
             }
         </div>

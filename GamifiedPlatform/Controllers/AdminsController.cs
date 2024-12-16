@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GamifiedPlatform.Models;
+using Microsoft.Data.SqlClient;
 
 namespace GamifiedPlatform.Controllers
 {
@@ -67,7 +68,55 @@ namespace GamifiedPlatform.Controllers
 
             return View(admin);
         }
+        public async Task<IActionResult> AddForum(int adminID, int moduleID, int courseID, string title, string description)
+        {
+            var admin = await _context.Admins.FirstOrDefaultAsync(l => l.AdminId == adminID);
 
+            if (admin == null)
+            {
+                ModelState.AddModelError("", "The specified instructor does not exist.");
+                return View("Profile", admin); // Return a new model to prevent null
+            }
+            try
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec CreateDiscussion @ModuleID={moduleID},@courseID={courseID},@title={title},@description={description}");
+            }
+            catch (SqlException ex)
+            {
+
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+
+                    var moduleExists = await _context.Modules.AnyAsync(d => d.ModuleId == moduleID);
+                    if (!moduleExists)
+                    {
+                        ModelState.AddModelError("", "The specified module does not exist.");
+
+                    }
+                    else ModelState.AddModelError("", "The specified course does not exist.");
+
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "This forum already Exists");
+                }
+                else
+                {
+
+                    ModelState.AddModelError("", "An error occurred while creating the forum. Please try again.");
+                }
+
+                return View("Profile", admin);
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Profile", admin);
+            }
+            ViewData["SuccessMessage"] = "Forum created successfully!";
+            return View("Profile", admin);
+        }
         // GET: Admins/Create
         public IActionResult Create()
         {
