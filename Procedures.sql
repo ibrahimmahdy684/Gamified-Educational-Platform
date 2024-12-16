@@ -1,5 +1,31 @@
 ﻿USE GamifiedPlatform
 
+drop procedure DeleteLearner
+
+GO
+CREATE PROCEDURE DeleteLearner
+    @LearnerID INT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Example manual deletions
+        DELETE FROM LearnerMastery WHERE LearnerID = @LearnerID;
+        DELETE FROM LearnersCollaboration WHERE LearnerID = @LearnerID;
+
+        -- Cascade delete handled here
+        DELETE FROM Learner WHERE LearnerID = @LearnerID;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END;
+
+
 ------ADMIN PROCEDURES----------
  Go
 create proc updateLearnerInfo(@learnerID int,@firstName VARCHAR(50),@lastName VARCHAR(50)
