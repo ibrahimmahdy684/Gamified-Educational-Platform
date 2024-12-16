@@ -1,0 +1,59 @@
+﻿@model GamifiedPlatform.Models.LearningActivity
+
+@{
+    ViewData["Title"] = "Edit Learning Activity";
+}
+
+<div class="container mt-5">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-primary">@ViewData["Title"]</h1>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+
+    <!-- Form Section -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="Edit" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <input type="hidden" asp-for="ActivityId" />
+
+                <div class="mb-3">
+                    <label asp-for="ModuleId" class="form-label">Module</label>
+                    <select asp-for="ModuleId" class="form-select" asp-items="ViewBag.ModuleId"></select>
+                    <span asp-validation-for="ModuleId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CourseId" class="form-label">Course</label>
+                    <select asp-for="CourseId" class="form-select" asp-items="ViewBag.CourseId"></select>
+                    <span asp-validation-for="CourseId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ActivityType" class="form-label">Activity Type</label>
+                    <input asp-for="ActivityType" class="form-control" />
+                    <span asp-validation-for="ActivityType" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="InstructionDetails" class="form-label">Instruction Details</label>
+                    <textarea asp-for="InstructionDetails" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="InstructionDetails" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="MaxPoints" class="form-label">Maximum Points</label>
+                    <input asp-for="MaxPoints" type="number" class="form-control" />
+                    <span asp-validation-for="MaxPoints" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

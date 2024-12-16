@@ -308,6 +308,46 @@ namespace GamifiedPlatform.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Display the Create Activity form
+        public IActionResult CreateActivity()
+        {
+            return View();
+        }
+
+        // POST: Handle activity creation
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateActivity(int CourseID, int ModuleID, string ActivityType, string InstructionDetails, int MaxPoints)
+        {
+            try
+            {
+                // Check if the module exists
+                var moduleExists = _context.Modules.Any(m => m.CourseId == CourseID && m.ModuleId == ModuleID);
+                if (!moduleExists)
+                {
+                    TempData["ErrorMessage"] = "The specified module does not exist.";
+                    return View();
+                }
+
+                // Execute the stored procedure
+                _context.Database.ExecuteSqlRaw("EXEC NewActivity @CourseID, @ModuleID, @ActivityType, @InstructionDetails, @MaxPoints",
+                    new SqlParameter("@CourseID", CourseID),
+                    new SqlParameter("@ModuleID", ModuleID),
+                    new SqlParameter("@ActivityType", ActivityType),
+                    new SqlParameter("@InstructionDetails", InstructionDetails),
+                    new SqlParameter("@MaxPoints", MaxPoints));
+
+                TempData["SuccessMessage"] = "Activity created successfully!";
+                return View();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while creating the activity: " + ex.Message;
+                return View();
+            }
+        }
+
+
         private bool InstructorExists(int id)
         {
             return _context.Instructors.Any(e => e.InstructorId == id);

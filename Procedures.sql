@@ -782,7 +782,7 @@ GO
 EXEC SkillLearners @Skillname = 'Leadership';
 
 --2
-GO
+drop procedure NewActivity
 CREATE PROCEDURE NewActivity 
 (
     @CourseID INT, 
@@ -797,9 +797,8 @@ BEGIN
     (CourseID, ModuleID, activity_type, instruction_details, Max_points)
     VALUES 
     (@CourseID, @ModuleID, @activitytype, @instructiondetails, @maxpoints);
-    
-    PRINT 'New activity added successfully!';
 END;
+
 EXEC NewActivity 
     @CourseID = 1,  
     @ModuleID = 2,  

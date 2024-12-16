@@ -1,0 +1,36 @@
+﻿@model GamifiedPlatform.Models.LearningActivity
+
+@{
+    ViewData["Title"] = "Learning Activity Details";
+}
+
+<div class="container mt-5">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-primary">@ViewData["Title"]</h1>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+
+    <!-- Details Section -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Activity Type</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.ActivityType)</dd>
+
+                <dt class="col-sm-3">Instruction Details</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.InstructionDetails)</dd>
+
+                <dt class="col-sm-3">Maximum Points</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.MaxPoints)</dd>
+
+                <dt class="col-sm-3">Module</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Module.ModuleId)</dd>
+            </dl>
+        </div>
+        <div class="card-footer text-end">
+            <a asp-action="Edit" asp-route-id="@Model.ActivityId" class="btn btn-primary btn-sm">Edit</a>
+        </div>
+    </div>
+</div>
