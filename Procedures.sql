@@ -109,6 +109,38 @@ set Name=@name,Email=@email,Phone=@phone,Address=@address
 where UserID=@UserID
 End
 
+drop procedure updateInstructorInfo
+
+GO
+CREATE PROCEDURE updateInstructorInfo
+    @InstructorID INT,
+    @Name VARCHAR(50) = NULL,
+    @LatestQualification VARCHAR(50) = NULL,
+    @ExpertiseArea VARCHAR(50) = NULL,
+    @Email VARCHAR(50) = NULL,
+    @ProfilePicturePath VARCHAR(100) = NULL
+AS
+BEGIN
+    UPDATE Instructor
+    SET 
+        Name = ISNULL(@Name, Name),
+        Latest_Qualification = ISNULL(@LatestQualification, Latest_Qualification),
+        Expertise_Area = ISNULL(@ExpertiseArea, Expertise_Area),
+        Email = ISNULL(@Email, Email),
+        ProfilePicturePath = ISNULL(@ProfilePicturePath, ProfilePicturePath)
+    WHERE InstructorID = @InstructorID;
+END
+
+
+EXEC updateInstructorInfo 
+    @InstructorID = 8, 
+    @Name = 'Dr. John Smith', 
+    @LatestQualification = 'PhD in AI', 
+    @ExpertiseArea = 'Artificial Intelligence', 
+    @Email = 'johnsmith@example.com', 
+    @ProfilePicturePath = '/images/johnsmith.jpg';
+
+
 --1
 GO
 CREATE PROCEDURE ViewInfo (@LearnerID AS INT)

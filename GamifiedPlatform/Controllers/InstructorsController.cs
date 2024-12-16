@@ -32,23 +32,6 @@ namespace GamifiedPlatform.Controllers
 
             return View(instructor);
         }
-        public async Task<IActionResult> UpdateInfo(int instructorID,string name,string latest_qualification, string expertise_area, string email)
-            
-        {
-            var learnerExists = await _context.Instructors.AnyAsync(d => d.InstructorId == instructorID);
-            if (!learnerExists)
-            {
-                ModelState.AddModelError("", "The specified learner does not exist.");
-                return View("UpdateInfo");
-            }
-            else
-            {
-                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec updateInstructorInfo @InstructorID={instructorID},@name={name},@latest_qualification={latest_qualification},@expertise_area={expertise_area},@email={email}");
-                TempData["SuccessMessage"] = "Instructor information updated successfully!";
-                return RedirectToAction("Index");
-            }
-            
-        }
         public IActionResult ViewScores()
         {
             // Retrieve all learners' scores from the database and map them to the view model
@@ -240,6 +223,65 @@ namespace GamifiedPlatform.Controllers
             return View(instructor);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateInfo(
+    int instructorID,
+    string? name,
+    string? latestQualification,
+    string? expertiseArea,
+    string? email,
+    IFormFile? profilePicture)
+        {
+            
+
+            var instructor = await _context.Instructors.FirstOrDefaultAsync(i => i.InstructorId == instructorID);
+
+            if (instructor == null)
+            {
+                TempData["ErrorMessage"] = "The specified instructor does not exist.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            string profilePicturePath = instructor.ProfilePicturePath; // Default to existing path
+            Console.WriteLine($"Executing updateInstructorInfo for InstructorID: {instructorID}");
+            Console.WriteLine($"Name: {name}, LatestQualification: {latestQualification}, ExpertiseArea: {expertiseArea}, Email: {email}, ProfilePicturePath: {profilePicturePath}");
+
+            try
+            {
+                // Handle profile picture upload
+                if (profilePicture != null && profilePicture.Length > 0)
+                {
+                    var fileName = $"{Guid.NewGuid()}_{profilePicture.FileName}";
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await profilePicture.CopyToAsync(stream);
+                    }
+
+                    profilePicturePath = $"/images/{fileName}";
+                }
+
+                // Properly parameterized SQL query
+                await _context.Database.ExecuteSqlInterpolatedAsync($@"
+            EXEC updateInstructorInfo 
+                @InstructorID = {instructorID}, 
+                @Name = {name ?? instructor.Name}, 
+                @LatestQualification = {latestQualification ?? instructor.LatestQualification}, 
+                @ExpertiseArea = {expertiseArea ?? instructor.ExpertiseArea}, 
+                @Email = {email ?? instructor.Email}, 
+                @ProfilePicturePath = {profilePicturePath}");
+
+                TempData["SuccessMessage"] = "Instructor information updated successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred while updating the instructor: {ex.Message}";
+                return View("Edit", instructor); ;
+            }
+
+            return RedirectToAction("Edit", new { id = instructorID });
+        }
 
         // POST: Instructors/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.

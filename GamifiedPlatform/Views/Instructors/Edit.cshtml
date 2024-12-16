@@ -12,45 +12,56 @@
                     <h3 class="mb-0">Edit Instructor</h3>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Edit" method="post">
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-                        <input type="hidden" asp-for="InstructorId" />
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                    }
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                    }
+
+                    <form asp-action="UpdateInfo" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="InstructorId" name="instructorID" />
 
                         <div class="mb-3">
-                            <label asp-for="UserId" class="form-label"></label>
-                            <select asp-for="UserId" class="form-select" asp-items="ViewBag.UserId"></select>
-                            <span asp-validation-for="UserId" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Name" class="form-label"></label>
-                            <input asp-for="Name" class="form-control" />
+                            <label asp-for="Name" class="form-label">Name</label>
+                            <input asp-for="Name" class="form-control" name="name" />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="LatestQualification" class="form-label"></label>
-                            <input asp-for="LatestQualification" class="form-control" />
+                            <label asp-for="LatestQualification" class="form-label">Latest Qualification</label>
+                            <input asp-for="LatestQualification" class="form-control" name="latestQualification" />
                             <span asp-validation-for="LatestQualification" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="ExpertiseArea" class="form-label"></label>
-                            <input asp-for="ExpertiseArea" class="form-control" />
+                            <label asp-for="ExpertiseArea" class="form-label">Expertise Area</label>
+                            <input asp-for="ExpertiseArea" class="form-control" name="expertiseArea" />
                             <span asp-validation-for="ExpertiseArea" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" />
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input asp-for="Email" class="form-control" name="email" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                        <!-- Profile Picture -->
+                        <div class="mb-3">
+                            <label for="ProfilePicture" class="form-label">Profile Picture</label>
+                            <input type="file" id="ProfilePicture" name="ProfilePicture" class="form-control" />
+                            @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
+                            {
+                                <img src="@Model.ProfilePicturePath" alt="Profile Picture" class="img-thumbnail mt-2" style="max-width: 150px;" />
+                            }
                         </div>
+
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </form>
+
                 </div>
             </div>
         </div>
