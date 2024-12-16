@@ -222,6 +222,7 @@ namespace GamifiedPlatform.Controllers
         }
 
         // GET: Instructors/Edit/5
+        // GET: Instructors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -234,9 +235,11 @@ namespace GamifiedPlatform.Controllers
             {
                 return NotFound();
             }
+
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", instructor.UserId);
             return View(instructor);
         }
+
 
         // POST: Instructors/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.

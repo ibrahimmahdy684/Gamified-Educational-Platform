@@ -102,7 +102,7 @@
                 <li><strong>Latest Qualification:</strong> @Model.LatestQualification</li>
                 <li><strong>Expertise Area:</strong> @Model.ExpertiseArea</li>
             </ul>
-            <a href="@Url.Action("EditProfile", "Instructor", new { id = Model.UserId })" class="btn btn-primary">Edit Profile</a>
+            <a href="@Url.Action("Edit", "Instructors", new { id = Model.InstructorId })" class="btn btn-primary">Edit Profile</a>
         </div>
     </div>
 
