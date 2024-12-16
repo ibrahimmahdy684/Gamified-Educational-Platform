@@ -49,6 +49,62 @@ namespace GamifiedPlatform.Controllers
             }
             
         }
+        public async Task<IActionResult> AddPath(int instructorID,int LearnerID, int profileID, string completionStatus, string customContent, string adaptiveRules)
+        {
+
+            var instructor = await _context.Instructors.FirstOrDefaultAsync(l => l.InstructorId == instructorID);
+
+            if (instructor == null)
+            {
+                
+                return RedirectToAction("Profile"); // Redirect to the Profile action if learner does not exist
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec NewPath @LearnerID={LearnerID},@ProfileID={profileID},@completion_status={completionStatus},@custom_content={customContent},@adaptiverules={adaptiveRules}");
+            }
+
+            catch (SqlException ex)
+            {
+
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+                    var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == LearnerID);
+                    var profileExists = await _context.PersonalizationProfiles.AnyAsync(d => d.ProfileId == profileID);
+                    if (!LearnerExists && !profileExists)
+                    {
+                        ModelState.AddModelError("", "The specified Learner and profile do not exist.");
+
+                    }
+                    else
+                    {
+                        if (!LearnerExists) ModelState.AddModelError("", "The specified Learner does not exist.");
+                        else ModelState.AddModelError("", "The specified Profile does not exist.");
+                    }
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "This path already Assigned to this Learner");
+                }
+                else
+                {
+
+                    ModelState.AddModelError("", "An error occurred while adding the path. Please try again.");
+                }
+
+                return View("Profile",instructor);
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Profile",instructor);
+            }
+            TempData["SuccessMessage"] = "Path created successfully!";
+            return View("Profile", instructor);
+        }
+
         public IActionResult ViewScores()
         {
             // Retrieve all learners' scores from the database and map them to the view model
@@ -222,6 +278,7 @@ namespace GamifiedPlatform.Controllers
         }
 
         // GET: Instructors/Edit/5
+        // GET: Instructors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -234,9 +291,11 @@ namespace GamifiedPlatform.Controllers
             {
                 return NotFound();
             }
+
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", instructor.UserId);
             return View(instructor);
         }
+
 
         // POST: Instructors/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.

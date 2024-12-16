@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Edit Profile";
 }
+
 @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger">
@@ -16,6 +17,7 @@
         @TempData["SuccessMessage"]
     </div>
 }
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -24,45 +26,46 @@
                     <h3 class="mb-0">Edit Profile</h3>
                 </div>
                 <div class="card-body">
-                    <!-- Ensure the form points to the UpdateInfo action -->
-                    <form asp-action="UpdateInfo" method="post">
+                    <form asp-action="UpdateInfo" method="post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <input type="hidden" asp-for="LearnerId" />
 
-                        <!-- Pass the learner's ID as a hidden field -->
-                        <input type="hidden" asp-for="LearnerId" name="learnerID" />
+                        <!-- Profile Picture Upload -->
+                        <div class="mb-3">
+                            <label for="ProfilePicture" class="form-label">Profile Picture</label>
+                            <input type="file" id="ProfilePicture" name="ProfilePicture" class="form-control" accept="image/*" />
+                        </div>
 
-                        <!-- Input fields for updating learner information -->
                         <div class="mb-3">
                             <label asp-for="FirstName" class="form-label"></label>
-                            <input asp-for="FirstName" class="form-control" name="firstName" />
+                            <input asp-for="FirstName" class="form-control" />
                             <span asp-validation-for="FirstName" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="LastName" class="form-label"></label>
-                            <input asp-for="LastName" class="form-control" name="lastName" />
+                            <input asp-for="LastName" class="form-control" />
                             <span asp-validation-for="LastName" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" name="email" />
+                            <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Country" class="form-label"></label>
-                            <input asp-for="Country" class="form-control" name="country" />
+                            <input asp-for="Country" class="form-control" />
                             <span asp-validation-for="Country" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="CulturalBackground" class="form-label"></label>
-                            <input asp-for="CulturalBackground" class="form-control" name="culturalBackground" />
+                            <input asp-for="CulturalBackground" class="form-control" />
                             <span asp-validation-for="CulturalBackground" class="text-danger"></span>
                         </div>
 
-                        <!-- Buttons for saving or going back -->
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">Save</button>
                             <a asp-action="Profile" asp-route-id="@Model.LearnerId" class="btn btn-secondary">Back to Profile</a>

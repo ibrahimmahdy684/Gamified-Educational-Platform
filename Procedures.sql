@@ -27,16 +27,33 @@ END;
 
 
 ------ADMIN PROCEDURES----------
- Go
-create proc updateLearnerInfo(@learnerID int,@firstName VARCHAR(50),@lastName VARCHAR(50)
-,@country VARCHAR(50),@email VARCHAR(50),@cultural_background VARCHAR(50))
-As
-begin
-update Learner
-set first_name=@firstName , last_name=@lastName,country=@country,email=@email,cultural_background=@cultural_background
-where @learnerID=@learnerID
-end
+drop procedure updateLearnerInfo
+
+ GO
+CREATE PROCEDURE updateLearnerInfo
+    @learnerID INT,
+    @firstName VARCHAR(50),
+    @lastName VARCHAR(50),
+    @country VARCHAR(50),
+    @email VARCHAR(50),
+    @cultural_background VARCHAR(50),
+    @profilePicturePath NVARCHAR(MAX) -- Add parameter for profile picture
+AS
+BEGIN
+    UPDATE Learner
+    SET 
+        first_name = @firstName,
+        last_name = @lastName,
+        country = @country,
+        email = @email,
+        cultural_background = @cultural_background,
+        ProfilePicturePath = @profilePicturePath -- Update profile picture
+    WHERE LearnerID = @learnerID
+END
+GO
+
 	 
+
 Go 
 create proc getCurrentLearnerPassword(@learnerID int,@password varchar(50) output)
 AS
@@ -45,6 +62,7 @@ select @password=u.Password
 from Learner l inner join Users u on l.UserID=u.UserID
 where l.LearnerID=@learnerID
 end
+
 
 	 
 Go 
@@ -91,6 +109,38 @@ update users
 set Name=@name,Email=@email,Phone=@phone,Address=@address
 where UserID=@UserID
 End
+
+drop procedure updateInstructorInfo
+
+GO
+CREATE PROCEDURE updateInstructorInfo
+    @InstructorID INT,
+    @Name VARCHAR(50) = NULL,
+    @LatestQualification VARCHAR(50) = NULL,
+    @ExpertiseArea VARCHAR(50) = NULL,
+    @Email VARCHAR(50) = NULL,
+    @ProfilePicturePath VARCHAR(100) = NULL
+AS
+BEGIN
+    UPDATE Instructor
+    SET 
+        Name = ISNULL(@Name, Name),
+        Latest_Qualification = ISNULL(@LatestQualification, Latest_Qualification),
+        Expertise_Area = ISNULL(@ExpertiseArea, Expertise_Area),
+        Email = ISNULL(@Email, Email),
+        ProfilePicturePath = ISNULL(@ProfilePicturePath, ProfilePicturePath)
+    WHERE InstructorID = @InstructorID;
+END
+
+
+EXEC updateInstructorInfo 
+    @InstructorID = 8, 
+    @Name = 'Dr. John Smith', 
+    @LatestQualification = 'PhD in AI', 
+    @ExpertiseArea = 'Artificial Intelligence', 
+    @Email = 'johnsmith@example.com', 
+    @ProfilePicturePath = '/images/johnsmith.jpg';
+
 
 --1
 GO
@@ -634,7 +684,7 @@ Go
 create proc AddGoal(@LearnerID int, @GoalID int)
 As 
 Begin 
-insert into LearnersGoals(GoalID,LearnerID)values(@LearnerID,@GoalID)
+insert into LearnersGoals(GoalID,LearnerID)values(@GoalID,@LearnerID)
 End
 exec AddGoal 4,2
 /*test
