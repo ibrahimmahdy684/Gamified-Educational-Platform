@@ -19,25 +19,31 @@ namespace GamifiedPlatform.Controllers
         }
 
         // GET: PersonalizationProfiles
-        public async Task<IActionResult> Index(int learnerID)
+        public async Task<IActionResult> Index()
         {
-            var learnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
-            if (!learnerExists)
-            {
-                ModelState.AddModelError("", "The specified learner does not exist.");
-                return View("Index");
-            }
-            var Learners=await _context.PersonalizationProfiles.FromSqlRaw($"Exec viewInfo @LearnerID={learnerID}").ToListAsync();
-            return View(Learners);
+            var gamifiedPlatformContext = _context.PersonalizationProfiles.Include(p => p.Learner);
+            return View(await gamifiedPlatformContext.ToListAsync());
         }
 
         // GET: PersonalizationProfiles/Details/5
-        public async Task<IActionResult> Details(int learnerID)
+        public async Task<IActionResult> Details(int? id)
         {
-            var Learner = await _context.PersonalizationProfiles.FromSqlRaw("Exec LearnerInfo@LearnerID=@p0",learnerID).ToListAsync();
-            return View(Learner);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var personalizationProfile = await _context.PersonalizationProfiles
+                .Include(p => p.Learner)
+                .FirstOrDefaultAsync(m => m.LearnerId == id);
+            if (personalizationProfile == null)
+            {
+                return NotFound();
+            }
+
+            return View(personalizationProfile);
         }
-       
+
         // GET: PersonalizationProfiles/Create
         public IActionResult Create()
         {
