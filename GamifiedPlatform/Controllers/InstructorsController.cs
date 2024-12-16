@@ -32,6 +32,79 @@ namespace GamifiedPlatform.Controllers
 
             return View(instructor);
         }
+        public async Task<IActionResult> UpdateInfo(int instructorID,string name,string latest_qualification, string expertise_area, string email)
+            
+        {
+            var learnerExists = await _context.Instructors.AnyAsync(d => d.InstructorId == instructorID);
+            if (!learnerExists)
+            {
+                ModelState.AddModelError("", "The specified learner does not exist.");
+                return View("UpdateInfo");
+            }
+            else
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec updateInstructorInfo @InstructorID={instructorID},@name={name},@latest_qualification={latest_qualification},@expertise_area={expertise_area},@email={email}");
+                TempData["SuccessMessage"] = "Instructor information updated successfully!";
+                return RedirectToAction("Index");
+            }
+            
+        }
+        public async Task<IActionResult> AddPath(int instructorID,int LearnerID, int profileID, string completionStatus, string customContent, string adaptiveRules)
+        {
+
+            var instructor = await _context.Instructors.FirstOrDefaultAsync(l => l.InstructorId == instructorID);
+
+            if (instructor == null)
+            {
+                
+                return RedirectToAction("Profile"); // Redirect to the Profile action if learner does not exist
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec NewPath @LearnerID={LearnerID},@ProfileID={profileID},@completion_status={completionStatus},@custom_content={customContent},@adaptiverules={adaptiveRules}");
+            }
+
+            catch (SqlException ex)
+            {
+
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+                    var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == LearnerID);
+                    var profileExists = await _context.PersonalizationProfiles.AnyAsync(d => d.ProfileId == profileID);
+                    if (!LearnerExists && !profileExists)
+                    {
+                        ModelState.AddModelError("", "The specified Learner and profile do not exist.");
+
+                    }
+                    else
+                    {
+                        if (!LearnerExists) ModelState.AddModelError("", "The specified Learner does not exist.");
+                        else ModelState.AddModelError("", "The specified Profile does not exist.");
+                    }
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "This path already Assigned to this Learner");
+                }
+                else
+                {
+
+                    ModelState.AddModelError("", "An error occurred while adding the path. Please try again.");
+                }
+
+                return View("Profile",instructor);
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Profile",instructor);
+            }
+            TempData["SuccessMessage"] = "Path created successfully!";
+            return View("Profile", instructor);
+        }
+
         public IActionResult ViewScores()
         {
             // Retrieve all learners' scores from the database and map them to the view model
@@ -223,65 +296,6 @@ namespace GamifiedPlatform.Controllers
             return View(instructor);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateInfo(
-    int instructorID,
-    string? name,
-    string? latestQualification,
-    string? expertiseArea,
-    string? email,
-    IFormFile? profilePicture)
-        {
-            
-
-            var instructor = await _context.Instructors.FirstOrDefaultAsync(i => i.InstructorId == instructorID);
-
-            if (instructor == null)
-            {
-                TempData["ErrorMessage"] = "The specified instructor does not exist.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            string profilePicturePath = instructor.ProfilePicturePath; // Default to existing path
-            Console.WriteLine($"Executing updateInstructorInfo for InstructorID: {instructorID}");
-            Console.WriteLine($"Name: {name}, LatestQualification: {latestQualification}, ExpertiseArea: {expertiseArea}, Email: {email}, ProfilePicturePath: {profilePicturePath}");
-
-            try
-            {
-                // Handle profile picture upload
-                if (profilePicture != null && profilePicture.Length > 0)
-                {
-                    var fileName = $"{Guid.NewGuid()}_{profilePicture.FileName}";
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await profilePicture.CopyToAsync(stream);
-                    }
-
-                    profilePicturePath = $"/images/{fileName}";
-                }
-
-                // Properly parameterized SQL query
-                await _context.Database.ExecuteSqlInterpolatedAsync($@"
-            EXEC updateInstructorInfo 
-                @InstructorID = {instructorID}, 
-                @Name = {name ?? instructor.Name}, 
-                @LatestQualification = {latestQualification ?? instructor.LatestQualification}, 
-                @ExpertiseArea = {expertiseArea ?? instructor.ExpertiseArea}, 
-                @Email = {email ?? instructor.Email}, 
-                @ProfilePicturePath = {profilePicturePath}");
-
-                TempData["SuccessMessage"] = "Instructor information updated successfully!";
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"An error occurred while updating the instructor: {ex.Message}";
-                return View("Edit", instructor); ;
-            }
-
-            return RedirectToAction("Edit", new { id = instructorID });
-        }
 
         // POST: Instructors/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
