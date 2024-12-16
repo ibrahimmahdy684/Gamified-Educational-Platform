@@ -63,6 +63,7 @@ from Learner l inner join Users u on l.UserID=u.UserID
 where l.LearnerID=@learnerID
 end
 
+
 	 
 Go 
 create proc AllLearnersInfo
