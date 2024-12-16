@@ -347,6 +347,80 @@ namespace GamifiedPlatform.Controllers
             }
         }
 
+        // GET: Display the Enroll Learner form
+        public IActionResult EnrollLearner()
+        {
+            return View();
+        }
+
+        // POST: Handle learner enrollment
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EnrollLearner(int LearnerID, int CourseID)
+        {
+            try
+            {
+                // Check if the learner exists
+                var learnerExists = _context.Learners.Any(l => l.LearnerId == LearnerID);
+                if (!learnerExists)
+                {
+                    TempData["ErrorMessage"] = "The specified learner does not exist.";
+                    return View();
+                }
+
+                // Check if the course exists
+                var courseExists = _context.Courses.Any(c => c.CourseId == CourseID);
+                if (!courseExists)
+                {
+                    TempData["ErrorMessage"] = "The specified course does not exist.";
+                    return View();
+                }
+
+                // Check if the learner is already enrolled
+                var alreadyEnrolled = _context.CourseEnrollments.Any(ce => ce.LearnerId == LearnerID && ce.CourseId == CourseID);
+                if (alreadyEnrolled)
+                {
+                    TempData["ErrorMessage"] = "The learner is already enrolled in this course.";
+                    return View();
+                }
+
+                // Execute the stored procedure
+                var connection = _context.Database.GetDbConnection();
+                using (var command = connection.CreateCommand())
+                {
+                    connection.Open();
+                    command.CommandText = "EXEC Courseregister @LearnerID, @CourseID";
+                    command.Parameters.Add(new SqlParameter("@LearnerID", LearnerID));
+                    command.Parameters.Add(new SqlParameter("@CourseID", CourseID));
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            string resultMessage = reader.GetString(0);
+                            if (resultMessage.Contains("Registration Failed"))
+                            {
+                                TempData["ErrorMessage"] = resultMessage;
+                                return View();
+                            }
+                            else
+                            {
+                                TempData["SuccessMessage"] = resultMessage;
+                                return View();
+                            }
+                        }
+                    }
+                }
+
+                TempData["ErrorMessage"] = "An unexpected error occurred.";
+                return View();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while enrolling the learner: " + ex.Message;
+                return View();
+            }
+        }
 
         private bool InstructorExists(int id)
         {

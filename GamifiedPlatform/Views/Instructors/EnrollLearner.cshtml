@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Enroll Learner in a Course";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center text-warning">Enroll Learner in a Course</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <form asp-action="EnrollLearner" method="post">
+        <div class="mb-3">
+            <label for="LearnerID" class="form-label">Learner ID</label>
+            <input type="number" id="LearnerID" name="LearnerID" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="CourseID" class="form-label">Course ID</label>
+            <input type="number" id="CourseID" name="CourseID" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Enroll Learner</button>
+        <a href="@Url.Action("Dashboard", "Instructors")" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
