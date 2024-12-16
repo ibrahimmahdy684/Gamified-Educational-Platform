@@ -5,6 +5,14 @@
 }
 
 <div class="container mt-5">
+    <!-- Profile Picture -->
+    @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
+    {
+        <div class="text-center mb-4">
+            <img src="@Model.ProfilePicturePath" alt="Profile Picture" class="img-fluid rounded-circle" style="max-width: 150px; max-height: 150px;" />
+        </div>
+    }
+
     <!-- Welcome Card -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white text-center">

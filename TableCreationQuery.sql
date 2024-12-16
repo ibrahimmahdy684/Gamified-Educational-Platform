@@ -7,6 +7,9 @@ ALTER TABLE Assessments
 ADD Grade INT NULL; -- Adjust the data type if necessary
 
 
+ALTER TABLE Learner
+Add ProfilePicturePath varchar(100)
+
 ALTER TABLE Course
 Add Status varchar(20)
 

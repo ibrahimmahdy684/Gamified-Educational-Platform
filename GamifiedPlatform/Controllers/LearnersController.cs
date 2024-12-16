@@ -50,7 +50,15 @@ namespace GamifiedPlatform.Controllers
             // Pass the assessments data to the view
             return View(assessments);
         }
-        public async Task<IActionResult> UpdateInfo(int learnerID, string firstName, string lastName, string country, string email, string culturalBackground)
+        [HttpPost]
+        public async Task<IActionResult> UpdateInfo(
+    int learnerID,
+    string firstName,
+    string lastName,
+    string country,
+    string email,
+    string culturalBackground,
+    IFormFile ProfilePicture)
         {
             // Fetch the learner model to ensure it's not null
             var learner = await _context.Learners.FirstOrDefaultAsync(l => l.LearnerId == learnerID);
@@ -61,17 +69,34 @@ namespace GamifiedPlatform.Controllers
                 return View("Edit", new GamifiedPlatform.Models.Learner()); // Return a new model to prevent null
             }
 
+            string profilePicturePath = learner.ProfilePicturePath; // Default to existing path
+
             try
             {
+                // Handle profile picture upload
+                if (ProfilePicture != null && ProfilePicture.Length > 0)
+                {
+                    var fileName = $"{Guid.NewGuid()}_{ProfilePicture.FileName}";
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ProfilePicture.CopyToAsync(stream);
+                    }
+
+                    profilePicturePath = $"/images/{fileName}"; // Update the path for the new picture
+                }
+
                 // Update learner information using the stored procedure
                 await _context.Database.ExecuteSqlInterpolatedAsync($@"
-            Exec updateLearnerInfo 
-                @learnerID={learnerID}, 
-                @firstName={firstName}, 
-                @lastName={lastName}, 
-                @country={country}, 
-                @email={email}, 
-                @cultural_background={culturalBackground}");
+            EXEC updateLearnerInfo 
+                @learnerID = {learnerID}, 
+                @firstName = {firstName}, 
+                @lastName = {lastName}, 
+                @country = {country}, 
+                @email = {email}, 
+                @cultural_background = {culturalBackground},
+                @profilePicturePath = {profilePicturePath}");
 
                 TempData["SuccessMessage"] = "Learner information updated successfully!";
             }
@@ -320,35 +345,54 @@ namespace GamifiedPlatform.Controllers
             return RedirectToAction("Profile", new { id = learner.UserId });
         }
 
-        // GET: Learners/Edit/5
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var learner = _context.Learners.FirstOrDefault(l => l.LearnerId == id);
+            var learner = _context.Learners
+                .Include(l => l.User) // Include User data
+                .FirstOrDefault(l => l.LearnerId == id);
+
             if (learner == null)
             {
                 return NotFound();
             }
+
+            // Pass the user information to the view if needed
+            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Name", learner.UserId);
+
             return View(learner);
         }
 
-        // This action will save the edited profile
         [HttpPost]
-        public IActionResult Edit(Learner learner)
+        public async Task<IActionResult> Edit(Learner learner, IFormFile ProfilePicture)
         {
             if (ModelState.IsValid)
             {
-                // Save the learner details to the database
-                _context.Update(learner);
-                _context.SaveChanges();
+                if (ProfilePicture != null && ProfilePicture.Length > 0)
+                {
+                    var fileName = $"{Guid.NewGuid()}_{ProfilePicture.FileName}";
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
 
-                // Redirect to the profile page after saving
-                return RedirectToAction("Profile", new { id = learner.LearnerId });
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ProfilePicture.CopyToAsync(stream);
+                    }
+
+                    learner.ProfilePicturePath = $"/images/{fileName}";
+                }
+
+                _context.Update(learner);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Profile updated successfully!";
+                return RedirectToAction("Profile", new { id = learner.UserId });
             }
 
-            // If the model state is invalid, return the view with the model data so that validation errors are shown
+            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Name", learner.UserId);
             return View(learner);
         }
+
+
         public async Task<IActionResult> AddFeedback(int activityID, int learnerID, string feedback)
         {
             var learner = await _context.Learners.FirstOrDefaultAsync(l => l.LearnerId == learnerID);

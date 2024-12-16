@@ -27,16 +27,33 @@ END;
 
 
 ------ADMIN PROCEDURES----------
- Go
-create proc updateLearnerInfo(@learnerID int,@firstName VARCHAR(50),@lastName VARCHAR(50)
-,@country VARCHAR(50),@email VARCHAR(50),@cultural_background VARCHAR(50))
-As
-begin
-update Learner
-set first_name=@firstName , last_name=@lastName,country=@country,email=@email,cultural_background=@cultural_background
-where @learnerID=@learnerID
-end
+drop procedure updateLearnerInfo
+
+ GO
+CREATE PROCEDURE updateLearnerInfo
+    @learnerID INT,
+    @firstName VARCHAR(50),
+    @lastName VARCHAR(50),
+    @country VARCHAR(50),
+    @email VARCHAR(50),
+    @cultural_background VARCHAR(50),
+    @profilePicturePath NVARCHAR(MAX) -- Add parameter for profile picture
+AS
+BEGIN
+    UPDATE Learner
+    SET 
+        first_name = @firstName,
+        last_name = @lastName,
+        country = @country,
+        email = @email,
+        cultural_background = @cultural_background,
+        ProfilePicturePath = @profilePicturePath -- Update profile picture
+    WHERE LearnerID = @learnerID
+END
+GO
+
 	 
+
 Go 
 create proc getCurrentLearnerPassword(@learnerID int,@password varchar(50) output)
 AS
