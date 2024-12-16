@@ -684,7 +684,7 @@ Go
 create proc AddGoal(@LearnerID int, @GoalID int)
 As 
 Begin 
-insert into LearnersGoals(GoalID,LearnerID)values(@LearnerID,@GoalID)
+insert into LearnersGoals(GoalID,LearnerID)values(@GoalID,@LearnerID)
 End
 exec AddGoal 4,2
 /*test
