@@ -1,5 +1,31 @@
 ﻿USE GamifiedPlatform
 
+drop procedure DeleteLearner
+
+GO
+CREATE PROCEDURE DeleteLearner
+    @LearnerID INT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Example manual deletions
+        DELETE FROM LearnerMastery WHERE LearnerID = @LearnerID;
+        DELETE FROM LearnersCollaboration WHERE LearnerID = @LearnerID;
+
+        -- Cascade delete handled here
+        DELETE FROM Learner WHERE LearnerID = @LearnerID;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END;
+
+
 ------ADMIN PROCEDURES----------
  Go
 create proc updateLearnerInfo(@learnerID int,@firstName VARCHAR(50),@lastName VARCHAR(50)
@@ -311,17 +337,6 @@ exec TotalPoints 4,'Points'
 
 --3
 drop procedure EnrolledCourses
-go
-create procedure EnrolledCourses
-    @LearnerID int
-AS
-BEGIN
-select c.CourseID, c.Title, c.learning_objective, c.credit_points, c.description, c.difficulty_level, c.pre_requisites, ce.status
-from Course_enrollment ce inner join Learner l on l.LearnerID=ce.LearnerID
-                          inner join Course c on c.CourseID=ce.CourseID
-where l.LearnerID=@LearnerID
-end
-
 GO
 CREATE PROCEDURE EnrolledCourses
     @LearnerID INT

@@ -370,19 +370,34 @@ namespace GamifiedPlatform.Controllers
         }
 
         // POST: Learners/Delete/5
+        // POST: Learners/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var learner = await _context.Learners.FindAsync(id);
-            if (learner != null)
+            try
             {
-                _context.Learners.Remove(learner);
+                // Execute the DeleteLearner stored procedure
+                var connection = _context.Database.GetDbConnection();
+                using (var command = connection.CreateCommand())
+                {
+                    connection.Open();
+                    command.CommandText = "EXEC DeleteLearner @LearnerID";
+                    command.Parameters.Add(new SqlParameter("@LearnerID", id));
+                    command.ExecuteNonQuery();
+                }
+
+                TempData["SuccessMessage"] = "Learner and associated records deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred while deleting the learner: {ex.Message}";
+                return RedirectToAction(nameof(Index));
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool LearnerExists(int id)
         {

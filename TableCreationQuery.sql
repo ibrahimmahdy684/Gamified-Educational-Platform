@@ -41,7 +41,7 @@ CREATE TABLE Admin (
     birth_date DATE,
     country VARCHAR(50),
     email VARCHAR(50),
-    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+    FOREIGN KEY (UserID) REFERENCES Users(UserID) on delete cascade on update cascade
 )
 
  --1
@@ -55,7 +55,7 @@ CREATE TABLE Learner (
     country VARCHAR(50),
     email VARCHAR(50),
     cultural_background VARCHAR(50),
-    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+    FOREIGN KEY (UserID) REFERENCES Users(UserID) on delete cascade on update cascade
 );
 -- 17
 --CREATE TABLE Instructor (
@@ -227,7 +227,7 @@ CREATE TABLE Learning_path (
 
 -- 17
 CREATE TABLE Instructor (
-    InstructorID INT PRIMARY KEY identity,
+    InstructorID INT PRIMARY KEY IDENTITY,
     UserID INT NOT NULL, 
     name VARCHAR(50),
     latest_qualification VARCHAR(50),
