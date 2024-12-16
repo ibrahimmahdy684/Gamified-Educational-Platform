@@ -6,6 +6,7 @@
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
+
 <div class="container mt-5">
     <div class="card">
         <div class="card-header text-white bg-primary">
@@ -58,7 +59,39 @@
             }
         </div>
     </div>
-</div>
+    <!-- Add Goal Card -->
+    <div class="card mt-4">
+        <div class="card-header text-white bg-info">
+            <h3>Add a Goal</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="AddGoal" method="post">
+                <input type="hidden" name="LearnerId" value="@Model.LearnerId" />
+                <div class="form-group">
+                    <label for="GoalId">Goal ID:</label>
+                    <input type="number" class="form-control" id="GoalId" name="GoalId" placeholder="Enter Goal ID" required>
+                </div>
+                <button type="submit" class="btn btn-info">Add Goal</button>
+            </form>
+
+            @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    @Html.ValidationSummary(false, "Please fix the following errors:")
+                </div>
+            }
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+        </div>
+    </div>
+
+
+    
 
 <style>
     .card-header {
@@ -82,8 +115,19 @@
         border-color: #218838;
     }
 
-        .btn-success:hover {
-            background-color: #218838;
-            border-color: #1e7e34;
-        }
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .btn-info {
+        color: #fff;
+        background-color: #17a2b8;
+        border-color: #117a8b;
+    }
+
+    .btn-info:hover {
+        background-color: #117a8b;
+        border-color: #0f6c7a;
+    }
 </style>

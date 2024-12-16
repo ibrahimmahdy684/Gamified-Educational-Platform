@@ -48,7 +48,7 @@ namespace GamifiedPlatform.Controllers
             var gamifiedPlatformContext = _context.Admins.Include(a => a.User);
             return View(await gamifiedPlatformContext.ToListAsync());
         }
-
+       
         // GET: Admins/Details/5
         public async Task<IActionResult> Details(int? id)
         {

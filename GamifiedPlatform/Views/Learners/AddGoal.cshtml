@@ -1,0 +1,21 @@
+﻿@model IEnumerable<GamifiedPlatform.Models.Learner>
+{
+<div class="alert alert-danger">
+    @Html.ValidationSummary(false, "Please fix the following errors:")
+</div>
+}
+
+<h1>AddGoal</h1>
+<form asp-action="AddGoal" method="post">
+    <div>
+        <label>Learner ID</label>
+        <input type="hidden" name="learnerID" value= />
+    </div>
+
+    <div>
+        <label>Goal ID</label>
+        <input type="number" name="goalID" required />
+    </div>
+
+    <button type="submit">define Goal</button>
+</form>
