@@ -76,7 +76,16 @@
             <a asp-action="ViewNotifications" asp-route-learnerId="@Model.LearnerId" class="btn btn-info">View Notifications</a>
         </div>
     </div>
-
+    <!-- LearningPath Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-white text-center">
+            <h3>Monitor Path</h3>
+        </div>
+        <div class="card-body text-center">
+            <p>View all Paths related to this learner.</p>
+            <a asp-action="MonitorPath" asp-route-learnerId="@Model.LearnerId" class="btn btn-info">Monitor Path</a>
+        </div>
+    </div>
     <!-- Add Goal Card -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-secondary text-white text-center">
@@ -106,6 +115,7 @@
             }
         </div>
     </div>
+   
 </div>
 
 <style>

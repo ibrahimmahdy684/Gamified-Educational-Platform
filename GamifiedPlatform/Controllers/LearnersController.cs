@@ -506,7 +506,20 @@ namespace GamifiedPlatform.Controllers
 
             return View(notifications);
         }
+        public IActionResult MonitorPath(int learnerId)
+        {
+            var learnerIdParam = new SqlParameter("@LearnerID", learnerId);
 
+            // Execute the stored procedure to get notifications
+            var Path = _context.LearningPaths
+                .FromSqlRaw("EXEC monitorSpecificPath @LearnerID", learnerIdParam)
+                .ToList();
+
+            // Pass the learnerId to ViewBag for "Back to Profile" button
+            ViewBag.LearnerId = learnerId;
+
+            return View(Path);
+        }
         private bool LearnerExists(int id)
         {
             return _context.Learners.Any(e => e.LearnerId == id);
