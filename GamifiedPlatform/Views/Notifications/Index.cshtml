@@ -3,55 +3,11 @@
 @{
     ViewData["Title"] = "Index";
 }
-@if (Model != null && Model.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.Timestamp)</th>
-                <th>@Html.DisplayNameFor(model => model.Message)</th>
-                <th>@Html.DisplayNameFor(model => model.UrgencyLevel)</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Timestamp)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Message)</td>
-                    <td>@Html.DisplayFor(modelItem => item.UrgencyLevel)</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No notifications found.</p>
-}
 
 <h1>Index</h1>
-@if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger">
-        @Html.ValidationSummary(true, "Please fix the following errors:")
-    </div>
-}
-
-<form method="post" action="/Notifications/Index">
-    <label for="learnerID"> LearnerID</label>
-    <input type="number" id="learnerID" name="learnerID" />
-    <button type="submit"> filter </button>
-</form>
 
 <p>
-  
+    <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>

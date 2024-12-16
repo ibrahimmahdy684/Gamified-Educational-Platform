@@ -50,23 +50,42 @@ namespace GamifiedPlatform.Controllers
             // Pass the assessments data to the view
             return View(assessments);
         }
-        public async Task<IActionResult> UpdateInfo(int learnerID,string firstName,string lastName,string country,string email,
-            string culturalBackground)
+        public async Task<IActionResult> UpdateInfo(int learnerID, string firstName, string lastName, string country, string email, string culturalBackground)
         {
-            var learnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
-            if (!learnerExists)
+            // Fetch the learner model to ensure it's not null
+            var learner = await _context.Learners.FirstOrDefaultAsync(l => l.LearnerId == learnerID);
+
+            if (learner == null)
             {
                 ModelState.AddModelError("", "The specified learner does not exist.");
-                return View("UpdateInfo");
+                return View("Edit", new GamifiedPlatform.Models.Learner()); // Return a new model to prevent null
             }
-            else
+
+            try
             {
-                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec updateLearnerInfo @learnerID={learnerID},@firstName={firstName},@lastName={lastName},@country={country},@email={email},@cultural_background={culturalBackground}");
+                // Update learner information using the stored procedure
+                await _context.Database.ExecuteSqlInterpolatedAsync($@"
+            Exec updateLearnerInfo 
+                @learnerID={learnerID}, 
+                @firstName={firstName}, 
+                @lastName={lastName}, 
+                @country={country}, 
+                @email={email}, 
+                @cultural_background={culturalBackground}");
+
                 TempData["SuccessMessage"] = "Learner information updated successfully!";
-                return RedirectToAction("Index");
             }
-            
+            catch (Exception ex)
+            {
+                // Add error to ModelState and pass the learner back to the Edit view
+                ModelState.AddModelError("", "An error occurred: " + ex.Message);
+                return View("Edit", learner); // Pass the valid learner object to prevent null reference
+            }
+
+            // Redirect to the Profile page after successful update
+            return RedirectToAction("Edit", new { id = learnerID });
         }
+
         public IActionResult Profile(int id)
         {
             var learner = _context.Learners.FirstOrDefault(l => l.UserId == id);
@@ -106,6 +125,56 @@ namespace GamifiedPlatform.Controllers
             }
 
             return View(modules);
+        }
+        public async Task<IActionResult> AddGoal(int learnerID, int goalID)
+        {
+            // Fetch the learner data to pass to the view
+            var learner = await _context.Learners.FirstOrDefaultAsync(l => l.LearnerId == learnerID);
+
+            if (learner == null)
+            {
+                TempData["ErrorMessage"] = "The specified learner does not exist.";
+                return RedirectToAction("Profile"); // Redirect to the Profile action if learner does not exist
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec AddGoal @learnerID={learnerID},@goalID={goalID}");
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+                    var learnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
+                    if (!learnerExists)
+                    {
+                        ModelState.AddModelError("", "The specified learner does not exist.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "The specified goal does not exist.");
+                    }
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "This goal already specified.");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "An error occurred while specifying the goal. Please try again.");
+                }
+
+                // Pass the learner model when returning to the view
+                return View("Profile", learner);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Profile", learner);
+            }
+
+            TempData["SuccessMessage"] = "Goal added successfully.";
+            return View("Profile", learner);
         }
 
         public IActionResult EnrolledCourses(int id)

@@ -19,46 +19,11 @@ namespace GamifiedPlatform.Controllers
         }
 
         // GET: Notifications
-
-        public async Task<IActionResult> Index(int learnerID)
+        public async Task<IActionResult> Index()
         {
-            var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
-            if (!LearnerExists)
-            {
-                ModelState.AddModelError("", "The specified Learner does not exist.");
-                return View("Index");
-            }
-            var Notifications = await _context.Notifications.FromSqlRaw($"Exec ViewNot @LearnerID={learnerID}").ToListAsync();
-            if (Notifications != null && Notifications.Any())
-            {
-                return View(Notifications);
-            }
-            ModelState.AddModelError("", "No notifications found.");
-            return View("Index");
+            return View(await _context.Notifications.ToListAsync());
         }
-        public async Task<IActionResult> Mark(int learnerID,int notificationID){
-            var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
-            var NotificationExists = await _context.Notifications.AnyAsync(d => d.Id == notificationID);
-            if (!LearnerExists)
-            {
-                ModelState.AddModelError("", "The specified Learner does not exist.");
-                return View("Mark");
-            }
-            else
-            {
-                if (!NotificationExists)
-                {
-                    ModelState.AddModelError("", "The specified Notification does not exist.");
-                    return View("Mark");
-                }
-                else
-                {
-                    await _context.Database.ExecuteSqlInterpolatedAsync($"Exec NotificationUpdate @LearnerID={learnerID},@NotificationID={notificationID},@ReadStatus={1}");
-                    TempData["SuccessMessage"] = "If this sentence changed to error,then your action failed,otherwise it succceded";
-                    return RedirectToAction("Mark");
-                }
-            }
-        }
+
         // GET: Notifications/Details/5
         public async Task<IActionResult> Details(int? id)
         {
