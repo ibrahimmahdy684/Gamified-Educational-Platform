@@ -1,6 +1,13 @@
 ﻿USE GamifiedPlatform
 
 drop procedure DeleteLearner
+Go
+
+create proc PostINS(@instructorID int,@DiscussionID int,@Post varchar(max))
+AS
+begin
+insert into InstructorDiscussion(ForumID,InstructorID,Post) values (@DiscussionID,@instructorID,@Post);
+end
 
 GO
 CREATE PROCEDURE DeleteLearner
