@@ -329,6 +329,20 @@ namespace GamifiedPlatform.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult ViewNotifications(int learnerId)
+        {
+            var learnerIdParam = new SqlParameter("@LearnerID", learnerId);
+
+            // Execute the stored procedure to get notifications
+            var notifications = _context.Notifications
+                .FromSqlRaw("EXEC ViewNot @LearnerID", learnerIdParam)
+                .ToList();
+
+            // Pass the learnerId to ViewBag for "Back to Profile" button
+            ViewBag.LearnerId = learnerId;
+
+            return View(notifications);
+        }
 
         private bool LearnerExists(int id)
         {
