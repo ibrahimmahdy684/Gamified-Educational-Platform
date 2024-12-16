@@ -37,7 +37,7 @@
             <div class="form-group">
                 <label asp-for="deadline" class="control-label"></label>
                 <input asp-for="deadline" class="form-control" type="datetime-local"
-                       value="@(DateTime.TryParse(Model.deadline, out var parsedDeadline) ? parsedDeadline.ToString("yyyy-MM-ddTHH:mm") : Model.deadline)" />
+                       value="@(Model.deadline.HasValue ? Model.deadline.Value.ToString("yyyy-MM-ddTHH:mm") : "")" />
                 <span asp-validation-for="deadline" class="text-danger"></span>
             </div>
             <div class="form-group">

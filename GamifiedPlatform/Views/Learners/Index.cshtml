@@ -41,6 +41,7 @@
                                     <a asp-action="Edit" asp-route-id="@item.LearnerId" class="btn btn-warning btn-sm">Edit</a>
                                     <a asp-action="Details" asp-route-id="@item.LearnerId" class="btn btn-info btn-sm">Details</a>
                                     <a asp-action="Delete" asp-route-id="@item.LearnerId" class="btn btn-danger btn-sm">Delete</a>
+                                    <a asp-action="ActiveQuestParticipants" asp-route-learnerId="@item.LearnerId" class="btn btn-primary btn-sm">Check Participants</a>
                                 </div>
                             </td>
                         </tr>

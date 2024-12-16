@@ -15,7 +15,7 @@ public partial class Quest
 
     public string? Title { get; set; }
 
-    public string? deadline { get; set; }
+    public DateTime? deadline { get; set; }
 
     public virtual Collaborative? Collaborative { get; set; }
 

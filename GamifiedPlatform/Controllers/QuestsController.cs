@@ -49,11 +49,9 @@ namespace GamifiedPlatform.Controllers
         }
 
         // POST: Quests/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("QuestId,DifficultyLevel,Criteria,Description,Title")] Quest quest)
+        public async Task<IActionResult> Create([Bind("QuestId,DifficultyLevel,Criteria,Description,Title,Deadline")] Quest quest)
         {
             if (ModelState.IsValid)
             {
@@ -81,11 +79,9 @@ namespace GamifiedPlatform.Controllers
         }
 
         // POST: Quests/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("QuestId,DifficultyLevel,Criteria,Description,Title")] Quest quest)
+        public async Task<IActionResult> Edit(int id, [Bind("QuestId,DifficultyLevel,Criteria,Description,Title,Deadline")] Quest quest)
         {
             if (id != quest.QuestId)
             {
@@ -115,7 +111,7 @@ namespace GamifiedPlatform.Controllers
             return View(quest);
         }
 
-        // GET: Quests/Delete/5
+       
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -151,6 +147,45 @@ namespace GamifiedPlatform.Controllers
         private bool QuestExists(int id)
         {
             return _context.Quests.Any(e => e.QuestId == id);
+        }
+
+        // GET: Quests/ViewCustom
+        public IActionResult ViewCustom()
+        {
+            var quests = _context.Quests.ToList(); // Fetch all quests
+            return View(quests); // Pass data to the custom view
+        }
+
+        // POST: Quests/JoinQuest
+        [HttpPost]
+        public async Task<IActionResult> JoinQuest(int questId)
+        {
+            // Simulated learner ID - Replace with current logged-in learner ID
+            int learnerId = 1; // Replace this with actual learner ID from authentication
+
+            // Check if learner has already joined the quest
+            var existingEntry = await _context.LearnersCollaborations
+                .FirstOrDefaultAsync(lc => lc.LearnerId == learnerId && lc.QuestId == questId);
+
+            if (existingEntry != null)
+            {
+                TempData["Error"] = "You have already joined this quest.";
+                return RedirectToAction(nameof(ViewCustom));
+            }
+
+            // Add the learner to the quest
+            var newCollaboration = new LearnersCollaboration
+            {
+                LearnerId = learnerId,
+                QuestId = questId,
+                CompletionStatus = "In Progress"
+            };
+
+            _context.LearnersCollaborations.Add(newCollaboration);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "You have successfully joined the quest!";
+            return RedirectToAction(nameof(ViewCustom));
         }
     }
 }

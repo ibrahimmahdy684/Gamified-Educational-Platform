@@ -50,7 +50,7 @@
                 <td>
                     @{
                         DateTime parsedDeadline;
-                        if (DateTime.TryParse(item.deadline, out parsedDeadline))
+                        if (item.deadline.HasValue && DateTime.TryParse(item.deadline.Value.ToString(), out parsedDeadline))
                         {
                             // If parsing succeeds, format the deadline as "yyyy-MM-dd HH:mm:ss"
                             @parsedDeadline.ToString("yyyy-MM-dd HH:mm:ss")
