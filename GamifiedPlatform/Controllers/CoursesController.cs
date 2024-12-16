@@ -25,6 +25,33 @@ namespace GamifiedPlatform.Controllers
             return View(await _context.Courses.ToListAsync());
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Index(int? learnerId)
+        {
+            if (learnerId.HasValue)
+            {
+                // Check if learner exists
+                var learnerExists = await _context.Learners.AnyAsync(l => l.LearnerId == learnerId);
+                if (!learnerExists)
+                {
+                    TempData["ErrorMessage"] = "The specified learner does not exist.";
+                    return View(Enumerable.Empty<Course>()); // Return an empty list if learner doesn't exist
+                }
+
+                // Execute the EnrolledCourses stored procedure
+                var learnerIdParam = new SqlParameter("@LearnerID", learnerId.Value);
+                var courses = await _context.Courses
+                    .FromSqlRaw("EXEC EnrolledCourses @LearnerID", learnerIdParam)
+                    .ToListAsync();
+
+                return View(courses); // Return filtered courses
+            }
+
+            // If no filter, return all courses
+            var allCourses = await _context.Courses.ToListAsync();
+            return View(allCourses);
+        }
+
         // GET: Courses/Details/5
         public async Task<IActionResult> Details(int? id)
         {

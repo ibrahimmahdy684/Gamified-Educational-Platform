@@ -783,6 +783,7 @@ EXEC SkillLearners @Skillname = 'Leadership';
 
 --2
 drop procedure NewActivity
+go
 CREATE PROCEDURE NewActivity 
 (
     @CourseID INT, 

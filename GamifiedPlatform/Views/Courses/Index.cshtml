@@ -17,6 +17,23 @@
             <h2>@ViewData["Title"]</h2>
         </div>
         <div class="card-body">
+
+            <!-- Filter Form -->
+            <form method="get" action="@Url.Action("Index", "Courses")" class="mb-3">
+                <div class="form-group row">
+                    <div class="col-md-8">
+                        <label for="learnerId" class="form-label">Filter by Learner ID</label>
+                        <input type="number" id="learnerId" name="learnerId" class="form-control"
+                               placeholder="Enter Learner ID"
+                               value="@ViewContext.HttpContext.Request.Query["learnerId"]" />
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <a href="@Url.Action("Index", "Courses")" class="btn btn-secondary ml-2">Clear Filter</a>
+                    </div>
+                </div>
+            </form>
+
             <a href="@Url.Action("Create", "Courses")" class="btn btn-success mb-3">Create New Course</a>
 
             <table class="table table-striped table-hover">
@@ -32,21 +49,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
+                    @if (!Model.Any())
                     {
                         <tr>
-                            <td>@Html.DisplayFor(modelItem => item.Title)</td>
-                            <td>@Html.DisplayFor(modelItem => item.LearningObjective)</td>
-                            <td>@Html.DisplayFor(modelItem => item.CreditPoints)</td>
-                            <td>@Html.DisplayFor(modelItem => item.DifficultyLevel)</td>
-                            <td>@Html.DisplayFor(modelItem => item.PreRequisites)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                            <td>
-                                <a href="@Url.Action("Edit", "Courses", new { id = item.CourseId })" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="@Url.Action("Details", "Courses", new { id = item.CourseId })" class="btn btn-info btn-sm">Details</a>
-                                <a href="@Url.Action("Delete", "Courses", new { id = item.CourseId })" class="btn btn-danger btn-sm">Delete</a>
-                            </td>
+                            <td colspan="7" class="text-center">No courses found for the given Learner ID.</td>
                         </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                                <td>@Html.DisplayFor(modelItem => item.LearningObjective)</td>
+                                <td>@Html.DisplayFor(modelItem => item.CreditPoints)</td>
+                                <td>@Html.DisplayFor(modelItem => item.DifficultyLevel)</td>
+                                <td>@Html.DisplayFor(modelItem => item.PreRequisites)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                <td>
+                                    <a href="@Url.Action("Edit", "Courses", new { id = item.CourseId })" class="btn btn-warning btn-sm">Edit</a>
+                                    <a href="@Url.Action("Details", "Courses", new { id = item.CourseId })" class="btn btn-info btn-sm">Details</a>
+                                    <a href="@Url.Action("Delete", "Courses", new { id = item.CourseId })" class="btn btn-danger btn-sm">Delete</a>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
