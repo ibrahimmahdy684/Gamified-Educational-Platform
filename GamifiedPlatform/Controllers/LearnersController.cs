@@ -349,8 +349,58 @@ namespace GamifiedPlatform.Controllers
             // If the model state is invalid, return the view with the model data so that validation errors are shown
             return View(learner);
         }
+        public async Task<IActionResult> AddFeedback(int activityID, int learnerID, string feedback)
+        {
+            var learner = await _context.Learners.FirstOrDefaultAsync(l => l.LearnerId == learnerID);
 
+            if (learner == null)
+            {
+                TempData["ErrorMessage"] = "The specified learner does not exist.";
+                return RedirectToAction("Profile"); // Redirect to the Profile action if learner does not exist
+            }
 
+            try
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec ViewMyDeviceCharge @ActivityID={activityID},@LearnerID={learnerID},@timestamp={DateTime.Now},@emotionalstate={feedback}");
+            }
+            catch (SqlException ex)
+            {
+
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+                    var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
+                    var activityExists = await _context.LearningActivities.AnyAsync(d => d.ActivityId == activityID);
+                    if (!LearnerExists && !activityExists)
+                    {
+                        ModelState.AddModelError("", "The specified Learner and Activity do not exist.");
+
+                    }
+                    else
+                    {
+                        if (!LearnerExists) ModelState.AddModelError("", "The specified Learner does not exist.");
+                        else ModelState.AddModelError("", "The specified Activity does not exist.");
+                    }
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "This feedback already added");
+                }
+                else
+                {
+
+                    ModelState.AddModelError("", "An error occurred while giving the feedback. Please try again.");
+                }
+
+                return View("Profile", learner);
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Profile", learner);
+            }
+            return RedirectToAction("Profile", learner);
+        }
         // GET: Learners/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
