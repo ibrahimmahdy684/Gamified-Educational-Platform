@@ -297,7 +297,16 @@
             }
         </div>
     </div>
-
+    <!-- Card for LeaderBoards -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-white text-center">
+            <h3>View All Leaderboards</h3>
+        </div>
+        <div class="card-body text-center">
+            <p>Check out all the leaderboards in the system.</p>
+            <a asp-action="GetAllLeaderboards" asp-route-learnerId="@Model.InstructorId" class="btn btn-info">viewLeaderBoards</a>
+        </div>
+    </div>
     <!-- Add Post Section -->
     <div class="card mt-4">
         <div class="card-header bg-secondary text-white">

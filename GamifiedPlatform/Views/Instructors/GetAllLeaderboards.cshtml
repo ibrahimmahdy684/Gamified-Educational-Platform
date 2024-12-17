@@ -1,0 +1,43 @@
+﻿@model IEnumerable<GamifiedPlatform.Models.Leaderboard>
+
+@{
+    ViewData["Title"] = "All Leaderboards";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center text-primary mb-4">All Leaderboards</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Board ID</th>
+                    <th>Season</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var leaderboard in Model)
+                {
+                    <tr>
+                        <td>@leaderboard.BoardId</td>
+                        <td>@leaderboard.Season</td>
+                        <td>
+                            <form asp-action="LeaderboardRank" asp-controller="Instructor" method="get" style="display:inline;">
+                                <input type="hidden" name="leaderboardID" value="@leaderboard.BoardId" />
+                                <button type="submit" class="btn btn-sm btn-outline-info">View Ranks</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info text-center" role="alert">
+            No leaderboards available at the moment.
+        </div>
+    }
+</div>

@@ -196,7 +196,28 @@
             }
         </div>
     </div>
+    
 </div>
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-info text-white text-center">
+        <h3>View All Leaderboards</h3>
+    </div>
+    <div class="card-body text-center">
+        <p>Check out all the leaderboards in the system.</p>
+        <a asp-action="GetAllLeaderboards" asp-route-learnerId="@Model.LearnerId" class="btn btn-info">viewLeaderBoards</a>
+    </div>
+</div>
+<!-- Leaderboards Card -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-info text-white text-center">
+        <h3>View leaderboards</h3>
+    </div>
+    <div class="card-body text-center">
+        <p>View all Leaderboards related to this learner.</p>
+        <a asp-action="LeaderboardFilter" asp-route-learnerId="@Model.LearnerId" class="btn btn-info">viewLeaderBoards</a>
+    </div>
+</div>
+
 
 <style>
     .card-header {

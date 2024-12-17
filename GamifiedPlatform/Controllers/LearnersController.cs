@@ -34,6 +34,57 @@ namespace GamifiedPlatform.Controllers
 
             return View(learner);
         }
+        public IActionResult GetAllLeaderboards() {
+            
+
+            // Execute the stored procedure to get notifications
+            var leaderboards = _context.Leaderboards
+                .FromSqlRaw("EXEC getAllLeaderBoards ")
+                .ToList();
+
+           
+
+            return View(leaderboards);
+        }
+        public async Task<IActionResult> LeaderboardRank(int leaderboardID,int learnerID)
+        {
+            var learner = await _context.Learners.FirstOrDefaultAsync(l => l.LearnerId == learnerID);
+
+            if (learner == null)
+            {
+                ModelState.AddModelError("", "The specified Learner does not exist.");
+                return RedirectToAction("LeaderboardRank"); // Redirect to the Profile action if learner does not exist
+            }
+
+            // Execute the stored procedure to get notifications
+            var boards = _context.Rankings
+                .FromSqlRaw($"EXEC LeaderboardRank @learnerID={learnerID},@LeaderboardID={leaderboardID}")
+                .ToList();
+
+            // Pass the learnerId to ViewBag for "Back to Profile" button
+            ViewBag.LearnerId = learnerID;
+
+            return View(boards);
+        }
+
+        // Action to filter leaderboard by LearnerID
+        public IActionResult LeaderboardFilter(int LearnerID)
+        {
+
+            var learnerIdParam = new SqlParameter("@LearnerID", LearnerID);
+
+            // Execute the stored procedure to get notifications
+            var boards = _context.Rankings
+                .FromSqlRaw("EXEC LeaderboardFilter @LearnerID", learnerIdParam)
+                .ToList();
+
+            // Pass the learnerId to ViewBag for "Back to Profile" button
+            ViewBag.LearnerId = LearnerID;
+
+            return View(boards);
+        }
+
+
         public async Task<IActionResult> AddPost(int learnerID, int forumID, string post)
         {
 
