@@ -7,86 +7,143 @@
 <div class="container mt-5">
     <!-- Profile Card -->
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white text-center">
-            <h2>Welcome, @Model.FirstName @Model.LastName</h2>
+        <div class="card-header bg-dark text-white">
+            <h2 class="mb-0">Welcome, @Model.FirstName @Model.LastName</h2>
         </div>
 
-        <!-- Profile Picture -->
-        <div class="text-center my-4">
-            <img src="@(string.IsNullOrEmpty(Model.ProfilePicturePath) ? "https://via.placeholder.com/150?text=Profile+Picture" : Model.ProfilePicturePath)"
-                 alt="Profile Picture"
-                 class="img-fluid rounded-circle shadow-sm"
-                 style="width: 150px; height: 150px; object-fit: cover;" />
-        </div>
+        <div class="row align-items-center p-4">
+            <!-- Profile Picture -->
+            <div class="col-md-3 text-center">
+                <img src="@(string.IsNullOrEmpty(Model.ProfilePicturePath) ? "https://cdn-icons-png.flaticon.com/512/149/149071.png" : Model.ProfilePicturePath)"
+                     alt="Profile Picture"
+                     class="img-fluid rounded-circle shadow-sm"
+                     style="width: 150px; height: 150px; object-fit: cover;" />
+            </div>
 
-        <!-- Profile Details -->
-        <div class="card-body">
-            <h4 class="mb-3 text-primary text-center">Your Profile Details</h4>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><strong>Name:</strong> @Model.FirstName @Model.LastName</li>
-                <li class="list-group-item"><strong>Email:</strong> @Model.Email</li>
-                <li class="list-group-item"><strong>Gender:</strong> @Model.Gender</li>
-                <li class="list-group-item"><strong>Birth Date:</strong> @(Model.BirthDate?.ToString("dd/MM/yyyy") ?? "Not provided")</li>
-                <li class="list-group-item"><strong>Country:</strong> @Model.Country</li>
-                <li class="list-group-item"><strong>Cultural Background:</strong> @Model.CulturalBackground</li>
-            </ul>
+            <!-- Profile Details -->
+            <div class="col-md-9">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Name:</strong> @Model.FirstName @Model.LastName</li>
+                    <li class="list-group-item"><strong>Email:</strong> @Model.Email</li>
+                    <li class="list-group-item"><strong>Gender:</strong> @Model.Gender</li>
+                    <li class="list-group-item"><strong>Birth Date:</strong> @(Model.BirthDate?.ToString("dd/MM/yyyy") ?? "Not provided")</li>
+                    <li class="list-group-item"><strong>Country:</strong> @Model.Country</li>
+                    <li class="list-group-item"><strong>Cultural Background:</strong> @Model.CulturalBackground</li>
+                </ul>
+            </div>
         </div>
 
         <!-- Action Buttons -->
-        <div class="card-footer d-flex justify-content-center align-items-center">
-            <a asp-action="Edit" asp-route-id="@Model.LearnerId" class="btn btn-outline-primary btn-sm me-2" style="min-width: 140px;">Edit Profile</a>
-            <a asp-action="ViewAssessments" asp-route-learnerId="@Model.LearnerId" class="btn btn-outline-secondary btn-sm me-2" style="min-width: 140px;">View Assessments</a>
-            <a asp-action="EnrolledCourses" asp-route-id="@Model.UserId" class="btn btn-outline-success btn-sm me-2" style="min-width: 140px;">View Courses</a>
-            <form asp-action="DeleteAccount" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');" style="display: inline;">
+        <div class="card-footer d-flex justify-content-center gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.LearnerId" class="btn btn-outline-primary">Edit Profile</a>
+            <a asp-action="ViewAssessments" asp-route-learnerId="@Model.LearnerId" class="btn btn-outline-secondary">View Assessments</a>
+            <a asp-action="EnrolledCourses" asp-route-id="@Model.UserId" class="btn btn-outline-success">View Courses</a>
+            <form asp-action="DeleteAccount" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');" class="d-inline">
                 <input type="hidden" name="LearnerId" value="@Model.LearnerId" />
-                <button type="submit" class="btn btn-outline-danger btn-sm" style="min-width: 140px;">Delete Account</button>
+                <button type="submit" class="btn btn-outline-danger">Delete Account</button>
             </form>
         </div>
     </div>
 
-    <!-- Enrollment Card -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-success text-white text-center">
-            <h3>Enroll in a Course</h3>
+    <!-- Quick Access Cards (Top) -->
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">View Personalization Profiles</h5>
+                </div>
+                <div class="card-body text-center">
+                    <a asp-action="ViewPersonalizationProfiles" asp-route-learnerId="@Model.LearnerId" class="btn btn-outline-primary">View Profiles</a>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <form asp-action="EnrollInCourse" method="post">
-                <input type="hidden" name="LearnerId" value="@Model.LearnerId" />
-                <div class="form-group">
-                    <label for="CourseId">Course ID:</label>
-                    <input type="number" class="form-control" id="CourseId" name="CourseId" placeholder="Enter Course ID" required>
-                </div>
-                <button type="submit" class="btn btn-success">Enroll</button>
-            </form>
 
-            @if (TempData["ErrorMessage"] != null)
-            {
-                <div class="alert alert-danger mt-3">
-                    @TempData["ErrorMessage"]
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">View Notifications</h5>
                 </div>
-            }
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success mt-3">
-                    @TempData["SuccessMessage"]
+                <div class="card-body text-center">
+                    <a asp-action="ViewNotifications" asp-route-learnerId="@Model.LearnerId" class="btn btn-outline-info">View Notifications</a>
                 </div>
-            }
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Monitor Path</h5>
+                </div>
+                <div class="card-body text-center">
+                    <a asp-action="MonitorPath" asp-route-learnerId="@Model.LearnerId" class="btn btn-outline-success">Monitor Path</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Leaderboards Cards -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">View All Leaderboards</h5>
+                </div>
+                <div class="card-body text-center">
+                    <a asp-action="GetAllLeaderboards" asp-route-learnerId="@Model.LearnerId" class="btn btn-outline-primary">View Leaderboards</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">View Leaderboards</h5>
+                </div>
+                <div class="card-body text-center">
+                    <a asp-action="LeaderboardFilter" asp-route-learnerId="@Model.LearnerId" class="btn btn-outline-info">View Leaderboards</a>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Personalization Profiles Card -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-warning text-white text-center">
-            <h3>View Personalization Profiles</h3>
+    <!-- Form-Based Cards (Bottom) -->
+    <div class="row">
+        <!-- Enroll in a Course -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5>Enroll in a Course</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="EnrollInCourse" method="post">
+                        <input type="hidden" name="LearnerId" value="@Model.LearnerId" />
+                        <div class="form-group">
+                            <label for="CourseId">Course ID:</label>
+                            <input type="number" class="form-control" id="CourseId" name="CourseId" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-2">Enroll</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="card-body text-center">
-            <p>Explore the personalization profiles associated with this learner.</p>
-            <a asp-action="ViewPersonalizationProfiles" asp-route-learnerId="@Model.LearnerId" class="btn btn-warning">View Profiles</a>
+
+        <!-- Add Goal -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5>Add a Goal</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="AddGoal" method="post">
+                        <input type="hidden" name="LearnerId" value="@Model.LearnerId" />
+                        <div class="form-group">
+                            <label for="GoalId">Goal ID:</label>
+                            <input type="number" class="form-control" id="GoalId" name="GoalId" required>
+                        </div>
+                        <button type="submit" class="btn btn-secondary w-100 mt-2">Add Goal</button>
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
 
-
-<<<<<<< HEAD
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm">
                 <div class="card-header bg-light">
@@ -108,44 +165,8 @@
                     </form>
                 </div>
             </div>
-=======
-    <!-- Notifications Card -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-info text-white text-center">
-            <h3>View Notifications</h3>
->>>>>>> parent of 81c3d98 (improved profile for learner)
         </div>
-        <div class="card-body text-center">
-            <p>View all notifications related to this learner.</p>
-            <a asp-action="ViewNotifications" asp-route-learnerId="@Model.LearnerId" class="btn btn-info">View Notifications</a>
-        </div>
-    </div>
-    <!-- LearningPath Card -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-info text-white text-center">
-            <h3>Monitor Path</h3>
-        </div>
-        <div class="card-body text-center">
-            <p>View all Paths related to this learner.</p>
-            <a asp-action="MonitorPath" asp-route-learnerId="@Model.LearnerId" class="btn btn-info">Monitor Path</a>
-        </div>
-    </div>
-    <!-- Add Goal Card -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-secondary text-white text-center">
-            <h3>Add a Goal</h3>
-        </div>
-        <div class="card-body">
-            <form asp-action="AddGoal" method="post">
-                <input type="hidden" name="LearnerId" value="@Model.LearnerId" />
-                <div class="form-group">
-                    <label for="GoalId">Goal ID:</label>
-                    <input type="number" class="form-control" id="GoalId" name="GoalId" placeholder="Enter Goal ID" required>
-                </div>
-                <button type="submit" class="btn btn-secondary">Add Goal</button>
-            </form>
 
-<<<<<<< HEAD
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm">
                 <div class="card-header bg-light">
@@ -155,24 +176,26 @@
             </form>
             
             
-=======
->>>>>>> parent of 81c3d98 (improved profile for learner)
             @if (TempData["SuccessMessage"] != null)
             {
                 <div class="alert alert-success mt-3">
                     @TempData["SuccessMessage"]
-<<<<<<< HEAD
 >>>>>>> 52f4eb8d35e89980ad5bee8a0c13e8ca2e04bd73
-=======
->>>>>>> parent of 81c3d98 (improved profile for learner)
                 </div>
-            }
-            @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
-            {
-                <div class="alert alert-danger mt-3">
-                    @Html.ValidationSummary(false, "Please fix the following errors:")
+                <div class="card-body">
+                    <form asp-action="AddFeedback" method="post">
+                        <input type="hidden" name="LearnerID" value="@Model.LearnerId" />
+                        <div class="form-group">
+                            <label for="ActivityID">Activity ID:</label>
+                            <input type="number" class="form-control" id="ActivityID" name="ActivityID" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emotionalState">Emotional State:</label>
+                            <input type="text" class="form-control" id="emotionalState" name="emotionalState" required>
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100 mt-2">Submit Feedback</button>
+                    </form>
                 </div>
-<<<<<<< HEAD
 <<<<<<< HEAD
 =======
             }
@@ -180,129 +203,6 @@
                 <a asp-action="GetAllGoals" asp-route-learnerId="@Model.LearnerId" class="btn btn-info">View All Goals</a>
 >>>>>>> 52f4eb8d35e89980ad5bee8a0c13e8ca2e04bd73
             </div>
-=======
-            }
->>>>>>> parent of 81c3d98 (improved profile for learner)
         </div>
-    </div>
-    <!-- Add Post Card -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-warning text-white text-center">
-            <h3>Add a Post</h3>
-        </div>
-        <div class="card-body">
-            <form asp-action="AddPost" method="post">
-                <input type="hidden" name="LearnerId" value="@Model.LearnerId" />
-                <div class="form-group">
-                    <label for="ForumId">Forum ID:</label>
-                    <input type="number" class="form-control" id="ForumId" name="ForumId" placeholder="Enter Forum ID" required>
-                </div>
-                <div class="form-group">
-                    <label for="Post">Post:</label>
-                    <textarea class="form-control" id="Post" name="Post" placeholder="Write your post here..." rows="4" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-warning">Submit Post</button>
-            </form>
-
-            <!-- Display Success and Error Messages -->
-            
-            @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
-            {
-                <div class="alert alert-danger mt-3">
-                    @Html.ValidationSummary(false, "Please fix the following errors:")
-                </div>
-            }
-            
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success mt-3">
-                    @TempData["SuccessMessage"]
-                </div>
-            }
-
-        </div>
-    </div>
-    <!-- Add Feedback Card -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-danger text-white text-center">
-            <h3>Give Feedback</h3>
-        </div>
-        <div class="card-body">
-            <form asp-action="AddFeedback" method="post">
-                <input type="hidden" name="LearnerID" value="@Model.LearnerId" />
-                <div class="form-group">
-                    <label for="ActivityID">Activity ID:</label>
-                    <input type="number" class="form-control" id="ActivityID" name="ActivityID" placeholder="Enter Activity ID" required>
-                </div>
-                <div class="form-group">
-                    <label for="EmotionalState">Emotional State:</label>
-                    <input type="text" class="form-control" id="emotionalState" name="emotionalState" placeholder="Enter your feedback" required>
-                <button type="submit" class="btn btn-danger">Submit Feedback</button>
-            </form>
-
-            <!-- Success and Error Messages -->
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success mt-3">@TempData["SuccessMessage"]</div>
-            }
-
-            @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
-            {
-                <div class="alert alert-danger mt-3">
-                    @Html.ValidationSummary(false, "Please fix the following errors:")
-                </div>
-            }
-        </div>
-    </div>
-    
-</div>
-<div class="card shadow-sm mb-4">
-    <div class="card-header bg-info text-white text-center">
-        <h3>View All Leaderboards</h3>
-    </div>
-    <div class="card-body text-center">
-        <p>Check out all the leaderboards in the system.</p>
-        <a asp-action="GetAllLeaderboards" asp-route-learnerId="@Model.LearnerId" class="btn btn-info">viewLeaderBoards</a>
     </div>
 </div>
-<!-- Leaderboards Card -->
-<div class="card shadow-sm mb-4">
-    <div class="card-header bg-info text-white text-center">
-        <h3>View leaderboards</h3>
-    </div>
-    <div class="card-body text-center">
-        <p>View all Leaderboards related to this learner.</p>
-        <a asp-action="LeaderboardFilter" asp-route-learnerId="@Model.LearnerId" class="btn btn-info">viewLeaderBoards</a>
-    </div>
-</div>
-
-
-<style>
-    .card-header {
-        font-size: 1.25rem;
-        font-weight: bold;
-    }
-
-    .list-group-item {
-        font-size: 1rem;
-    }
-
-    .btn {
-        margin: 0 5px;
-    }
-
-    .btn-outline-primary:hover {
-        background-color: #007bff;
-        color: #fff;
-    }
-
-    .btn-outline-secondary:hover {
-        background-color: #6c757d;
-        color: #fff;
-    }
-
-    .btn-outline-success:hover {
-        background-color: #28a745;
-        color: #fff;
-    }
-</style>
