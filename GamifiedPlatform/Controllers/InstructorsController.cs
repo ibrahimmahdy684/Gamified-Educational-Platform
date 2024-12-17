@@ -32,23 +32,63 @@ namespace GamifiedPlatform.Controllers
 
             return View(instructor);
         }
-        public async Task<IActionResult> UpdateInfo(int instructorID,string name,string latest_qualification, string expertise_area, string email)
-            
+        [HttpPost]
+        public async Task<IActionResult> UpdateInfo(
+    int instructorID,
+    string? name,
+    string? latestQualification,
+    string? expertiseArea,
+    string? email,
+    IFormFile? ProfilePicture)
         {
-            var learnerExists = await _context.Instructors.AnyAsync(d => d.InstructorId == instructorID);
-            if (!learnerExists)
+            var instructor = await _context.Instructors.FirstOrDefaultAsync(i => i.InstructorId == instructorID);
+
+            if (instructor == null)
             {
-                ModelState.AddModelError("", "The specified learner does not exist.");
-                return View("UpdateInfo");
+                TempData["ErrorMessage"] = "The specified instructor does not exist.";
+                return View("Edit", new GamifiedPlatform.Models.Instructor()); // Reload with empty model
             }
-            else
+
+            string profilePicturePath = instructor.ProfilePicturePath; // Default to existing path
+
+            try
             {
-                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec updateInstructorInfo @InstructorID={instructorID},@Name={name},@LatestQualification={latest_qualification},@ExpertiseArea={expertise_area},@Email={email}");
-                TempData["SuccessMessage"] = "Instructor information updated successfully!";
-                return RedirectToAction("Index");
+                // Handle profile picture upload
+                if (ProfilePicture != null && ProfilePicture.Length > 0)
+                {
+                    var fileName = $"{Guid.NewGuid()}_{ProfilePicture.FileName}";
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ProfilePicture.CopyToAsync(stream);
+                    }
+
+                    profilePicturePath = $"/images/{fileName}"; // Set new path for uploaded image
+                }
+
+                // Execute the stored procedure
+                await _context.Database.ExecuteSqlInterpolatedAsync($@"
+            EXEC updateInstructorInfo 
+                @InstructorID = {instructorID}, 
+                @Name = {name ?? instructor.Name}, 
+                @LatestQualification = {latestQualification ?? instructor.LatestQualification}, 
+                @ExpertiseArea = {expertiseArea ?? instructor.ExpertiseArea}, 
+                @Email = {email ?? instructor.Email}, 
+                @ProfilePicturePath = {profilePicturePath}");
+
+                TempData["SuccessMessage"] = "Profile updated successfully!";
             }
-            
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+            }
+
+            // Return to the same view without redirection
+            instructor = await _context.Instructors.FirstOrDefaultAsync(i => i.InstructorId == instructorID);
+            return View("Edit", instructor);
         }
+
         public async Task<IActionResult> AddForum(int instructorID,int moduleID, int courseID, string title, string description)
         {
             var instructor = await _context.Instructors.FirstOrDefaultAsync(l => l.InstructorId ==instructorID );
