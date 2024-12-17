@@ -32,6 +32,14 @@ namespace GamifiedPlatform.Controllers
 
             return View(instructor);
         }
+        public IActionResult GetAllGoals() {
+            var goals = _context.LearningGoals
+                    .FromSqlRaw("EXEC getAllGoals ")
+                    .ToList();
+            return View(goals);
+        }
+        
+
         public IActionResult GetAllLeaderboards()
         {
 
