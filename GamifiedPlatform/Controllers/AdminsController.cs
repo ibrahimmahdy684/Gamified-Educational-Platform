@@ -31,7 +31,23 @@ namespace GamifiedPlatform.Controllers
 
             return View(admin);
         }
+        public IActionResult EmotionalFeedbackTrend()
+        {
+            return View();
+        }
 
+        // POST: Fetch Trends Data
+        [HttpPost]
+        public IActionResult EmotionalFeedbackTrend(int courseID, int moduleID, DateTime timePeriod)
+        {
+            // Call the stored procedure
+            var trends = _context.EmotionalFeedbacks
+                .FromSqlRaw("EXEC EmotionalTrendAnalysisIns @CourseID={0}, @ModuleID={1}, @TimePeriod={2}",
+                            courseID, moduleID, timePeriod)
+                .ToList();
+
+            return View(trends); // Pass trends data to the view
+        }
         public IActionResult Profile(int id)
         {
             var admin = _context.Admins.FirstOrDefault(a => a.UserId == id);
