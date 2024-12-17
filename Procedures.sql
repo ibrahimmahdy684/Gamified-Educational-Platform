@@ -9,7 +9,15 @@ begin
 insert into InstructorDiscussion(ForumID,InstructorID,Post,time) values (@DiscussionID,@instructorID,@Post,GETDATE());
 end
 
-
+Go
+create proc markAsRead(@notificationID int)
+AS
+begin
+update Notification
+set urgency_level='read'
+where ID=@notificationID
+End
+	
 GO
 CREATE PROCEDURE DeleteLearner
     @LearnerID INT
