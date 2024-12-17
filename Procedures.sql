@@ -34,21 +34,32 @@ AS
 BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
-
-        -- Example manual deletions
-        DELETE FROM LearnerMastery WHERE LearnerID = @LearnerID;
-        DELETE FROM LearnersCollaboration WHERE LearnerID = @LearnerID;
-
-        -- Cascade delete handled here
+        DECLARE @UserID INT;
+        -- Retrieve the UserID corresponding to the LearnerID
+        SELECT @UserID = UserID 
+        FROM Learner 
+        WHERE LearnerID = @LearnerID;
+        -- Check if the Learner exists
+        IF @UserID IS NULL
+        BEGIN
+            PRINT 'Learner does not exist.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+        -- Delete the learner
         DELETE FROM Learner WHERE LearnerID = @LearnerID;
-
+        -- Delete the corresponding user
+        DELETE FROM Users WHERE UserID = @UserID;
         COMMIT TRANSACTION;
+        PRINT 'Learner and corresponding user deleted successfully.';
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
+        PRINT 'Error occurred during deletion: ' + ERROR_MESSAGE();
         THROW;
     END CATCH
 END;
+
 
 GO
 CREATE PROCEDURE updateLearnerInfo
