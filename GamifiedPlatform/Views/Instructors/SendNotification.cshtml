@@ -6,26 +6,31 @@
 
 <div class="container mt-5">
     <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center">
             <h2 class="mb-0">Send Notification</h2>
         </div>
+
+        <!-- Body -->
         <div class="card-body">
+            <!-- Success Message -->
             @if (ViewData["SuccessMessage"] != null)
             {
-                <div class="alert alert-success">
+                <div class="alert alert-success mb-3">
                     @ViewData["SuccessMessage"]
                 </div>
             }
 
+            <!-- Form -->
             <form asp-action="SendNotification" method="post">
                 <div class="mb-3">
                     <label for="LearnerID" class="form-label">Learner ID</label>
-                    <input type="number" class="form-control" id="LearnerID" name="LearnerID" required />
+                    <input type="number" class="form-control" id="LearnerID" name="LearnerID" placeholder="Enter Learner ID" required />
                 </div>
 
                 <div class="mb-3">
                     <label for="Message" class="form-label">Message</label>
-                    <textarea class="form-control" id="Message" name="Message" rows="4" required></textarea>
+                    <textarea class="form-control" id="Message" name="Message" rows="4" placeholder="Enter your message here" required></textarea>
                 </div>
 
                 <div class="mb-3">
@@ -37,12 +42,13 @@
                     </select>
                 </div>
 
+                <!-- Buttons -->
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-success">Send Notification</button>
-                    <a href="@Url.Action("Profile", "Instructors")" class="btn btn-secondary">Back to Profile</a>
+                    <button type="submit" class="btn btn-outline-success">Send Notification</button>
                 </div>
             </form>
 
+            <!-- Error Message -->
             @if (ViewData["ErrorMessage"] != null)
             {
                 <div class="alert alert-danger mt-3">

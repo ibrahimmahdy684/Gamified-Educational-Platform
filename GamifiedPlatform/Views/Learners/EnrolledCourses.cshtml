@@ -1,73 +1,80 @@
 ﻿@model IEnumerable<Course>
 
 <div class="container mt-5">
-    <h2 class="text-primary text-center mb-4">Enrolled Courses</h2>
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary text-center mb-4">Enrolled Courses</h2>
+    </div>
 
-    <table class="table table-hover table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th>Course ID</th>
-                <th>Title</th>
-                <th>Learning Objective</th>
-                <th>Credit Points</th>
-                <th>Description</th>
-                <th>Difficulty Level</th>
-                <th>Pre-Requisites</th>
-                <th>Status</th>
-                <th>Highest Assessment</th>
-                <th>Highest Grade</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var course in Model)
-            {
-                <tr>
-                    <td>@course.CourseId</td>
-                    <td><strong>@course.Title</strong></td>
-                    <td>@course.LearningObjective</td>
-                    <td>@course.CreditPoints</td>
-                    <td>@course.Description</td>
-                    <td>@course.DifficultyLevel</td>
-                    <td>@course.PreRequisites</td>
-                    <td>
-                        <span class="badge @(course.Status == "Completed" ? "badge-success" : "badge-warning")">
-                            @course.Status
-                        </span>
-                    </td>
-                    <td>
-                        @if (course.HighestAssessmentTitle != null)
-                        {
-                            <span>@course.HighestAssessmentTitle</span>
-                        }
-                        else
-                        {
-                            <span class="text-muted">N/A</span>
-                        }
-                    </td>
-                    <td>
-                        @if (course.HighestAssessmentGrade.HasValue)
-                        {
-                            <span>@course.HighestAssessmentGrade</span>
-                        }
-                        else
-                        {
-                            <span class="text-muted">N/A</span>
-                        }
-                    </td>
-                    <td>
-                    <td>
-                        <a asp-action="Modules" asp-route-courseId="@course.CourseId" class="btn btn-outline-primary btn-sm d-flex justify-content-center align-items-center">
-                            <i class="fas fa-book-open mr-2"></i> View Modules
-                        </a>
-                    </td>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <!-- Table Section -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Course ID</th>
+                        <th>Title</th>
+                        <th>Learning Objective</th>
+                        <th>Credit Points</th>
+                        <th>Description</th>
+                        <th>Difficulty Level</th>
+                        <th>Pre-Requisites</th>
+                        <th>Status</th>
+                        <th>Highest Assessment</th>
+                        <th>Highest Grade</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var course in Model)
+                    {
+                        <tr>
+                            <td>@course.CourseId</td>
+                            <td><strong>@course.Title</strong></td>
+                            <td>@course.LearningObjective</td>
+                            <td>@course.CreditPoints</td>
+                            <td>@course.Description</td>
+                            <td>@course.DifficultyLevel</td>
+                            <td>@course.PreRequisites</td>
+                            <td class="text-center">
+                                <span class="badge @(course.Status == "Completed" ? "bg-success" : "bg-warning")">
+                                    @course.Status
+                                </span>
+                            </td>
+                            <td>
+                                @if (course.HighestAssessmentTitle != null)
+                                {
+                                    <span>@course.HighestAssessmentTitle</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                @if (course.HighestAssessmentGrade.HasValue)
+                                {
+                                    <span>@course.HighestAssessmentGrade</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="Modules" asp-route-courseId="@course.CourseId" class="btn btn-outline-primary btn-sm">
+                                    View Modules
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 
+    <!-- Back to Profile Button -->
     <div class="text-center mt-4">
-        <a asp-action="Profile" asp-route-id="@ViewBag.UserId" class="btn btn-secondary">Back to Profile</a>
+        <a asp-action="Profile" asp-route-id="@ViewBag.UserId" class="btn btn-outline-secondary">Back to Profile</a>
     </div>
 </div>

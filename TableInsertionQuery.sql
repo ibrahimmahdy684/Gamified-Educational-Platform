@@ -551,8 +551,8 @@ values(1,2,96),
 (4,1,22)
 
 insert into takesassesment
-values(6,1,96),
-(6,2,20)
+values(7,1,96),
+(7,2,20)
 
 
 
