@@ -12,6 +12,12 @@ create proc getAllGoals
 As
 select*
 from Learning_goal
+
+	Go
+create proc getAllLeaderBoards
+AS
+select *
+from Leaderboard
 	
 	Go
 create proc getSpecificLearnerGoals(@learnerID int)
