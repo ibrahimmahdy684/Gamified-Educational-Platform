@@ -6,6 +6,12 @@ USE GamifiedPlatform
 ALTER TABLE Assessments
 ADD Grade INT NULL; -- Adjust the data type if necessary
 
+Alter Table ReceivedNotification
+ADD adminID int
+
+Alter Table ReceivedNotification
+Add constraint FK_ReceivedNotification_Admin foreign key(adminID) references Admin(AdminID)
+
 
 ALTER TABLE Learner
 Add ProfilePicturePath varchar(100)
