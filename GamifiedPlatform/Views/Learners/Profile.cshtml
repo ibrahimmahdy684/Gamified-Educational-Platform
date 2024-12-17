@@ -5,21 +5,23 @@
 }
 
 <div class="container mt-5">
-    <!-- Profile Picture -->
-    @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
-    {
-        <div class="text-center mb-4">
-            <img src="@Model.ProfilePicturePath" alt="Profile Picture" class="img-fluid rounded-circle" style="max-width: 150px; max-height: 150px;" />
-        </div>
-    }
-
-    <!-- Welcome Card -->
+    <!-- Profile Card -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white text-center">
             <h2>Welcome, @Model.FirstName @Model.LastName</h2>
         </div>
+
+        <!-- Profile Picture -->
+        <div class="text-center my-4">
+            <img src="@(string.IsNullOrEmpty(Model.ProfilePicturePath) ? "https://via.placeholder.com/150?text=Profile+Picture" : Model.ProfilePicturePath)"
+                 alt="Profile Picture"
+                 class="img-fluid rounded-circle shadow-sm"
+                 style="width: 150px; height: 150px; object-fit: cover;" />
+        </div>
+
+        <!-- Profile Details -->
         <div class="card-body">
-            <h4 class="mb-3 text-primary">Your Profile Details:</h4>
+            <h4 class="mb-3 text-primary text-center">Your Profile Details</h4>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item"><strong>Name:</strong> @Model.FirstName @Model.LastName</li>
                 <li class="list-group-item"><strong>Email:</strong> @Model.Email</li>
@@ -29,10 +31,16 @@
                 <li class="list-group-item"><strong>Cultural Background:</strong> @Model.CulturalBackground</li>
             </ul>
         </div>
-        <div class="card-footer text-center">
-            <a asp-action="Edit" asp-route-id="@Model.LearnerId" class="btn btn-outline-primary mr-2">Edit Profile</a>
-            <a asp-action="ViewAssessments" asp-route-learnerId="@Model.LearnerId" class="btn btn-outline-secondary mr-2">View Your Assessments</a>
-            <a asp-action="EnrolledCourses" asp-route-id="@Model.UserId" class="btn btn-outline-success">View Enrolled Courses</a>
+
+        <!-- Action Buttons -->
+        <div class="card-footer d-flex justify-content-center align-items-center">
+            <a asp-action="Edit" asp-route-id="@Model.LearnerId" class="btn btn-outline-primary btn-sm me-2" style="min-width: 140px;">Edit Profile</a>
+            <a asp-action="ViewAssessments" asp-route-learnerId="@Model.LearnerId" class="btn btn-outline-secondary btn-sm me-2" style="min-width: 140px;">View Assessments</a>
+            <a asp-action="EnrolledCourses" asp-route-id="@Model.UserId" class="btn btn-outline-success btn-sm me-2" style="min-width: 140px;">View Courses</a>
+            <form asp-action="DeleteAccount" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');" style="display: inline;">
+                <input type="hidden" name="LearnerId" value="@Model.LearnerId" />
+                <button type="submit" class="btn btn-outline-danger btn-sm" style="min-width: 140px;">Delete Account</button>
+            </form>
         </div>
     </div>
 

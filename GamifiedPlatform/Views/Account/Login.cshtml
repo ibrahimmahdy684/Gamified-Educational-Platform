@@ -4,65 +4,117 @@
     ViewData["Title"] = "Login";
 }
 
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 <div class="container mt-5">
-    <div class="card">
-        <div class="card-header text-white bg-primary">
-            <h2>@ViewData["Title"]</h2>
-        </div>
-        <div class="card-body">
-            <form asp-action="Login" method="post">
-                <div class="form-group">
-                    <label for="Email">Email</label>
-                    <input type="email" asp-for="Email" class="form-control" placeholder="Enter your email" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
+    <div class="row align-items-center">
+        <!-- Left Section: Illustration -->
+        <div class="col-md-6 d-none d-md-block">
+            <div class="h-100 d-flex align-items-center justify-content-center bg-primary text-white rounded-start" style="height: 500px;">
+                <div class="text-center">
+                    <h1 class="display-4">Welcome Back!</h1>
+                    <p class="lead">Login to access your personalized dashboard and continue your learning journey.</p>
+                    <img src="~/images/grad.png" alt="Illustration" class="img-fluid" style="max-width: 80%; margin-top: 20px;">
                 </div>
-
-                <div class="form-group">
-                    <label for="Password">Password</label>
-                    <input type="password" asp-for="Password" class="form-control" placeholder="Enter your password" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
-            </form>
+            </div>
         </div>
-        <div class="card-footer text-center">
-            <div class="text-danger">
-                @Html.ValidationSummary(true)
+
+        <!-- Right Section: Login Form -->
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-white border-0 text-center py-4">
+                    <h2 class="fw-bold text-primary">Login</h2>
+                    <p class="text-muted mb-0">Access your account</p>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Login" method="post">
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="Email" class="form-label fw-semibold">Email</label>
+                            <input type="email" asp-for="Email" class="form-control" placeholder="Enter your email" required />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="Password" class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <input id="passwordField" type="password" asp-for="Password" class="form-control" placeholder="Enter your password" required />
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i id="toggleIcon" class="bi bi-eye-slash"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Remember Me -->
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="RememberMe" />
+                            <label class="form-check-label" for="RememberMe"> Remember me </label>
+                        </div>
+
+                        <!-- Login Button -->
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                        </div>
+                    </form>
+
+                    <!-- Other Links -->
+                    <div class="text-center">
+                        <a href="#" class="text-primary small">Forgot Password?</a>
+                        <p class="mt-3 mb-0">
+                            Don't have an account?
+                            <a href="@Url.Action("Register", "Account")" class="text-primary fw-semibold">Sign Up</a>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Password Toggle Script -->
+<script>
+    document.getElementById("togglePassword").addEventListener("click", function () {
+        const passwordField = document.getElementById("passwordField");
+        const toggleIcon = document.getElementById("toggleIcon");
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleIcon.classList.replace("bi-eye-slash", "bi-eye");
+        } else {
+            passwordField.type = "password";
+            toggleIcon.classList.replace("bi-eye", "bi-eye-slash");
+        }
+    });
+</script>
+
+<!-- Custom CSS -->
 <style>
-    .card-header {
-        text-align: center;
-        font-weight: bold;
+    body {
+        background-color: #f8f9fa;
     }
 
-    .card-body {
-        padding: 30px;
-    }
-
-    .form-group label {
-        font-weight: bold;
+    .card {
+        border: none;
+        border-radius: 8px;
     }
 
     .form-control {
         border-radius: 4px;
-        padding: 10px;
-        font-size: 16px;
     }
 
     .btn-primary {
         background-color: #007bff;
-        border-color: #007bff;
+        border: none;
     }
 
         .btn-primary:hover {
             background-color: #0056b3;
-            border-color: #0056b3;
         }
+
+    .btn-outline-secondary:hover {
+        background-color: #e9ecef;
+    }
 </style>

@@ -646,6 +646,29 @@ namespace GamifiedPlatform.Controllers
             return View(profiles);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAccount(int LearnerId)
+        {
+            try
+            {
+                // Call the stored procedure to delete the learner and their associated records
+                await _context.Database.ExecuteSqlInterpolatedAsync($@"
+            EXEC DeleteLearner @LearnerID = {LearnerId}");
+
+                TempData["SuccessMessage"] = "Your account has been deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred while deleting the account: {ex.Message}";
+                return RedirectToAction("Profile", new { id = LearnerId });
+            }
+
+            // Redirect to the Register page after account deletion
+            return RedirectToAction("Register", "Account");
+        }
+
+
         public async Task<IActionResult> DeletePersonalizationProfile(int profileId, int learnerId)
         {
             try

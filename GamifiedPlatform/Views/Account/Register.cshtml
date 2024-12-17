@@ -4,81 +4,128 @@
     ViewData["Title"] = "Register";
 }
 
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 <div class="container mt-5">
-    <div class="card">
-        <div class="card-header text-white bg-primary">
-            <h2>@ViewData["Title"]</h2>
+    <div class="row align-items-center">
+        <!-- Left Section: Illustration -->
+        <div class="col-md-6 d-none d-md-block">
+            <div class="h-100 d-flex align-items-center justify-content-center bg-primary text-white rounded-start" style="height: 600px;">
+                <div class="text-center">
+                    <h1 class="display-4">Join Us Today!</h1>
+                    <p class="lead">Start your journey with personalized learning and exclusive tools.</p>
+                    <img src="~/images/illust.png" alt="Register Illustration" class="img-fluid" style="max-width: 80%; margin-top: 20px;">
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <form asp-action="Register" method="post">
-                <div class="form-group">
-                    <label for="Name">Name</label>
-                    <input type="text" asp-for="Name" class="form-control" placeholder="Enter your full name" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
 
-                <div class="form-group">
-                    <label for="Email">Email</label>
-                    <input type="email" asp-for="Email" class="form-control" placeholder="Enter your email" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
+        <!-- Right Section: Register Form -->
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-white border-0 text-center py-4">
+                    <h2 class="fw-bold text-primary">Register</h2>
+                    <p class="text-muted mb-0">Create your account</p>
                 </div>
+                <div class="card-body p-4">
+                    <form asp-action="Register" method="post">
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label for="Name" class="form-label fw-semibold">Full Name</label>
+                            <input type="text" asp-for="Name" class="form-control" placeholder="Enter your full name" required />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
 
-                <div class="form-group">
-                    <label for="Password">Password</label>
-                    <input type="password" asp-for="Password" class="form-control" placeholder="Create a password" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="Email" class="form-label fw-semibold">Email</label>
+                            <input type="email" asp-for="Email" class="form-control" placeholder="Enter your email" required />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="Password" class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <input id="passwordField" type="password" asp-for="Password" class="form-control" placeholder="Create a password" required />
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i id="toggleIcon" class="bi bi-eye-slash"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <!-- User Type -->
+                        <div class="mb-3">
+                            <label for="Type" class="form-label fw-semibold">User Type</label>
+                            <select asp-for="Type" class="form-select">
+                                <option value="Learner">Learner</option>
+                                <option value="Instructor">Instructor</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                            <span asp-validation-for="Type" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Register Button -->
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                        </div>
+                    </form>
+
+                    <!-- Other Links -->
+                    <div class="text-center">
+                        <p class="mt-3 mb-0">
+                            Already have an account?
+                            <a href="@Url.Action("Login", "Account")" class="text-primary fw-semibold">Login</a>
+                        </p>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="Type">User Type</label>
-                    <select asp-for="Type" class="form-control">
-                        <option value="Learner">Learner</option>
-                        <option value="Instructor">Instructor</option>
-                        <option value="Admin">Admin</option>
-                    </select>
-                    <span asp-validation-for="Type" class="text-danger"></span>
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-block">Register</button>
-            </form>
-        </div>
-        <div class="card-footer text-center">
-            <div class="text-danger">
-                @Html.ValidationSummary(true)
             </div>
         </div>
     </div>
 </div>
 
+<!-- Password Toggle Script -->
+<script>
+    document.getElementById("togglePassword").addEventListener("click", function () {
+        const passwordField = document.getElementById("passwordField");
+        const toggleIcon = document.getElementById("toggleIcon");
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleIcon.classList.replace("bi-eye-slash", "bi-eye");
+        } else {
+            passwordField.type = "password";
+            toggleIcon.classList.replace("bi-eye", "bi-eye-slash");
+        }
+    });
+</script>
+
+<!-- Custom CSS -->
 <style>
-    .card-header {
-        text-align: center;
-        font-weight: bold;
+    body {
+        background-color: #f8f9fa;
     }
 
-    .card-body {
-        padding: 30px;
+    .card {
+        border: none;
+        border-radius: 8px;
     }
 
-    .form-group label {
-        font-weight: bold;
-    }
-
-    .form-control {
+    .form-control, .form-select {
         border-radius: 4px;
-        padding: 10px;
-        font-size: 16px;
     }
 
     .btn-primary {
         background-color: #007bff;
-        border-color: #007bff;
+        border: none;
     }
 
         .btn-primary:hover {
             background-color: #0056b3;
-            border-color: #0056b3;
         }
+
+    .btn-outline-secondary:hover {
+        background-color: #e9ecef;
+    }
 </style>

@@ -5,23 +5,32 @@
 }
 
 <div class="container mt-5">
-
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-primary">@ViewData["Title"]</h1>
+        <h2 class="text-primary">@ViewData["Title"]</h2>
     </div>
+
+    <!-- Success and Error Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success mb-3">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger mb-3">@TempData["ErrorMessage"]</div>
+    }
 
     <!-- Table Section -->
     <div class="card shadow-sm">
         <div class="card-body">
-            <table class="table table-striped table-hover">
-                <thead class="thead-dark">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
                     <tr>
                         <th>@Html.DisplayNameFor(model => model.PreferedContentType)</th>
                         <th>@Html.DisplayNameFor(model => model.EmotionalState)</th>
                         <th>@Html.DisplayNameFor(model => model.PersonalityType)</th>
                         <th>@Html.DisplayNameFor(model => model.Learner.LearnerId)</th>
-                        <th>Actions</th>
+                        <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,11 +41,12 @@
                             <td>@Html.DisplayFor(modelItem => item.EmotionalState)</td>
                             <td>@Html.DisplayFor(modelItem => item.PersonalityType)</td>
                             <td>@Html.DisplayFor(modelItem => item.Learner.LearnerId)</td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a asp-action="Details" asp-route-id="@item.ProfileId" class="btn btn-info btn-sm">Details</a>
-                                    <a asp-action="Delete" asp-route-id="@item.ProfileId" class="btn btn-danger btn-sm">Delete</a>
-                                </div>
+                            <td class="text-center">
+                                <form method="post" asp-action="DeletePersonalizationProfile" asp-route-profileId="@item.ProfileId" asp-route-learnerId="@item.Learner.LearnerId">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this profile?');">
+                                        Delete
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     }

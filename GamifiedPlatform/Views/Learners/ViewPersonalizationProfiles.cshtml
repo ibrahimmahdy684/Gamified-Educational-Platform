@@ -5,17 +5,30 @@
 }
 
 <div class="container mt-5">
+    <!-- Page Header -->
     <div class="card shadow-sm">
-        <div class="card-header bg-warning text-white text-center">
-            <h2>Personalization Profiles</h2>
+        <div class="card-header bg-primary text-white text-center">
+            <h2 class="mb-0">Personalization Profiles</h2>
         </div>
         <div class="card-body">
+            <!-- Success and Error Messages -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mb-3">@TempData["SuccessMessage"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger mb-3">@TempData["ErrorMessage"]</div>
+            }
+
+            <!-- Conditional Display -->
             @if (!Model.Any())
             {
                 <p class="text-center text-muted">No personalization profiles found for this learner.</p>
             }
             else
             {
+                <!-- Profiles Table -->
                 <table class="table table-striped table-hover align-middle">
                     <thead class="table-dark">
                         <tr>
@@ -49,17 +62,8 @@
 
             <!-- Back to Profile Button -->
             <div class="text-center mt-3">
+                <a href="@Url.Action("Profile", "Learners")" class="btn btn-outline-secondary">Back to Profile</a>
             </div>
         </div>
     </div>
 </div>
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success mt-3">@TempData["SuccessMessage"]</div>
-}
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger mt-3">@TempData["ErrorMessage"]</div>
-}
