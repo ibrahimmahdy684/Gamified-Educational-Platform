@@ -580,6 +580,40 @@ namespace GamifiedPlatform.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult ViewPersonalizationProfiles(int learnerId)
+        {
+            var learnerIdParam = new SqlParameter("@LearnerID", learnerId);
+
+            // Execute the stored procedure to get personalization profiles
+            var profiles = _context.PersonalizationProfiles
+                .FromSqlRaw("EXEC ViewPersonalizationProfiles @LearnerID", learnerIdParam)
+                .ToList();
+
+            // Pass the learnerId to ViewBag for "Back to Profile" button
+            ViewBag.LearnerId = learnerId;
+
+            return View(profiles);
+        }
+
+        public async Task<IActionResult> DeletePersonalizationProfile(int profileId, int learnerId)
+        {
+            try
+            {
+                // Execute the stored procedure to delete the profile
+                await _context.Database.ExecuteSqlInterpolatedAsync($@"
+            EXEC DeletePersonalizationProfile @ProfileID = {profileId}");
+
+                TempData["SuccessMessage"] = "Personalization profile deleted successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred while deleting the profile: {ex.Message}";
+            }
+
+            // Redirect back to the ViewPersonalizationProfiles view
+            return RedirectToAction(nameof(ViewPersonalizationProfiles), new { learnerId });
+        }
+
         public IActionResult ViewNotifications(int learnerId)
         {
             var learnerIdParam = new SqlParameter("@LearnerID", learnerId);

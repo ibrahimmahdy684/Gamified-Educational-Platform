@@ -66,6 +66,18 @@
         </div>
     </div>
 
+    <!-- Personalization Profiles Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning text-white text-center">
+            <h3>View Personalization Profiles</h3>
+        </div>
+        <div class="card-body text-center">
+            <p>Explore the personalization profiles associated with this learner.</p>
+            <a asp-action="ViewPersonalizationProfiles" asp-route-learnerId="@Model.LearnerId" class="btn btn-warning">View Profiles</a>
+        </div>
+    </div>
+
+
     <!-- Notifications Card -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-info text-white text-center">

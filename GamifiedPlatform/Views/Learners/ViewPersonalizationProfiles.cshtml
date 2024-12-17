@@ -1,0 +1,65 @@
+﻿@model IEnumerable<GamifiedPlatform.Models.PersonalizationProfile>
+
+@{
+    ViewData["Title"] = "Personalization Profiles";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-warning text-white text-center">
+            <h2>Personalization Profiles</h2>
+        </div>
+        <div class="card-body">
+            @if (!Model.Any())
+            {
+                <p class="text-center text-muted">No personalization profiles found for this learner.</p>
+            }
+            else
+            {
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Profile ID</th>
+                            <th>Preferred Content Type</th>
+                            <th>Emotional State</th>
+                            <th>Personality Type</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var profile in Model)
+                        {
+                            <tr>
+                                <td>@profile.ProfileId</td>
+                                <td>@profile.PreferedContentType</td>
+                                <td>@profile.EmotionalState</td>
+                                <td>@profile.PersonalityType</td>
+                                <td class="text-center">
+                                    <form method="post" asp-action="DeletePersonalizationProfile" asp-route-profileId="@profile.ProfileId" asp-route-learnerId="@profile.LearnerId">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this profile?');">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            <!-- Back to Profile Button -->
+            <div class="text-center mt-3">
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success mt-3">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger mt-3">@TempData["ErrorMessage"]</div>
+}
