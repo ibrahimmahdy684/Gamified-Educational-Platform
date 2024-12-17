@@ -613,6 +613,29 @@ namespace GamifiedPlatform.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAccount(int InstructorId)
+        {
+            try
+            {
+                // Execute the stored procedure to delete the instructor and their corresponding user
+                await _context.Database.ExecuteSqlInterpolatedAsync($@"
+            EXEC DeleteInstructor @InstructorID = {InstructorId}");
+
+                TempData["SuccessMessage"] = "Your account has been deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred while deleting your account: {ex.Message}";
+                return RedirectToAction("Profile", new { id = InstructorId });
+            }
+
+            // Redirect to the Register page after successful deletion
+            return RedirectToAction("Register", "Account");
+        }
+
+
         private bool InstructorExists(int id)
         {
             return _context.Instructors.Any(e => e.InstructorId == id);
