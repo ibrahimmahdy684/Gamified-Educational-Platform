@@ -4,206 +4,157 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
-<style>
-    .dashboard-container {
-        margin-top: 30px;
-    }
-
-    .card {
-        border: none;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-    }
-
-    .card-header {
-        background-color: #343a40; /* Dark grey for card header */
-        color: white;
-        font-size: 18px;
-        padding: 15px;
-        border-radius: 8px 8px 0 0;
-    }
-
-    .card-body {
-        background-color: #f8f9fa; /* Light grey background for content */
-        padding: 20px;
-        border-radius: 0 0 8px 8px;
-    }
-
-    .btn {
-        padding: 10px 20px;
-        font-size: 16px;
-        border-radius: 5px;
-        width: 100%;
-    }
-
-    .btn-primary {
-        background-color: #007bff; /* Bootstrap primary color */
-        border: none;
-    }
-
-        .btn-primary:hover {
-            background-color: #0056b3; /* Darker blue on hover */
-        }
-
-    .btn-secondary {
-        background-color: #6c757d; /* Grey for secondary buttons */
-        border: none;
-    }
-
-        .btn-secondary:hover {
-            background-color: #5a6268; /* Darker grey on hover */
-        }
-
-    .dashboard-header {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-</style>
-
-<div class="container dashboard-container">
-    <!-- Welcome Header -->
-    <div class="dashboard-header">
-        <h2>Welcome, @Model.Name</h2>
-        <p class="lead">Your admin dashboard for managing the platform and users.</p>
-    </div>
-
-    <!-- Profile Section -->
-    <div class="card">
-        <div class="card-header">
-            <h4>Your Profile Details</h4>
-        </div>
-        <div class="card-body">
-            <ul>
-                <li><strong>Name:</strong> @Model.Name</li>
-                <li><strong>Email:</strong> @Model.Email</li>
-                <li><strong>Gender:</strong> @Model.Gender</li>
-                <li><strong>Birth Date:</strong> @(Model.BirthDate?.ToString("dd/MM/yyyy") ?? "Not provided")</li>
-                <li><strong>Country:</strong> @Model.Country</li>
-            </ul>
-            <a href="@Url.Action("EditProfile", "Admin", new { id = Model.UserId })" class="btn btn-primary mt-3">Edit Profile</a>
-        </div>
-    </div>
-    
-    <!-- Card for All Learners -->
-    <div class="card">
-        <div class="card-header">
-            <h4>View All Learners</h4>
-        </div>
-        <div class="card-body">
-            <p>Manage and view all learners registered on the platform.</p>
-            <a href="@Url.Action("Index", "Learners")" class="btn btn-secondary">Go to Learners</a>
-        </div>
-    </div>
-
-    <!-- Card for All Instructors -->
-    <div class="card">
-        <div class="card-header">
-            <h4>View All Instructors</h4>
-        </div>
-        <div class="card-body">
-            <p>Manage and view all instructors on the platform.</p>
-            <a href="@Url.Action("Index", "Instructors")" class="btn btn-secondary">Go to Instructors</a>
-        </div>
-    </div>
-    <!-- Create Discussion Section -->
-    <div class="card mt-4">
-        <div class="card-header bg-primary text-white">
-            <h4>Create Discussion Forum</h4>
-        </div>
-        <div class="card-body">
-            <p>Use this form to create a discussion forum for a specific course module.</p>
-            <form asp-action="AddForum" method="post">
-                <input for="adminID" type="hidden" name="adminID" value="@Model.AdminId" />
-                <div class="form-group">
-                    <label for="moduleID">Module ID</label>
-                    <input type="number" class="form-control" id="moduleID" name="moduleID" placeholder="Enter Module ID" required>
-                </div>
-                <div class="form-group">
-                    <label for="courseID">Course ID</label>
-                    <input type="number" class="form-control" id="courseID" name="courseID" placeholder="Enter Course ID" required>
-                </div>
-                <div class="form-group">
-                    <label for="title">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter Discussion Title" required>
-                </div>
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter Description" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Create Discussion</button>
-            </form>
-            @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
-            {
-                <div class="alert alert-danger">
-                    @Html.ValidationSummary(false, "Please fix the following errors:")
-                </div>
-            }
-            @if (ViewData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success mt-3">
-                    @ViewData["SuccessMessage"]
-                </div>
-            }
-        </div>
-    </div>
-    <!-- Notifications Card -->
+<div class="container mt-5">
+    <!-- Profile Card -->
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-info text-white text-center">
-            <h3>View Notifications</h3>
-        </div>
-        <div class="card-body text-center">
-            <p>View all notifications related to this admin.</p>
-            <a asp-action="ViewNotifications" asp-route-learnerId="@Model.AdminId" class="btn btn-info">View Notifications</a>
-        </div>
-    </div>
-    <!-- Show Emotional Trends Section -->
-    <div class="card mt-4">
         <div class="card-header bg-dark text-white">
-            <h4>Analyze Emotional Trends</h4>
+            <h2 class="mb-0">Welcome, @Model.Name</h2>
         </div>
-        <div class="card-body">
+        <div class="row align-items-center p-4">
+            <!-- Profile Picture -->
+            <div class="col-md-3 text-center">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                     alt="Admin Profile Picture"
+                     class="img-fluid rounded-circle shadow-sm"
+                     style="width: 150px; height: 150px; object-fit: cover;" />
+            </div>
 
-            <form asp-action="EmotionalFeedbackTrend" method="get">
-
-                <button type="submit" class="btn btn-primary"> Trends</button>
-            </form>
-
-            @if (ViewData["Trends"] != null)
-            {
-                <div class="alert alert-info mt-3">
-                    Emotional trends data successfully retrieved.
-                </div>
-            }
-
-            @if (ViewContext.HttpContext.Request.Method == "GET" && !ViewData.ModelState.IsValid)
-            {
-                <div class="alert alert-danger mt-3">
-                    @Html.ValidationSummary(false, "Please fix the following errors:")
-                </div>
-            }
+            <!-- Profile Details -->
+            <div class="col-md-9">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Name:</strong> @Model.Name</li>
+                    <li class="list-group-item"><strong>Email:</strong> @Model.Email</li>
+                    <li class="list-group-item"><strong>Gender:</strong> @Model.Gender</li>
+                    <li class="list-group-item"><strong>Birth Date:</strong> @(Model.BirthDate?.ToString("dd/MM/yyyy") ?? "Not provided")</li>
+                    <li class="list-group-item"><strong>Country:</strong> @Model.Country</li>
+                </ul>
+            </div>
         </div>
     </div>
-    <!-- Card for LeaderBoards -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-info text-white text-center">
-            <h3>View All Leaderboards</h3>
+
+    <!-- Quick Access Cards (Top) -->
+    <div class="row">
+        <!-- Learners -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5>View All Learners</h5>
+                </div>
+                <div class="card-body text-center">
+                    <a href="@Url.Action("Index", "Learners")" class="btn btn-outline-primary w-100">Go to Learners</a>
+                </div>
+            </div>
         </div>
-        <div class="card-body text-center">
-            <p>Check out all the leaderboards in the system.</p>
-            <a asp-action="GetAllLeaderboards" asp-route-learnerId="@Model.AdminId" class="btn btn-info">viewLeaderBoards</a>
+
+        <!-- Instructors -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5>View All Instructors</h5>
+                </div>
+                <div class="card-body text-center">
+                    <a href="@Url.Action("Index", "Instructors")" class="btn btn-outline-secondary w-100">Go to Instructors</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personalization Profiles -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5>View Personalization Profiles</h5>
+                </div>
+                <div class="card-body text-center">
+                    <a href="@Url.Action("Index", "PersonalizationProfiles")" class="btn btn-outline-success w-100">Go to Profiles</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboards -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5>View All Leaderboards</h5>
+                </div>
+                <div class="card-body text-center">
+                    <a asp-action="GetAllLeaderboards" asp-route-learnerId="@Model.AdminId" class="btn btn-outline-info w-100">View Leaderboards</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analyze Emotional Trends -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5>Analyze Emotional Trends</h5>
+                </div>
+                <div class="card-body text-center">
+                    <form asp-action="EmotionalFeedbackTrend" method="get">
+                        <button type="submit" class="btn btn-outline-dark w-100">Analyze Trends</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- Card for Personalization Profiles -->
-    <div class="card">
-        <div class="card-header">
-            <h4>View Personalization Profiles</h4>
+
+    <!-- Form-Based Cards (Bottom) -->
+    <div class="row">
+        <!-- Create Discussion Forum -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5>Create Discussion Forum</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="AddForum" method="post">
+                        <input type="hidden" name="adminID" value="@Model.AdminId" />
+                        <div class="form-group mb-3">
+                            <label for="moduleID">Module ID</label>
+                            <input type="number" class="form-control" id="moduleID" name="moduleID" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="courseID">Course ID</label>
+                            <input type="number" class="form-control" id="courseID" name="courseID" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Create Discussion</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <p>Manage and view all personalization profiles.</p>
-            <a href="@Url.Action("Index", "PersonalizationProfiles")" class="btn btn-secondary">Go to Personalization Profiles</a>
+
+        <!-- View Notifications -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5>View Notifications</h5>
+                </div>
+                <div class="card-body">
+                    <a asp-action="ViewNotifications" asp-route-learnerId="@Model.AdminId" class="btn btn-outline-info w-100">View Notifications</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .card-header {
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+
+    .btn {
+        margin-top: 10px;
+    }
+
+    .list-group-item {
+        font-size: 1rem;
+    }
+</style>
