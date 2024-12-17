@@ -34,19 +34,6 @@ namespace GamifiedPlatform.Controllers
 
             return View(learner);
         }
-        public IActionResult GetAllGoals()
-        {
-
-
-            // Execute the stored procedure to get notifications
-            var goals = _context.LearningGoals
-                .FromSqlRaw("EXEC getAllGoals ")
-                .ToList();
-
-
-
-            return View(goals);
-        }
         public IActionResult GetAllLeaderboards() {
             
 
