@@ -29,7 +29,16 @@ add HighestAssessmentGrade int
 ALTER TABLE Quest
 add deadline datetime  
 
-
+--added after discussionTable(40)
+/*Create table InstructorDiscussion( 
+ForumID int,
+InstructorID int,
+ Post VARCHAR(100),
+    time DATETIME,
+    PRIMARY KEY (ForumID, InstructorID),
+    FOREIGN KEY (ForumID) REFERENCES Discussion_forum(forumID)on delete cascade on update cascade,
+    FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID)on delete cascade on update cascade
+);*/
 
 Create table Users(
     UserID INT primary Key Identity,
@@ -458,7 +467,15 @@ CREATE TABLE Discussion_forum (
     description VARCHAR(100),
     FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)on delete cascade on update cascade
 );
-
+Create table InstructorDiscussion(
+ForumID int,
+InstructorID int,
+ Post VARCHAR(100),
+    time DATETIME,
+    PRIMARY KEY (ForumID, InstructorID),
+    FOREIGN KEY (ForumID) REFERENCES Discussion_forum(forumID)on delete cascade on update cascade,
+    FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID)on delete cascade on update cascade
+);
 -- 41
 CREATE TABLE LearnerDiscussion (
     ForumID INT,
