@@ -33,6 +33,11 @@
             <a asp-action="Edit" asp-route-id="@Model.LearnerId" class="btn btn-outline-primary mr-2">Edit Profile</a>
             <a asp-action="ViewAssessments" asp-route-learnerId="@Model.LearnerId" class="btn btn-outline-secondary mr-2">View Your Assessments</a>
             <a asp-action="EnrolledCourses" asp-route-id="@Model.UserId" class="btn btn-outline-success">View Enrolled Courses</a>
+            <!-- Delete Account Button -->
+            <form asp-action="DeleteAccount" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');" style="display: inline;">
+                <input type="hidden" name="LearnerId" value="@Model.LearnerId" />
+                <button type="submit" class="btn btn-outline-danger ml-2">Delete Account</button>
+            </form>
         </div>
     </div>
 
