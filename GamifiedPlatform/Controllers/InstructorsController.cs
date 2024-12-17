@@ -483,13 +483,19 @@ namespace GamifiedPlatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var instructor = await _context.Instructors.FindAsync(id);
-            if (instructor != null)
+            try
             {
-                _context.Instructors.Remove(instructor);
+                // Call the DeleteInstructor stored procedure
+                await _context.Database.ExecuteSqlInterpolatedAsync($@"
+            EXEC DeleteInstructor @InstructorID = {id}");
+
+                TempData["SuccessMessage"] = "Instructor and corresponding user deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred while deleting the instructor: {ex.Message}";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

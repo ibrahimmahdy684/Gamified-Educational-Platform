@@ -60,6 +60,38 @@ BEGIN
     END CATCH
 END;
 
+GO
+CREATE PROCEDURE DeleteInstructor
+    @InstructorID INT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        DECLARE @UserID INT;
+        -- Retrieve the UserID corresponding to the InstructorID
+        SELECT @UserID = UserID 
+        FROM Instructor 
+        WHERE InstructorID = @InstructorID;
+        -- Check if the Instructor exists
+        IF @UserID IS NULL
+        BEGIN
+            PRINT 'Instructor does not exist.';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+        -- Delete the Instructor
+        DELETE FROM Instructor WHERE InstructorID = @InstructorID;
+        -- Delete the corresponding user
+        DELETE FROM Users WHERE UserID = @UserID;
+        COMMIT TRANSACTION;
+        PRINT 'Instructor and corresponding user deleted successfully.';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT 'Error occurred during deletion: ' + ERROR_MESSAGE();
+        THROW;
+    END CATCH
+END;
 
 GO
 CREATE PROCEDURE updateLearnerInfo
