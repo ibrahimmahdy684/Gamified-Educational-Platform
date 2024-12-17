@@ -1,7 +1,32 @@
 ﻿USE GamifiedPlatform
 
-drop procedure DeleteLearner
+Go
+create proc PostINS(@instructorID int,@DiscussionID int,@Post varchar(max))
+AS
+begin
+insert into InstructorDiscussion(ForumID,InstructorID,Post,time) values (@DiscussionID,@instructorID,@Post,GETDATE());
+end
 
+Go
+create proc markAsRead(@notificationID int)
+AS
+begin
+update Notification
+set urgency_level='read'
+where ID=@notificationID
+End
+	
+GO
+CREATE PROCEDURE ViewNotAdmin (@adminID AS INT)
+AS
+BEGIN
+	SELECT Notification.ID, Notification.message, Notification.urgency_level, Notification.timestamp
+	FROM Notification
+	INNER JOIN 
+		ReceivedNotification ON ReceivedNotification.NotificationID = Notification.ID AND 
+		ReceivedNotification.adminID = @adminID
+END
+	
 GO
 CREATE PROCEDURE DeleteLearner
     @LearnerID INT
@@ -25,11 +50,7 @@ BEGIN
     END CATCH
 END;
 
-
-------ADMIN PROCEDURES----------
-drop procedure updateLearnerInfo
-
- GO
+GO
 CREATE PROCEDURE updateLearnerInfo
     @learnerID INT,
     @firstName VARCHAR(50),
@@ -52,8 +73,6 @@ BEGIN
 END
 GO
 
-	 
-
 Go 
 create proc getCurrentLearnerPassword(@learnerID int,@password varchar(50) output)
 AS
@@ -62,8 +81,6 @@ select @password=u.Password
 from Learner l inner join Users u on l.UserID=u.UserID
 where l.LearnerID=@learnerID
 end
-
-
 	 
 Go 
 create proc AllLearnersInfo
@@ -132,16 +149,36 @@ BEGIN
     WHERE InstructorID = @InstructorID;
 END
 
+GO
+CREATE PROCEDURE ViewPersonalizationProfiles 
+(
+    @LearnerID AS INT
+)
+AS
+BEGIN
+    SELECT *
+    FROM PersonalizationProfiles p
+    WHERE p.LearnerID = @LearnerID
+END
 
-EXEC updateInstructorInfo 
-    @InstructorID = 8, 
-    @Name = 'Dr. John Smith', 
-    @LatestQualification = 'PhD in AI', 
-    @ExpertiseArea = 'Artificial Intelligence', 
-    @Email = 'johnsmith@example.com', 
-    @ProfilePicturePath = '/images/johnsmith.jpg';
+EXEC ViewPersonalizationProfiles 7
 
+GO
+CREATE PROCEDURE DeletePersonalizationProfile 
+(
+    @ProfileID AS INT
+)
+AS
+BEGIN
+    DELETE 
+    FROM PersonalizationProfiles
+    WHERE PersonalizationProfiles.ProfileID = @ProfileID
+END
 
+select * from PersonalizationProfiles
+exec DeletePersonalizationProfile 104
+
+------ADMIN PROCEDURES----------
 --1
 GO
 CREATE PROCEDURE ViewInfo (@LearnerID AS INT)
@@ -672,7 +709,7 @@ Go
 create proc Post(@LearnerID int,@DiscussionID int,@Post varchar(max))
 AS
 begin
-insert into LearnerDiscussion(ForumID,LearnerID,Post) values (@DiscussionID,@LearnerID,@Post);
+insert into LearnerDiscussion(ForumID,LearnerID,Post,time) values (@DiscussionID,@LearnerID,@Post,GETDATE());
 end
 exec Post 6,5,'hhh'
 /*test

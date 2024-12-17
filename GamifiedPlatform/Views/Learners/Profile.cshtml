@@ -66,6 +66,18 @@
         </div>
     </div>
 
+    <!-- Personalization Profiles Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning text-white text-center">
+            <h3>View Personalization Profiles</h3>
+        </div>
+        <div class="card-body text-center">
+            <p>Explore the personalization profiles associated with this learner.</p>
+            <a asp-action="ViewPersonalizationProfiles" asp-route-learnerId="@Model.LearnerId" class="btn btn-warning">View Profiles</a>
+        </div>
+    </div>
+
+
     <!-- Notifications Card -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-info text-white text-center">
@@ -115,7 +127,75 @@
             }
         </div>
     </div>
-   
+    <!-- Add Post Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning text-white text-center">
+            <h3>Add a Post</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="AddPost" method="post">
+                <input type="hidden" name="LearnerId" value="@Model.LearnerId" />
+                <div class="form-group">
+                    <label for="ForumId">Forum ID:</label>
+                    <input type="number" class="form-control" id="ForumId" name="ForumId" placeholder="Enter Forum ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="Post">Post:</label>
+                    <textarea class="form-control" id="Post" name="Post" placeholder="Write your post here..." rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-warning">Submit Post</button>
+            </form>
+
+            <!-- Display Success and Error Messages -->
+            
+            @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger mt-3">
+                    @Html.ValidationSummary(false, "Please fix the following errors:")
+                </div>
+            }
+            
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+        </div>
+    </div>
+    <!-- Add Feedback Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-danger text-white text-center">
+            <h3>Give Feedback</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="AddFeedback" method="post">
+                <input type="hidden" name="LearnerID" value="@Model.LearnerId" />
+                <div class="form-group">
+                    <label for="ActivityID">Activity ID:</label>
+                    <input type="number" class="form-control" id="ActivityID" name="ActivityID" placeholder="Enter Activity ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="EmotionalState">Emotional State:</label>
+                    <input type="text" class="form-control" id="emotionalState" name="emotionalState" placeholder="Enter your feedback" required>
+                <button type="submit" class="btn btn-danger">Submit Feedback</button>
+            </form>
+
+            <!-- Success and Error Messages -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3">@TempData["SuccessMessage"]</div>
+            }
+
+            @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger mt-3">
+                    @Html.ValidationSummary(false, "Please fix the following errors:")
+                </div>
+            }
+        </div>
+    </div>
 </div>
 
 <style>

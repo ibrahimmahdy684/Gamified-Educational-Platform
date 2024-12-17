@@ -3,43 +3,60 @@
 }
 
 <div class="container mt-5">
-    <h2 class="text-center">Create New Activity</h2>
+    <div class="card shadow-sm">
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center">
+            <h2>Create New Activity</h2>
+        </div>
 
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">
-            @TempData["ErrorMessage"]
-        </div>
-    }
+        <!-- Body -->
+        <div class="card-body">
+            <!-- Success and Error Messages -->
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger mb-3">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mb-3">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">
-            @TempData["SuccessMessage"]
-        </div>
-    }
+            <!-- Form -->
+            <form asp-action="CreateActivity" method="post">
+                <div class="mb-3">
+                    <label for="CourseID" class="form-label">Course ID</label>
+                    <input type="number" id="CourseID" name="CourseID" class="form-control" placeholder="Enter Course ID" required />
+                </div>
 
-    <form asp-action="CreateActivity" method="post">
-        <div class="mb-3">
-            <label for="CourseID" class="form-label">Course ID</label>
-            <input type="number" id="CourseID" name="CourseID" class="form-control" required>
+                <div class="mb-3">
+                    <label for="ModuleID" class="form-label">Module ID</label>
+                    <input type="number" id="ModuleID" name="ModuleID" class="form-control" placeholder="Enter Module ID" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="ActivityType" class="form-label">Activity Type</label>
+                    <input type="text" id="ActivityType" name="ActivityType" class="form-control" placeholder="Enter Activity Type" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="InstructionDetails" class="form-label">Instruction Details</label>
+                    <textarea id="InstructionDetails" name="InstructionDetails" class="form-control" rows="4" placeholder="Enter Instruction Details" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="MaxPoints" class="form-label">Maximum Points</label>
+                    <input type="number" id="MaxPoints" name="MaxPoints" class="form-control" placeholder="Enter Maximum Points" required />
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-outline-primary">Create Activity</button>
+                </div>
+            </form>
         </div>
-        <div class="mb-3">
-            <label for="ModuleID" class="form-label">Module ID</label>
-            <input type="number" id="ModuleID" name="ModuleID" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label for="ActivityType" class="form-label">Activity Type</label>
-            <input type="text" id="ActivityType" name="ActivityType" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label for="InstructionDetails" class="form-label">Instruction Details</label>
-            <textarea id="InstructionDetails" name="InstructionDetails" class="form-control" rows="4" required></textarea>
-        </div>
-        <div class="mb-3">
-            <label for="MaxPoints" class="form-label">Maximum Points</label>
-            <input type="number" id="MaxPoints" name="MaxPoints" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Create Activity</button>
-    </form>
+    </div>
 </div>

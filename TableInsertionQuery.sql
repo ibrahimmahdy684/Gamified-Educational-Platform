@@ -84,9 +84,11 @@ VALUES
 (2, 102, 'Text', 'Focused', 'Introvert'),
 (3, 103, 'Interactive', 'Calm', 'Ambivert'),
 (4, 104, 'Audio', 'Excited', 'Extrovert'),
-(5, 105, 'Visual', 'Anxious', 'Introvert'),
-(3, 106, 'Text', 'Relaxed', 'Ambivert'),
-(1, 107, 'Interactive', 'Motivated', 'Extrovert');
+(5, 105, 'Visual', 'Anxious', 'Introvert')
+INSERT INTO PersonalizationProfiles (LearnerID, ProfileID, Prefered_content_type, emotional_state, personality_type)
+VALUES
+(7, 106, 'Text', 'Relaxed', 'Ambivert'),
+(7, 107, 'Interactive', 'Motivated', 'Extrovert');
 
 -- Insertion into HealthCondition
 INSERT INTO HealthCondition (LearnerID, ProfileID, condition)
@@ -551,8 +553,8 @@ values(1,2,96),
 (4,1,22)
 
 insert into takesassesment
-values(6,1,96),
-(6,2,20)
+values(7,1,96),
+(7,2,20)
 
 
 

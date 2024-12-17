@@ -9,6 +9,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using GamifiedPlatform.Models;
 using System.Reflection;
+using Microsoft.Extensions.Hosting;
 
 namespace GamifiedPlatform.Controllers
 {
@@ -32,6 +33,144 @@ namespace GamifiedPlatform.Controllers
             }
 
             return View(learner);
+        }
+        public async Task<IActionResult> AddPost(int learnerID, int forumID, string post)
+        {
+
+            var learner = await _context.Learners.FirstOrDefaultAsync(l => l.LearnerId == learnerID);
+
+            if (learner == null)
+            {
+
+                return RedirectToAction("Profile"); // Redirect to the Profile action if learner does not exist
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec Post @LearnerID={learnerID},@DiscussionID={forumID},@Post={post}");
+            }
+
+            catch (SqlException ex)
+            {
+
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+                    var learnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
+                    var forumExists = await _context.DiscussionForums.AnyAsync(d => d.ForumId == forumID);
+                    if (!learnerExists && !forumExists)
+                    {
+                        ModelState.AddModelError("", "The specified Learner and Forum do not exist.");
+
+                    }
+                    else
+                    {
+                        if (!learnerExists) ModelState.AddModelError("", "The specified Learner does not exist.");
+                        else ModelState.AddModelError("", "The specified Forum does not exist.");
+                    }
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "This post already added");
+                }
+                else
+                {
+
+                    ModelState.AddModelError("", "An error occurred while adding the path. Please try again.");
+                }
+
+                return View("Profile", learner);
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Profile", learner);
+            }
+            TempData["SuccessMessage"] = "Post added successfully!";
+
+            return View("Profile", learner);
+        }
+        public async Task<IActionResult> AddFeedback(int activityID, int learnerID, string emotionalState) 
+        {
+            var learner = await _context.Learners.FirstOrDefaultAsync(l => l.LearnerId == learnerID);
+
+            if (learner == null)
+            {
+
+                return RedirectToAction("Profile"); // Redirect to the Profile action if learner does not exist
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec ViewMyDeviceCharge @LearnerID={learnerID},@ActivityID={activityID},@emotionalstate={emotionalState}");
+            }
+
+            catch (SqlException ex)
+            {
+
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+                    var learnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
+                    var activityExists = await _context.LearningActivities.AnyAsync(d => d.ActivityId == activityID);
+                    if (!learnerExists && !activityExists)
+                    {
+                        ModelState.AddModelError("", "The specified Learner and Activity do not exist.");
+
+                    }
+                    else
+                    {
+                        if (!learnerExists) ModelState.AddModelError("", "The specified Learner does not exist.");
+                        else ModelState.AddModelError("", "The specified Activity does not exist.");
+                    }
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    
+                        ModelState.AddModelError("", "This feedback already added");
+                    
+
+
+                }
+            }
+
+
+
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Profile", learner);
+            }
+            TempData["SuccessMessage"] = "Feedback given successfully!";
+
+            return View("Profile", learner);
+        }
+        public async Task<IActionResult> MarkNotificationAsRead(int notificationID)
+        {
+            // Ensure notificationID is valid
+            if (notificationID <= 0)
+            {
+                TempData["ErrorMessage"] = "Invalid notification ID.";
+                return RedirectToAction("ViewNotifications"); // Redirect to the notifications list or a relevant page
+            }
+
+            try
+            {
+                // Execute the stored procedure
+                await _context.Database.ExecuteSqlInterpolatedAsync(
+                    $"EXEC markAsRead @notificationID={notificationID}");
+
+                // Optionally, show a success message
+                TempData["SuccessMessage"] = "Notification marked as read.";
+            }
+            catch (Exception ex)
+            {
+                // Log or handle any errors
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+            }
+
+            // Redirect to the appropriate view after marking the notification as read
+            return RedirectToAction("ViewNotifications"); // Adjust based on your app's structure
         }
 
         public IActionResult ViewAssessments(int learnerId)
@@ -393,58 +532,7 @@ namespace GamifiedPlatform.Controllers
         }
 
 
-        public async Task<IActionResult> AddFeedback(int activityID, int learnerID, string feedback)
-        {
-            var learner = await _context.Learners.FirstOrDefaultAsync(l => l.LearnerId == learnerID);
-
-            if (learner == null)
-            {
-                TempData["ErrorMessage"] = "The specified learner does not exist.";
-                return RedirectToAction("Profile"); // Redirect to the Profile action if learner does not exist
-            }
-
-            try
-            {
-                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec ViewMyDeviceCharge @ActivityID={activityID},@LearnerID={learnerID},@timestamp={DateTime.Now},@emotionalstate={feedback}");
-            }
-            catch (SqlException ex)
-            {
-
-                if (ex.Message.Contains("FOREIGN KEY constraint"))
-                {
-                    var LearnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
-                    var activityExists = await _context.LearningActivities.AnyAsync(d => d.ActivityId == activityID);
-                    if (!LearnerExists && !activityExists)
-                    {
-                        ModelState.AddModelError("", "The specified Learner and Activity do not exist.");
-
-                    }
-                    else
-                    {
-                        if (!LearnerExists) ModelState.AddModelError("", "The specified Learner does not exist.");
-                        else ModelState.AddModelError("", "The specified Activity does not exist.");
-                    }
-                }
-                else if (ex.Message.Contains("PRIMARY KEY constraint"))
-                {
-                    ModelState.AddModelError("", "This feedback already added");
-                }
-                else
-                {
-
-                    ModelState.AddModelError("", "An error occurred while giving the feedback. Please try again.");
-                }
-
-                return View("Profile", learner);
-            }
-            catch (Exception ex)
-            {
-
-                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
-                return View("Profile", learner);
-            }
-            return RedirectToAction("Profile", learner);
-        }
+       
         // GET: Learners/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -492,6 +580,40 @@ namespace GamifiedPlatform.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult ViewPersonalizationProfiles(int learnerId)
+        {
+            var learnerIdParam = new SqlParameter("@LearnerID", learnerId);
+
+            // Execute the stored procedure to get personalization profiles
+            var profiles = _context.PersonalizationProfiles
+                .FromSqlRaw("EXEC ViewPersonalizationProfiles @LearnerID", learnerIdParam)
+                .ToList();
+
+            // Pass the learnerId to ViewBag for "Back to Profile" button
+            ViewBag.LearnerId = learnerId;
+
+            return View(profiles);
+        }
+
+        public async Task<IActionResult> DeletePersonalizationProfile(int profileId, int learnerId)
+        {
+            try
+            {
+                // Execute the stored procedure to delete the profile
+                await _context.Database.ExecuteSqlInterpolatedAsync($@"
+            EXEC DeletePersonalizationProfile @ProfileID = {profileId}");
+
+                TempData["SuccessMessage"] = "Personalization profile deleted successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred while deleting the profile: {ex.Message}";
+            }
+
+            // Redirect back to the ViewPersonalizationProfiles view
+            return RedirectToAction(nameof(ViewPersonalizationProfiles), new { learnerId });
+        }
+
         public IActionResult ViewNotifications(int learnerId)
         {
             var learnerIdParam = new SqlParameter("@LearnerID", learnerId);
@@ -506,6 +628,7 @@ namespace GamifiedPlatform.Controllers
 
             return View(notifications);
         }
+        
         public IActionResult MonitorPath(int learnerId)
         {
             var learnerIdParam = new SqlParameter("@LearnerID", learnerId);

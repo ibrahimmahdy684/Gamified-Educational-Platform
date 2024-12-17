@@ -30,12 +30,28 @@ namespace GamifiedPlatform.Controllers
         }
 
 
-        // GET: Assessments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? learnerId)
         {
-            var gamifiedPlatformContext = _context.Assessments.Include(a => a.Module);
-            return View(await gamifiedPlatformContext.ToListAsync());
+            // Include related entities to avoid lazy loading issues
+            var assessments = _context.Assessments
+                .Include(a => a.Module)
+                .ThenInclude(m => m.Course)
+                .ThenInclude(c => c.CourseEnrollments)
+                .AsQueryable();
+
+            // Filter assessments if LearnerID is provided
+            if (learnerId.HasValue)
+            {
+                assessments = assessments.Where(a =>
+                    a.Module != null &&
+                    a.Module.Course != null &&
+                    a.Module.Course.CourseEnrollments.Any(e => e.LearnerId == learnerId));
+            }
+
+            return View(await assessments.ToListAsync());
         }
+
+
 
         // GET: Assessments/Details/5
         public async Task<IActionResult> Details(int? id)

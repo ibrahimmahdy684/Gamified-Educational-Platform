@@ -6,6 +6,12 @@ USE GamifiedPlatform
 ALTER TABLE Assessments
 ADD Grade INT NULL; -- Adjust the data type if necessary
 
+Alter Table ReceivedNotification
+ADD adminID int
+
+Alter Table ReceivedNotification
+Add constraint FK_ReceivedNotification_Admin foreign key(adminID) references Admin(AdminID)
+
 
 ALTER TABLE Learner
 Add ProfilePicturePath varchar(100)
@@ -29,7 +35,16 @@ add HighestAssessmentGrade int
 ALTER TABLE Quest
 add deadline datetime  
 
-
+--added after discussionTable(40)
+/*Create table InstructorDiscussion( 
+ForumID int,
+InstructorID int,
+ Post VARCHAR(100),
+    time DATETIME,
+    PRIMARY KEY (ForumID, InstructorID),
+    FOREIGN KEY (ForumID) REFERENCES Discussion_forum(forumID)on delete cascade on update cascade,
+    FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID)on delete cascade on update cascade
+);*/
 
 Create table Users(
     UserID INT primary Key Identity,
@@ -458,7 +473,15 @@ CREATE TABLE Discussion_forum (
     description VARCHAR(100),
     FOREIGN KEY (ModuleID, CourseID) REFERENCES Modules(ModuleID, CourseID)on delete cascade on update cascade
 );
-
+Create table InstructorDiscussion(
+ForumID int,
+InstructorID int,
+ Post VARCHAR(100),
+    time DATETIME,
+    PRIMARY KEY (ForumID, InstructorID),
+    FOREIGN KEY (ForumID) REFERENCES Discussion_forum(forumID)on delete cascade on update cascade,
+    FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID)on delete cascade on update cascade
+);
 -- 41
 CREATE TABLE LearnerDiscussion (
     ForumID INT,

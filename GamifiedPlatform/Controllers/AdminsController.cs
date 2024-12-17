@@ -31,7 +31,51 @@ namespace GamifiedPlatform.Controllers
 
             return View(admin);
         }
+        public async Task<IActionResult> MarkNotificationAsRead(int notificationID)
+        {
+            // Ensure notificationID is valid
+            if (notificationID <= 0)
+            {
+                TempData["ErrorMessage"] = "Invalid notification ID.";
+                return RedirectToAction("ViewNotifications"); // Redirect to the notifications list or a relevant page
+            }
 
+            try
+            {
+                // Execute the stored procedure
+                await _context.Database.ExecuteSqlInterpolatedAsync(
+                    $"EXEC markAsRead @notificationID={notificationID}");
+
+                // Optionally, show a success message
+                TempData["SuccessMessage"] = "Notification marked as read.";
+            }
+            catch (Exception ex)
+            {
+                // Log or handle any errors
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+            }
+
+            // Redirect to the appropriate view after marking the notification as read
+            return RedirectToAction("ViewNotifications"); // Adjust based on your app's structure
+        }
+
+        public IActionResult EmotionalFeedbackTrend()
+        {
+            return View();
+        }
+
+        // POST: Fetch Trends Data
+        [HttpPost]
+        public IActionResult EmotionalFeedbackTrend(int courseID, int moduleID, DateTime timePeriod)
+        {
+            // Call the stored procedure
+            var trends = _context.EmotionalFeedbacks
+                .FromSqlRaw("EXEC EmotionalTrendAnalysisIns @CourseID={0}, @ModuleID={1}, @TimePeriod={2}",
+                            courseID, moduleID, timePeriod)
+                .ToList();
+
+            return View(trends); // Pass trends data to the view
+        }
         public IActionResult Profile(int id)
         {
             var admin = _context.Admins.FirstOrDefault(a => a.UserId == id);
@@ -211,6 +255,20 @@ namespace GamifiedPlatform.Controllers
             }
 
             return View(admin);
+        }
+        public IActionResult ViewNotifications(int adminID)
+        {
+            var adminIdParam = new SqlParameter("@adminID", adminID);
+
+            // Execute the stored procedure to get notifications
+            var notifications = _context.Notifications
+                .FromSqlRaw("EXEC ViewNot @adminID", adminIdParam)
+                .ToList();
+
+            // Pass the learnerId to ViewBag for "Back to Profile" button
+            ViewBag.AdminID = adminID;
+
+            return View(notifications);
         }
 
         // POST: Admins/Delete/5
