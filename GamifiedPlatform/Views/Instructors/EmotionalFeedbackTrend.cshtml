@@ -1,0 +1,65 @@
+﻿@model IEnumerable<GamifiedPlatform.Models.EmotionalFeedback>
+
+@{
+    ViewData["Title"] = "Emotional Feedback Trends";
+}
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container mt-5">
+    <h2 class="text-center">Emotional Feedback Trends</h2>
+    <p class="text-muted text-center">Analyze emotional feedback trends for courses and modules.</p>
+
+    <!-- Input Form -->
+    <form method="post" class="mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="courseID">Course ID</label>
+                <input type="number" id="courseID" name="courseID" class="form-control" placeholder="Enter Course ID" required>
+            </div>
+            <div class="col-md-4">
+                <label for="moduleID">Module ID</label>
+                <input type="number" id="moduleID" name="moduleID" class="form-control" placeholder="Enter Module ID" required>
+            </div>
+            <div class="col-md-4">
+                <label for="timePeriod">Time Period</label>
+                <input type="date" id="timePeriod" name="timePeriod" class="form-control" required>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">View Trends</button>
+        </div>
+    </form>
+
+    <!-- Display Results -->
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-bordered table-hover mt-4">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Feedback ID</th>
+                    <th>Feedback Time</th>
+                    <th>Emotional State</th>
+                    <th>Learner ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var trend in Model)
+                {
+                    <tr>
+                        <td>@trend.FeedbackId</td>
+                        <td>@trend.Timestamp</td>
+                        <td>@trend.EmotionalState</td>
+                        <td>@trend.LearnerId</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (ViewContext.HttpContext.Request.Method == "POST")
+    {
+        <div class="alert alert-warning mt-4">
+            No emotional feedback trends found for the specified criteria.
+        </div>
+    }
+</div>

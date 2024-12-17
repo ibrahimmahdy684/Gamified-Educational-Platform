@@ -562,6 +562,7 @@ namespace GamifiedPlatform.Controllers
 
             return View(notifications);
         }
+        
         public IActionResult MonitorPath(int learnerId)
         {
             var learnerIdParam = new SqlParameter("@LearnerID", learnerId);

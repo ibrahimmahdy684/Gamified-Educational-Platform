@@ -266,6 +266,34 @@
             }
         </div>
     </div>
+    <!-- Show Emotional Trends Section -->
+    <div class="card mt-4">
+        <div class="card-header bg-dark text-white">
+            <h4>Analyze Emotional Trends</h4>
+        </div>
+        <div class="card-body">
+            
+            <form asp-action="EmotionalFeedbackTrend" method="get">
+                
+                <button type="submit" class="btn btn-primary"> Trends</button>
+            </form>
+
+            @if (ViewData["Trends"] != null)
+            {
+                <div class="alert alert-info mt-3">
+                    Emotional trends data successfully retrieved.
+                </div>
+            }
+
+            @if (ViewContext.HttpContext.Request.Method == "GET" && !ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger mt-3">
+                    @Html.ValidationSummary(false, "Please fix the following errors:")
+                </div>
+            }
+        </div>
+    </div>
+
     <!-- Add Post Section -->
     <div class="card mt-4">
         <div class="card-header bg-secondary text-white">
