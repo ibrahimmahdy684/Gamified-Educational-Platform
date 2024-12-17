@@ -91,93 +91,195 @@
     </div>
 
     <!-- Profile Section -->
-    <div class="card">
-    <div class="card-header">
-        <h4>Your Profile Details</h4>
-    </div>
-    <div class="card-body text-center">
-        <!-- Profile Picture -->
-        @if (!string.IsNullOrEmpty(Model.ProfilePicturePath))
-        {
-            <div class="mb-4">
-                <img src="@Model.ProfilePicturePath" alt="Profile Picture" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;" />
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">Your Profile Details</h4>
+        </div>
+        <div class="row align-items-center p-4">
+            <!-- Profile Picture -->
+            <div class="col-md-3 text-center">
+                <img src="@(string.IsNullOrEmpty(Model.ProfilePicturePath) ? "https://cdn-icons-png.flaticon.com/512/149/149071.png" : Model.ProfilePicturePath)"
+                     alt="Profile Picture"
+                     class="img-fluid rounded-circle shadow-sm"
+                     style="width: 150px; height: 150px; object-fit: cover;" />
             </div>
-        }
-        else
-        {
-            <div class="mb-4">
-                <img src="https://via.placeholder.com/150?text=Profile+Picture" alt="Default Profile Picture" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;" />
-            </div>
-        }
 
-        <!-- Instructor Details -->
-        <ul class="list-unstyled">
-            <li><strong>Name:</strong> @Model.Name</li>
-            <li><strong>Email:</strong> @Model.Email</li>
-            <li><strong>Latest Qualification:</strong> @Model.LatestQualification</li>
-            <li><strong>Expertise Area:</strong> @Model.ExpertiseArea</li>
-        </ul>
+            <!-- Instructor Details -->
+            <div class="col-md-9">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Name:</strong> @Model.Name</li>
+                    <li class="list-group-item"><strong>Email:</strong> @Model.Email</li>
+                    <li class="list-group-item"><strong>Latest Qualification:</strong> @Model.LatestQualification</li>
+                    <li class="list-group-item"><strong>Expertise Area:</strong> @Model.ExpertiseArea</li>
+                </ul>
+            </div>
+        </div>
 
         <!-- Edit and Delete Buttons -->
-            <div class="card-footer d-flex justify-content-center align-items-center">
-                <!-- Edit Profile Button -->
-                <a href="@Url.Action("Edit", "Instructors", new { id = Model.InstructorId })" class="btn btn-outline-primary btn-sm me-2" style="min-width: 150px;">
-                    Edit Profile
-                </a>
+        <div class="card-footer d-flex justify-content-center gap-2">
+            <!-- Edit Profile Button -->
+            <a href="@Url.Action("Edit", "Instructors", new { id = Model.InstructorId })"
+               class="btn btn-outline-primary btn-sm"
+               style="min-width: 150px;">
+                Edit Profile
+            </a>
 
-                <!-- Delete Account Button -->
-                <form asp-action="DeleteAccount" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');" style="display: inline;">
-                    <input type="hidden" name="InstructorId" value="@Model.InstructorId" />
-                    <button type="submit" class="btn btn-outline-danger btn-sm" style="min-width: 150px;">
-                        Delete Account
-                    </button>
-                </form>
+            <!-- Delete Account Button -->
+            <form asp-action="DeleteAccount" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');" class="d-inline">
+                <input type="hidden" name="InstructorId" value="@Model.InstructorId" />
+                <button type="submit" class="btn btn-outline-danger btn-sm" style="min-width: 150px;">
+                    Delete Account
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- View Quests -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">View Quests</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <a asp-controller="Quests" asp-action="Index" class="btn btn-outline-primary w-100">View Quests</a>
+                    </div>
+                </div>
             </div>
+
+            <!-- View Achievements -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">View Achievements</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <a asp-controller="Achievements" asp-action="Index" class="btn btn-outline-secondary w-100">View Achievements</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View All Assessments -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Assessments Management</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <a href="@Url.Action("Index", "Assessments")" class="btn btn-outline-info w-100">View All Assessments</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Send Notification -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Send Notification</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <a href="@Url.Action("SendNotification", "Instructors")" class="btn btn-outline-primary w-100">Send Notification to Learner</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Learners' Assessment Scores -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">View Learners' Assessment Scores</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <a href="@Url.Action("ViewScores", "Instructors")" class="btn btn-outline-secondary w-100">View and Edit Learner Grades</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Courses -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Manage Courses</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <a href="@Url.Action("Index", "Courses")" class="btn btn-outline-success w-100">View All Courses</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Manage Learning Activities -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Manage Learning Activities</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <p>View and manage all learning activities associated with your courses.</p>
+                        <a href="@Url.Action("Index", "LearningActivities")" class="btn btn-outline-primary w-100">View Learning Activities</a>
+                    </div>
+                </div>
+            </div>
 
-    <a asp-controller="Quests" asp-action="Index" class="btn btn-primary">View Quests</a>
-    <a asp-controller="Achievements" asp-action="Index" class="btn btn-primary">View Achievements</a>
+            <!-- View All Leaderboards -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">View All Leaderboards</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <p>Check out all the leaderboards in the system.</p>
+                        <a asp-action="GetAllLeaderboards" asp-route-learnerId="@Model.InstructorId" class="btn btn-outline-info w-100">View Leaderboards</a>
+                    </div>
+                </div>
+            </div>
 
-    <!-- Assessments Section -->
-    <div class="card">
-        <div class="card-header">
-            <h4>Assessments Management</h4>
+            <!-- Analyze Emotional Trends -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Analyze Emotional Trends</h5>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="EmotionalFeedbackTrend" method="get" class="text-center">
+                            <button type="submit" class="btn btn-outline-primary w-100">Analyze Trends</button>
+                        </form>
+
+                        <!-- Success Message -->
+                        @if (ViewData["Trends"] != null)
+                        {
+                            <div class="alert alert-info mt-3">
+                                Emotional trends data successfully retrieved.
+                            </div>
+                        }
+
+                        <!-- Validation Errors -->
+                        @if (ViewContext.HttpContext.Request.Method == "GET" && !ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger mt-3">
+                                @Html.ValidationSummary(false, "Please fix the following errors:")
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enroll Learner in a Course Section -->
+    <div class="card mt-4">
+        <div class="card-header bg-warning text-white">
+            <h4>Enroll Learner in a Course</h4>
         </div>
         <div class="card-body">
-            <a href="@Url.Action("Index", "Assessments")" class="btn btn-secondary">View All Assessments</a>
-        </div>
-    </div>
-
-    <!-- Notification Section -->
-    <div class="card">
-        <div class="card-header">
-            <h4>Send Notification</h4>
-        </div>
-        <div class="card-body">
-            <a href="@Url.Action("SendNotification", "Instructors")" class="btn btn-primary mt-3">Send Notification to Learner</a>
-        </div>
-    </div>
-
-    <!-- View Learners' Assessment Scores -->
-    <div class="card">
-        <div class="card-header">
-            <h4>View Learners' Assessment Scores</h4>
-        </div>
-        <div class="card-body">
-            <a href="@Url.Action("ViewScores", "Instructors")" class="btn btn-secondary">View and Edit Learner Grades</a>
-        </div>
-    </div>
-
-    <!-- Manage Courses Section -->
-    <div class="card">
-        <div class="card-header">
-            <h4>Manage Courses</h4>
-        </div>
-        <div class="card-body">
-            <!-- Button to view all courses -->
-            <a href="@Url.Action("Index", "Courses")" class="btn btn-secondary">View All Courses</a>
+            <p>Use this form to enroll a learner in a specific course.</p>
+            <a href="@Url.Action("EnrollLearner", "Instructors")" class="btn btn-primary">Enroll Learner</a>
         </div>
     </div>
 
@@ -192,27 +294,6 @@
         </div>
     </div>
 
-    <!-- View Learning Activities Section -->
-    <div class="card mt-4">
-        <div class="card-header bg-info text-white">
-            <h4>Manage Learning Activities</h4>
-        </div>
-        <div class="card-body">
-            <p>View and manage all learning activities associated with your courses.</p>
-            <a href="@Url.Action("Index", "LearningActivities")" class="btn btn-primary">View Learning Activities</a>
-        </div>
-    </div>
-
-    <!-- Enroll Learner in a Course Section -->
-    <div class="card mt-4">
-        <div class="card-header bg-warning text-white">
-            <h4>Enroll Learner in a Course</h4>
-        </div>
-        <div class="card-body">
-            <p>Use this form to enroll a learner in a specific course.</p>
-            <a href="@Url.Action("EnrollLearner", "Instructors")" class="btn btn-primary">Enroll Learner</a>
-        </div>
-    </div>
     <!-- Create Discussion Section -->
     <div class="card mt-4">
         <div class="card-header bg-primary text-white">
@@ -300,43 +381,7 @@
             }
         </div>
     </div>
-    <!-- Show Emotional Trends Section -->
-    <div class="card mt-4">
-        <div class="card-header bg-dark text-white">
-            <h4>Analyze Emotional Trends</h4>
-        </div>
-        <div class="card-body">
-            
-            <form asp-action="EmotionalFeedbackTrend" method="get">
-                
-                <button type="submit" class="btn btn-primary"> Trends</button>
-            </form>
-
-            @if (ViewData["Trends"] != null)
-            {
-                <div class="alert alert-info mt-3">
-                    Emotional trends data successfully retrieved.
-                </div>
-            }
-
-            @if (ViewContext.HttpContext.Request.Method == "GET" && !ViewData.ModelState.IsValid)
-            {
-                <div class="alert alert-danger mt-3">
-                    @Html.ValidationSummary(false, "Please fix the following errors:")
-                </div>
-            }
-        </div>
-    </div>
-    <!-- Card for LeaderBoards -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-info text-white text-center">
-            <h3>View All Leaderboards</h3>
-        </div>
-        <div class="card-body text-center">
-            <p>Check out all the leaderboards in the system.</p>
-            <a asp-action="GetAllLeaderboards" asp-route-learnerId="@Model.InstructorId" class="btn btn-info">viewLeaderBoards</a>
-        </div>
-    </div>
+    
     <!-- Add Post Section -->
     <div class="card mt-4">
         <div class="card-header bg-secondary text-white">
