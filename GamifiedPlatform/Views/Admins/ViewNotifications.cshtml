@@ -26,7 +26,7 @@
                     <td>@notification.UrgencyLevel</td>
                     <td>@notification.Timestamp</td>
                     <td>
-                        @if (notification.UrgencyLevel != "read")  
+                        @if (notification.UrgencyLevel != "read")
                         {
                             <form asp-action="MarkNotificationAsRead" method="post" style="display:inline;">
                                 <input type="hidden" name="notificationID" value="@notification.Id" />

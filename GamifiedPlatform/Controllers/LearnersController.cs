@@ -145,6 +145,34 @@ namespace GamifiedPlatform.Controllers
 
             return View("Profile", learner);
         }
+        public async Task<IActionResult> MarkNotificationAsRead(int notificationID)
+        {
+            // Ensure notificationID is valid
+            if (notificationID <= 0)
+            {
+                TempData["ErrorMessage"] = "Invalid notification ID.";
+                return RedirectToAction("ViewNotifications"); // Redirect to the notifications list or a relevant page
+            }
+
+            try
+            {
+                // Execute the stored procedure
+                await _context.Database.ExecuteSqlInterpolatedAsync(
+                    $"EXEC markAsRead @notificationID={notificationID}");
+
+                // Optionally, show a success message
+                TempData["SuccessMessage"] = "Notification marked as read.";
+            }
+            catch (Exception ex)
+            {
+                // Log or handle any errors
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+            }
+
+            // Redirect to the appropriate view after marking the notification as read
+            return RedirectToAction("ViewNotifications"); // Adjust based on your app's structure
+        }
+
         public IActionResult ViewAssessments(int learnerId)
         {
             // Prepare the SQL parameter

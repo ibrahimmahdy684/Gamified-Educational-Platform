@@ -86,7 +86,7 @@
             <a href="@Url.Action("EditProfile", "Admin", new { id = Model.UserId })" class="btn btn-primary mt-3">Edit Profile</a>
         </div>
     </div>
-
+    
     <!-- Card for All Learners -->
     <div class="card">
         <div class="card-header">
@@ -147,6 +147,16 @@
                     @ViewData["SuccessMessage"]
                 </div>
             }
+        </div>
+    </div>
+    <!-- Notifications Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-white text-center">
+            <h3>View Notifications</h3>
+        </div>
+        <div class="card-body text-center">
+            <p>View all notifications related to this learner.</p>
+            <a asp-action="ViewNotifications" asp-route-learnerId="@Model.AdminId" class="btn btn-info">View Notifications</a>
         </div>
     </div>
     <!-- Show Emotional Trends Section -->
