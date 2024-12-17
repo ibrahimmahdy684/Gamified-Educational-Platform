@@ -18,6 +18,27 @@ namespace GamifiedPlatform.Controllers
             _context = context;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DeletePersonalizationProfile(int profileId, int learnerId)
+        {
+            try
+            {
+                // Execute the stored procedure to delete the profile
+                await _context.Database.ExecuteSqlInterpolatedAsync($@"
+            EXEC DeletePersonalizationProfile @ProfileID = {profileId}");
+
+                TempData["SuccessMessage"] = "Personalization profile deleted successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred while deleting the profile: {ex.Message}";
+            }
+
+            // Redirect back to the Personalization Profiles view
+            return RedirectToAction("Index", new { learnerId });
+        }
+
+
         // GET: PersonalizationProfiles
         public async Task<IActionResult> Index()
         {
