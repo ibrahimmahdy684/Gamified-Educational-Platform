@@ -120,7 +120,8 @@
                 </div>
                 <button type="submit" class="btn btn-secondary">Add Goal</button>
             </form>
-
+            
+            
             @if (TempData["SuccessMessage"] != null)
             {
                 <div class="alert alert-success mt-3">
@@ -133,6 +134,9 @@
                     @Html.ValidationSummary(false, "Please fix the following errors:")
                 </div>
             }
+            <div class="mt-4 text-center">
+                <a asp-action="GetAllGoals" asp-route-learnerId="@Model.LearnerId" class="btn btn-info">View All Goals</a>
+            </div>
         </div>
     </div>
     <!-- Add Post Card -->

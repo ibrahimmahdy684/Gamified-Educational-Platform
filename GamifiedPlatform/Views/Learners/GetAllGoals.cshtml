@@ -1,0 +1,38 @@
+﻿@model IEnumerable<GamifiedPlatform.Models.LearningGoal>
+
+@{
+    ViewData["Title"] = "All Learning Goals";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center text-primary mb-4">All Learning Goals</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-bordered table-hover shadow-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Goal ID</th>
+                    <th>deadline</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var goal in Model)
+                {
+                    <tr>
+                        <td>@goal.Id</td>
+                        <td>@goal.Deadline</td>
+                        <td>@goal.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info text-center" role="alert">
+            No learning goals available at the moment.
+        </div>
+    }
+</div>
