@@ -19,6 +19,17 @@ where ID=@notificationID
 End
 	
 GO
+CREATE PROCEDURE ViewNotAdmin (@adminID AS INT)
+AS
+BEGIN
+	SELECT Notification.ID, Notification.message, Notification.urgency_level, Notification.timestamp
+	FROM Notification
+	INNER JOIN 
+		ReceivedNotification ON ReceivedNotification.NotificationID = Notification.ID AND 
+		ReceivedNotification.adminID = @adminID
+END
+	
+GO
 CREATE PROCEDURE DeleteLearner
     @LearnerID INT
 AS
