@@ -153,7 +153,64 @@ namespace GamifiedPlatform.Controllers
                 ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
                 return View("Profile",instructor);
             }
-            ViewData["SuccessMessage"] = "Path created successfully!";
+            ViewData
+                ["SuccessMessage"] = "Path created successfully!";
+            return View("Profile", instructor);
+        }
+        public async Task<IActionResult> AddPost(int instructorID,  int forumID, string post)
+        {
+
+            var instructor = await _context.Instructors.FirstOrDefaultAsync(l => l.InstructorId == instructorID);
+
+            if (instructor == null)
+            {
+
+                return RedirectToAction("Profile"); // Redirect to the Profile action if learner does not exist
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec PostINS @instructorID={instructorID},@DiscussionID={forumID},@Post={post}");
+            }
+
+            catch (SqlException ex)
+            {
+
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+                    var instructorExists = await _context.Instructors.AnyAsync(d => d.InstructorId == instructorID);
+                    var forumExists = await _context.DiscussionForums.AnyAsync(d => d.ForumId == forumID);
+                    if (!instructorExists && !forumExists)
+                    {
+                        ModelState.AddModelError("", "The specified Instructor and Forum do not exist.");
+
+                    }
+                    else
+                    {
+                        if (!instructorExists) ModelState.AddModelError("", "The specified Instructor does not exist.");
+                        else ModelState.AddModelError("", "The specified Forum does not exist.");
+                    }
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "This post already added");
+                }
+                else
+                {
+
+                    ModelState.AddModelError("", "An error occurred while adding the path. Please try again.");
+                }
+
+                return View("Profile", instructor);
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Profile", instructor);
+            }
+            ViewData
+                ["SuccessMessage"] = "post added successfully!";
             return View("Profile", instructor);
         }
 

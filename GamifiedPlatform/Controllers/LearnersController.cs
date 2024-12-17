@@ -33,6 +33,62 @@ namespace GamifiedPlatform.Controllers
 
             return View(learner);
         }
+        public async Task<IActionResult> AddPost(int learnerID, int forumID, string post)
+        {
+
+            var learner = await _context.Learners.FirstOrDefaultAsync(l => l.LearnerId == learnerID);
+
+            if (learner == null)
+            {
+
+                return RedirectToAction("Profile"); // Redirect to the Profile action if learner does not exist
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec Post @LearnerID={learnerID},@DiscussionID={forumID},@Post={post}");
+            }
+
+            catch (SqlException ex)
+            {
+
+                if (ex.Message.Contains("FOREIGN KEY constraint"))
+                {
+                    var learnerExists = await _context.Learners.AnyAsync(d => d.LearnerId == learnerID);
+                    var forumExists = await _context.DiscussionForums.AnyAsync(d => d.ForumId == forumID);
+                    if (!learnerExists && !forumExists)
+                    {
+                        ModelState.AddModelError("", "The specified Learner and Forum do not exist.");
+
+                    }
+                    else
+                    {
+                        if (!learnerExists) ModelState.AddModelError("", "The specified Learner does not exist.");
+                        else ModelState.AddModelError("", "The specified Forum does not exist.");
+                    }
+                }
+                else if (ex.Message.Contains("PRIMARY KEY constraint"))
+                {
+                    ModelState.AddModelError("", "This post already added");
+                }
+                else
+                {
+
+                    ModelState.AddModelError("", "An error occurred while adding the path. Please try again.");
+                }
+
+                return View("Profile", learner);
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError("", "An unexpected error occurred: " + ex.Message);
+                return View("Profile", learner);
+            }
+            TempData["SuccessMessage"] = "Post added successfully!";
+
+            return View("Profile", learner);
+        }
 
         public IActionResult ViewAssessments(int learnerId)
         {

@@ -115,7 +115,44 @@
             }
         </div>
     </div>
-   
+    <!-- Add Post Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning text-white text-center">
+            <h3>Add a Post</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="AddPost" method="post">
+                <input type="hidden" name="LearnerId" value="@Model.LearnerId" />
+                <div class="form-group">
+                    <label for="ForumId">Forum ID:</label>
+                    <input type="number" class="form-control" id="ForumId" name="ForumId" placeholder="Enter Forum ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="Post">Post:</label>
+                    <textarea class="form-control" id="Post" name="Post" placeholder="Write your post here..." rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-warning">Submit Post</button>
+            </form>
+
+            <!-- Display Success and Error Messages -->
+            
+            @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger mt-3">
+                    @Html.ValidationSummary(false, "Please fix the following errors:")
+                </div>
+            }
+            
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+        </div>
+    </div>
+
 </div>
 
 <style>

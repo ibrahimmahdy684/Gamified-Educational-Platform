@@ -266,6 +266,39 @@
             }
         </div>
     </div>
-    
+    <!-- Add Post Section -->
+    <div class="card mt-4">
+        <div class="card-header bg-secondary text-white">
+            <h4>Add a Post to Discussion Forum</h4>
+        </div>
+        <div class="card-body">
+            <p>Use this form to add a new post to an existing discussion forum.</p>
+            <form asp-action="AddPost" method="post">
+                <input for="instructorID" type="hidden" name="instructorID" value="@Model.InstructorId" />
+                <div class="form-group">
+                    <label for="forumID">Forum ID</label>
+                    <input type="number" class="form-control" id="forumID" name="forumID" placeholder="Enter Forum ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="post">Post Content</label>
+                    <textarea class="form-control" id="post" name="post" rows="3" placeholder="Enter your post" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Post</button>
+            </form>
+            @if (ViewContext.HttpContext.Request.Method == "POST" && !ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger mt-3">
+                    @Html.ValidationSummary(false, "Please fix the following errors:")
+                </div>
+            }
+            @if (ViewData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3">
+                    @ViewData["SuccessMessage"]
+                </div>
+            }
+        </div>
+    </div>
+
 
 </div>
