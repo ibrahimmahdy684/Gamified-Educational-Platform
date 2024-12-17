@@ -883,7 +883,7 @@ Go
 create proc  LeaderboardFilter(@LearnerID int)
 AS
 Begin 
-select l.BoardID,l.season,c.Title as course,r.total_points,r.rank
+select r.LearnerID, r.BoardID,r.CourseID,r.total_points,r.rank
 from Leaderboard l inner join Ranking r on l.BoardID=r.BoardID inner join Course c on r.CourseID=c.CourseID
 where LearnerID=@LearnerID 
 order by rank desc
