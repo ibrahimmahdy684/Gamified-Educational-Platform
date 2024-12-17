@@ -43,7 +43,7 @@ namespace GamifiedPlatform.Controllers
             }
             else
             {
-                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec updateInstructorInfo @InstructorID={instructorID},@name={name},@latest_qualification={latest_qualification},@expertise_area={expertise_area},@email={email}");
+                await _context.Database.ExecuteSqlInterpolatedAsync($"Exec updateInstructorInfo @InstructorID={instructorID},@Name={name},@LatestQualification={latest_qualification},@ExpertiseArea={expertise_area},@Email={email}");
                 TempData["SuccessMessage"] = "Instructor information updated successfully!";
                 return RedirectToAction("Index");
             }
