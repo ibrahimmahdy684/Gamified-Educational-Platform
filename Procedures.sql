@@ -6,7 +6,11 @@ AS
 begin
 insert into InstructorDiscussion(ForumID,InstructorID,Post,time) values (@DiscussionID,@instructorID,@Post,GETDATE());
 end
-
+Go
+create proc getAllGoals
+As
+select*
+from Learning_goal
 Go
 create proc markAsRead(@notificationID int)
 AS
