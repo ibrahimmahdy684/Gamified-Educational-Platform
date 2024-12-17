@@ -1,56 +1,35 @@
-﻿@model IEnumerable<GamifiedPlatform.Models.Ranking>
+﻿@model List<GamifiedPlatform.Models.Ranking>
+    <!-- Update with the correct namespace -->
+    @{
+        ViewData["Title"] = "Leaderboard Rank";
+    }
 
-@{
-    ViewData["Title"] = "Filtered Leaderboard";
-    var learnerId = ViewBag.LearnerId; // To link back to the profile
-}
-<form asp-action="LeaderboardRank" method="post">
-    
-    <div class="form-group">
-        <label for="learnerID">Learner ID:</label>
-        <input type="number" class="form-control" id="learnerID" name="learnerID" placeholder="Enter Learner ID" required>
-    </div>
-    
-        <button type="submit" class="btn btn-danger">get Rank</button>
-</form>
-<div class="container mt-5">
-    <h2 class="text-center text-primary mb-4">Filtered Leaderboard</h2>
+    <h2>Leaderboard Rank</h2>
 
-    @if (Model != null && Model.Any())
-    {
-        <table class="table table-bordered table-hover shadow-sm">
-            <thead class="thead-dark">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Learner ID</th>
+                <th>Total Points</th>
+                <th>Course ID</th>  <!-- If you want to display this as well -->
+                <th>Board ID</th>    <!-- If you want to display this -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var board in Model)
+            {
                 <tr>
-                    <th>Board ID</th>
-                    <th>Course ID</th>
-                    <th>Total Points</th>
-                    <th>Rank</th>
+                    <td>@board.Rank</td>
+                    <td>@board.LearnerId</td>
+                    <td>@board.TotalPoints</td>
+                    <td>@board.CourseId</td>  <!-- Display course ID -->
+                    <td>@board.BoardId</td>    <!-- Display board ID -->
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.BoardId</td>
-                        <td>@item.CourseId</td>
-                        <td>@item.TotalPoints</td>
-                        <td>@item.Rank</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <div class="alert alert-info text-center">
-            No leaderboard data found for this learner.
-        </div>
-    }
+            }
+        </tbody>
+    </table>
 
-    <!-- Back to Profile Button -->
-    <div class="text-center mt-4">
-        <a asp-action="Index" asp-controller="Learner" asp-route-id="@learnerId" class="btn btn-outline-secondary">
-            Back to Profile
-        </a>
-    </div>
-</div>
+    <!-- Back to Profile button -->
+    <a href="@Url.Action("Profile", "Home")" class="btn btn-primary">Back to Profile</a>
+

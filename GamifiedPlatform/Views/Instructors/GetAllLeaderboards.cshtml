@@ -23,12 +23,10 @@
                     <tr>
                         <td>@leaderboard.BoardId</td>
                         <td>@leaderboard.Season</td>
-                        <td>
-                            <form asp-action="LeaderboardRank" asp-controller="Instructor" method="get" style="display:inline;">
-                                <input type="hidden" name="leaderboardID" value="@leaderboard.BoardId" />
-                                <button type="submit" class="btn btn-sm btn-outline-info">View Ranks</button>
-                            </form>
-                        </td>
+                                <td>
+                                    <a asp-action="LeaderboardRank" asp-route-leaderboardID="@leaderboard.BoardId" class="btn btn-info">View details</a>
+
+                                </td>
                     </tr>
                 }
             </tbody>

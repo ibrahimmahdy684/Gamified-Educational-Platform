@@ -59,23 +59,19 @@ namespace GamifiedPlatform.Controllers
 
             return View(leaderboards);
         }
-        public async Task<IActionResult> LeaderboardRank(int leaderboardID,int learnerID)
+        public IActionResult LeaderboardRank(int leaderboardID)
         {
-            var learner = await _context.Learners.FirstOrDefaultAsync(l => l.LearnerId == learnerID);
+           
 
-            if (learner == null)
-            {
-                ModelState.AddModelError("", "The specified Learner does not exist.");
-                return RedirectToAction("LeaderboardRank"); // Redirect to the Profile action if learner does not exist
-            }
+           
 
             // Execute the stored procedure to get notifications
             var boards = _context.Rankings
-                .FromSqlRaw($"EXEC LeaderboardRank @learnerID={learnerID},@LeaderboardID={leaderboardID}")
+                .FromSqlRaw($"EXEC LeaderboardRank @LeaderboardID={leaderboardID}")
                 .ToList();
 
             // Pass the learnerId to ViewBag for "Back to Profile" button
-            ViewBag.LearnerId = learnerID;
+           
 
             return View(boards);
         }

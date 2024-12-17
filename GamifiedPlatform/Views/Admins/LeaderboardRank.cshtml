@@ -1,0 +1,35 @@
+﻿@model List<GamifiedPlatform.Models.Ranking>
+<!-- Update with the correct namespace -->
+@{
+    ViewData["Title"] = "Leaderboard Rank";
+}
+
+<h2>Leaderboard Rank</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Learner ID</th>
+            <th>Total Points</th>
+            <th>Course ID</th>  <!-- If you want to display this as well -->
+            <th>Board ID</th>    <!-- If you want to display this -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var board in Model)
+        {
+            <tr>
+                <td>@board.Rank</td>
+                <td>@board.LearnerId</td>
+                <td>@board.TotalPoints</td>
+                <td>@board.CourseId</td>  <!-- Display course ID -->
+                <td>@board.BoardId</td>    <!-- Display board ID -->
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Back to Profile button -->
+<a href="@Url.Action("Profile", "Home")" class="btn btn-primary">Back to Profile</a>
+
