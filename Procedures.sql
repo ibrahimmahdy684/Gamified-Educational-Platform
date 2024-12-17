@@ -6,25 +6,6 @@ AS
 begin
 insert into InstructorDiscussion(ForumID,InstructorID,Post,time) values (@DiscussionID,@instructorID,@Post,GETDATE());
 end
-	
-Go
-create proc getAllGoals
-As
-select*
-from Learning_goal
-
-	Go
-create proc getAllLeaderBoards
-AS
-select *
-from Leaderboard
-	
-	Go
-create proc getSpecificLearnerGoals(@learnerID int)
-As
-select*
-from LearnersGoals
-where LearnerID=@learnerID
 
 Go
 create proc markAsRead(@notificationID int)
@@ -583,15 +564,14 @@ exec Moduletraits 'Creativity',3
 --6
 go
 create procedure LeaderboardRank
-@LeaderboardID int , @learnerID int
+@LeaderboardID int
 as
 begin 
-select r.BoardID,r.CourseID,r.LearnerID,r.rank,r.total_points
-from Ranking r 
-where r.BoardID=@LeaderboardID AND r.LearnerID=@learnerID
+select l.first_name,l.last_name ,r.rank,r.total_points
+from Learner l inner join Ranking r on l.LearnerID=r.LearnerID
+where r.BoardID=@LeaderboardID
 order by r.rank
 end
-
 
 exec LeaderboardRank 4
 
