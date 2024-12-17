@@ -212,26 +212,63 @@
         </div>
     </div>
 
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Manage Learning Activities -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Manage Learning Activities</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <p>View and manage all learning activities associated with your courses.</p>
+                        <a href="@Url.Action("Index", "LearningActivities")" class="btn btn-outline-primary w-100">View Learning Activities</a>
+                    </div>
+                </div>
+            </div>
 
-    <!-- New Activity Section -->
-    <div class="card">
-        <div class="card-header">
-            <h4>Create New Activity</h4>
-        </div>
-        <div class="card-body">
-            <p>Use this form to create a new activity for a course module.</p>
-            <a href="@Url.Action("CreateActivity", "Instructors")" class="btn btn-primary">Create Activity</a>
-        </div>
-    </div>
+            <!-- View All Leaderboards -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">View All Leaderboards</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <p>Check out all the leaderboards in the system.</p>
+                        <a asp-action="GetAllLeaderboards" asp-route-learnerId="@Model.InstructorId" class="btn btn-outline-info w-100">View Leaderboards</a>
+                    </div>
+                </div>
+            </div>
 
-    <!-- View Learning Activities Section -->
-    <div class="card mt-4">
-        <div class="card-header bg-info text-white">
-            <h4>Manage Learning Activities</h4>
-        </div>
-        <div class="card-body">
-            <p>View and manage all learning activities associated with your courses.</p>
-            <a href="@Url.Action("Index", "LearningActivities")" class="btn btn-primary">View Learning Activities</a>
+            <!-- Analyze Emotional Trends -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Analyze Emotional Trends</h5>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="EmotionalFeedbackTrend" method="get" class="text-center">
+                            <button type="submit" class="btn btn-outline-primary w-100">Analyze Trends</button>
+                        </form>
+
+                        <!-- Success Message -->
+                        @if (ViewData["Trends"] != null)
+                        {
+                            <div class="alert alert-info mt-3">
+                                Emotional trends data successfully retrieved.
+                            </div>
+                        }
+
+                        <!-- Validation Errors -->
+                        @if (ViewContext.HttpContext.Request.Method == "GET" && !ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger mt-3">
+                                @Html.ValidationSummary(false, "Please fix the following errors:")
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -245,6 +282,18 @@
             <a href="@Url.Action("EnrollLearner", "Instructors")" class="btn btn-primary">Enroll Learner</a>
         </div>
     </div>
+
+    <!-- New Activity Section -->
+    <div class="card">
+        <div class="card-header">
+            <h4>Create New Activity</h4>
+        </div>
+        <div class="card-body">
+            <p>Use this form to create a new activity for a course module.</p>
+            <a href="@Url.Action("CreateActivity", "Instructors")" class="btn btn-primary">Create Activity</a>
+        </div>
+    </div>
+
     <!-- Create Discussion Section -->
     <div class="card mt-4">
         <div class="card-header bg-primary text-white">
@@ -332,43 +381,7 @@
             }
         </div>
     </div>
-    <!-- Show Emotional Trends Section -->
-    <div class="card mt-4">
-        <div class="card-header bg-dark text-white">
-            <h4>Analyze Emotional Trends</h4>
-        </div>
-        <div class="card-body">
-            
-            <form asp-action="EmotionalFeedbackTrend" method="get">
-                
-                <button type="submit" class="btn btn-primary"> Trends</button>
-            </form>
-
-            @if (ViewData["Trends"] != null)
-            {
-                <div class="alert alert-info mt-3">
-                    Emotional trends data successfully retrieved.
-                </div>
-            }
-
-            @if (ViewContext.HttpContext.Request.Method == "GET" && !ViewData.ModelState.IsValid)
-            {
-                <div class="alert alert-danger mt-3">
-                    @Html.ValidationSummary(false, "Please fix the following errors:")
-                </div>
-            }
-        </div>
-    </div>
-    <!-- Card for LeaderBoards -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-info text-white text-center">
-            <h3>View All Leaderboards</h3>
-        </div>
-        <div class="card-body text-center">
-            <p>Check out all the leaderboards in the system.</p>
-            <a asp-action="GetAllLeaderboards" asp-route-learnerId="@Model.InstructorId" class="btn btn-info">viewLeaderBoards</a>
-        </div>
-    </div>
+    
     <!-- Add Post Section -->
     <div class="card mt-4">
         <div class="card-header bg-secondary text-white">
